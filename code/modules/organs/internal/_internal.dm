@@ -26,6 +26,8 @@
 	update_icon()
 
 /obj/item/organ/internal/Process()
+	SEND_SIGNAL(src, COMSIG_WOUND_PROCESS)	// Must occur before organ processes due to the robotic check
+	refresh_damage()					// Death check is in the parent proc
 	..()
 	handle_blood()
 	handle_regeneration()
@@ -88,18 +90,15 @@
 					break
 			if(BV)
 				BV.current_blood = max(BV.current_blood - blood_req, 0)
-			if(BV?.current_blood == 0)	//When all blood from the organ and blood vessel is lost, 
-				take_damage(rand(2,5), prob(95))	//95% chance to not warn them, damage will proc on every organ in the limb
+			if(BV?.current_blood == 0 && !GetComponent(/datum/component/internal_wound/organic/blood_loss))	//When all blood from the organ and blood vessel is lost, 
+				AddComponent(/datum/component/internal_wound/organic/blood_loss)
 
 		return
 
 	current_blood = min(current_blood + blood_req, max_blood_storage)
 
 /obj/item/organ/internal/proc/handle_regeneration()
-	if(!damage || BP_IS_ROBOTIC(src) || !owner || owner.chem_effects[CE_TOXIN] || owner.is_asystole() || !current_blood)
-		return
-	if(damage < 0.1*max_damage)
-		heal_damage(0.1)
+	return
 
 /obj/item/organ/internal/examine(mob/user)
 	. = ..()
@@ -112,11 +111,7 @@
 	return ..() && !is_broken()
 
 /obj/item/organ/internal/heal_damage(amount, natural = TRUE)
-	if (natural && !can_recover())
-		return
-	if(owner.chem_effects[CE_BLOODCLOT])
-		amount *= 1 + owner.chem_effects[CE_BLOODCLOT]
-	damage = between(0, damage - round(amount, 0.1), max_damage)
+	return
 
 // Is body part open for most surgerical operations?
 /obj/item/organ/internal/is_open()
@@ -182,7 +177,12 @@
 	nutriment_req = initial(nutriment_req)
 	oxygen_req = initial(oxygen_req)
 
+	SEND_SIGNAL(src, COMSIG_WOUND_EFFECTS)
 	SEND_SIGNAL(src, COMSIG_APPVAL, src)
 
 	for(var/prefix in prefixes)
 		name = "[prefix] [name]"
+
+/obj/item/organ/internal/proc/refresh_damage()
+	damage = initial(damage)
+	SEND_SIGNAL(src, COMSIG_WOUND_DAMAGE)

@@ -52,9 +52,12 @@
 #define CE_BLOODCLOT 	"bloodclot"	// Promote healing but thickens blood, slows and stops bleeding (range 0 - 1)
 #define CE_OXYGENATED    "oxygen"       // Dexalin.
 #define CE_PURGER "purger"	//Purger
-#define CE_NOWITHDRAW "no_withdrawal" 
+#define CE_NOWITHDRAW "no_withdrawal"
 #define CE_VOICEMIMIC "voice_mimic"
 #define CE_DYNAMICFINGERS "dynfingers"
+
+// Chem effects for robotic/assisted organs
+#define CE_MECH_COOLING "coolant"
 
 // Reagent specific heat is not yet implemented, this is here for compatibility reasons
 #define SPECIFIC_HEAT_DEFAULT			200

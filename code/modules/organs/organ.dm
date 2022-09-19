@@ -181,14 +181,17 @@
 
 /obj/item/organ/proc/handle_germ_effects()
 	//** Handle the effects of infections
-	var/antibiotics = owner.reagents.get_reagent_amount("spaceacillin")
+	var/antibiotics = 0
+
+	if(CE_ANTIBIOTIC in owner.chem_effects)
+		antibiotics = chem_effects[CE_ANTIBIOTIC]
 
 	if(germ_level > 0 && germ_level < INFECTION_LEVEL_ONE/2 && prob(30))
 		germ_level--
 
 	if(germ_level >= INFECTION_LEVEL_ONE/2)
 		//aiming for germ level to go from ambient to INFECTION_LEVEL_TWO in an average of 15 minutes
-		if(antibiotics < 5 && prob(round(germ_level/6)))
+		if(antibiotics < 4 && prob(round(germ_level/6)))
 			germ_level++
 
 	if(germ_level >= INFECTION_LEVEL_ONE)
@@ -197,11 +200,8 @@
 
 	if(germ_level >= INFECTION_LEVEL_TWO)
 		//spread germs
-		if(parent && antibiotics < 5 && parent.germ_level < germ_level && ( parent.germ_level < INFECTION_LEVEL_ONE*2 || prob(30) ))
+		if(parent && antibiotics < 4 && parent.germ_level < germ_level && ( parent.germ_level < INFECTION_LEVEL_ONE*2 || prob(30) ))
 			parent.germ_level++
-
-		if(prob(3))	//about once every 30 seconds
-			take_damage(1,silent=prob(30))
 
 /obj/item/organ/proc/handle_rejection()
 	// Process unsuitable transplants. TODO: consider some kind of
@@ -241,8 +241,9 @@
 //Germs
 /obj/item/organ/proc/handle_antibiotics()
 	var/antibiotics = 0
-	if(owner)
-		antibiotics = owner.reagents.get_reagent_amount("spaceacillin")
+
+	if(owner && CE_ANTIBIOTIC in owner.chem_effects)
+		antibiotics = owner.chem_effects[CE_ANTIBIOTIC]
 
 	if(!germ_level || antibiotics < 5)
 		return
@@ -253,6 +254,9 @@
 		germ_level -= 6	//at germ_level == 500, this should cure the infection in a minute
 	else
 		germ_level -= 2 //at germ_level == 1000, this will cure the infection in 5 minutes
+
+	if(antibiotics)
+		SEND_SIGNAL(src, COMSIG_WOUND_TREAT, CE_ANTIBIOTIC, antibiotics)
 
 //Adds autopsy data for used_weapon.
 /obj/item/organ/proc/add_autopsy_data(var/used_weapon, var/damage)

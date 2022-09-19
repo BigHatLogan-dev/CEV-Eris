@@ -115,6 +115,7 @@
 	M.adjust_hallucination(-0.9 * effect_multiplier)
 	M.adjustToxLoss(-((0.4 + (M.getToxLoss() * 0.05)) * effect_multiplier))
 	M.add_chemical_effect(CE_ANTITOX, 1)
+	M.add_chemical_effect(CE_ANTIBIOTIC, 1)
 	holder.remove_reagent("pararein", 0.2 )
 	holder.remove_reagent("blattedin", 0.2 )
 
@@ -488,6 +489,13 @@
 	overdose = REAGENTS_OVERDOSE
 	scannable = 1
 
+/datum/reagent/medicine/spaceacillin/affect_blood(mob/living/carbon/M, alien, effect_multiplier)
+	M.add_chemical_effect(CE_ANTIBIOTIC, 2)
+	if(dose > 4)
+		M.add_chemical_effect(CE_ANTIBIOTIC, 2)
+	if(dose > 9)
+		M.add_chemical_effect(CE_ANTIBIOTIC, 2)
+
 /datum/reagent/medicine/sterilizine
 	name = "Sterilizine"
 	id = "sterilizine"
@@ -638,7 +646,7 @@
 					W.heal_damage(5 * effect_multiplier)
 
 /datum/reagent/medicine/quickclot/overdose(mob/living/carbon/M, alien)
-	M.add_chemical_effect(CE_BLOODCLOT, min(1, 0.20))
+	M.add_chemical_effect(CE_BLOODCLOT, min(1, 0.50))
 
 /datum/reagent/medicine/ossisine
 	name = "Ossisine"
