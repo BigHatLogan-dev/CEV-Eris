@@ -3,7 +3,9 @@
 	origin_tech = list(TECH_BIO = 2)
 	bad_type = /obj/item/organ/internal
 	spawn_tags = SPAWN_TAG_ORGAN_INTERNAL
-	max_damage = 100
+	max_damage = 10
+	min_bruised_damage = 2
+	min_broken_damage = 4
 	desc = "A vital organ."
 	var/list/owner_verbs = list()
 	var/list/initial_owner_verbs = list()
@@ -27,7 +29,7 @@
 
 /obj/item/organ/internal/Process()
 	SEND_SIGNAL(src, COMSIG_WOUND_PROCESS)	// Must occur before organ processes due to the robotic check
-	refresh_damage()					// Death check is in the parent proc
+	refresh_damage()						// Death check is in the parent proc
 	..()
 	handle_blood()
 	handle_regeneration()
@@ -66,8 +68,67 @@
 /obj/item/organ/internal/proc/get_process_efficiency(process_define)
 	return organ_efficiency[process_define] - (organ_efficiency[process_define] * (damage / max_damage))
 
-/obj/item/organ/internal/take_damage(amount, silent)	//Deals damage to the organ itself
-	damage = CLAMP(damage + amount * (100 / (parent ? parent.limb_efficiency : 100)), 0, max_damage)
+/obj/item/organ/internal/take_damage(amount, silent, damage_type = null, sharp = FALSE, edge = FALSE)	//Deals damage to the organ itself
+	if(!damage_type)
+		return
+
+	// Determine possible wounds based on nature and damage type
+	var/is_robotic = FALSE
+	var/is_organic = FALSE
+	var/list/possible_wounds = list()
+
+	var/total_damage = amount * (100 / (parent ? parent.limb_efficiency : 100))
+	var/wound_count = max(1, round(total_damage / 10, 1))	// Every 10 points of damage is a wound, minimum 1
+
+	if(BP_IS_ROBOTIC(src) || BP_IS_ASSISTED(src))
+		is_robotic = TRUE
+	if(BP_IS_ORGANIC(src) || BP_IS_ASSISTED(src))
+		is_organic = TRUE
+
+	if(!is_organic && !is_robotic)
+		return
+
+	switch(damage_type)
+		if(BRUTE)
+			if(!edge)
+				if(sharp)
+					if(is_organic)
+						possible_wounds |= typesof(/datum/component/internal_wound/organic/sharp)
+					if(is_robotic)
+						possible_wounds |= typesof(/datum/component/internal_wound/robotic/sharp)
+				else
+					if(is_organic)
+						possible_wounds |= typesof(/datum/component/internal_wound/organic/blunt)
+					if(is_robotic)
+						possible_wounds |= typesof(/datum/component/internal_wound/robotic/blunt)
+			else
+				if(is_organic)
+					possible_wounds |= typesof(/datum/component/internal_wound/organic/edge)
+				if(is_robotic)
+					possible_wounds |= typesof(/datum/component/internal_wound/robotic/edge)
+		if(BURN)
+			if(is_organic)
+				possible_wounds |= typesof(/datum/component/internal_wound/organic/burn)
+			if(is_robotic)
+				possible_wounds |= typesof(/datum/component/internal_wound/robotic/emp_burn)
+		if(TOX)
+			if(is_organic)
+				possible_wounds |= typesof(/datum/component/internal_wound/organic/poisoning)
+			if(is_robotic)
+				possible_wounds |= typesof(/datum/component/internal_wound/robotic/build_up)
+
+	if(is_organic)
+		possible_wounds -= GetComponents(/datum/component/internal_wound/organic)	// Organic wounds don't stack
+
+	if(possible_wounds.len)
+		for(var/i in 1 to wound_count)
+			var/choice = pick(possible_wounds)
+			AddComponent(choice)	
+			if(ispath(choice, /datum/component/internal_wound/organic))
+				possible_wounds -= choice
+			if(!possible_wounds.len)
+				break
+
 	if(!BP_IS_ROBOTIC(src) && owner && parent && amount > 0 && !silent)
 		owner.custom_pain("Something inside your [parent.name] hurts a lot.", 1)
 

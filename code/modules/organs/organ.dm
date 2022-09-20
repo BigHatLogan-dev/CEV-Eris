@@ -184,7 +184,7 @@
 	var/antibiotics = 0
 
 	if(CE_ANTIBIOTIC in owner.chem_effects)
-		antibiotics = chem_effects[CE_ANTIBIOTIC]
+		antibiotics = owner.chem_effects[CE_ANTIBIOTIC]
 
 	if(germ_level > 0 && germ_level < INFECTION_LEVEL_ONE/2 && prob(30))
 		germ_level--
@@ -242,7 +242,7 @@
 /obj/item/organ/proc/handle_antibiotics()
 	var/antibiotics = 0
 
-	if(owner && CE_ANTIBIOTIC in owner.chem_effects)
+	if(owner && (CE_ANTIBIOTIC in owner.chem_effects))
 		antibiotics = owner.chem_effects[CE_ANTIBIOTIC]
 
 	if(!germ_level || antibiotics < 5)

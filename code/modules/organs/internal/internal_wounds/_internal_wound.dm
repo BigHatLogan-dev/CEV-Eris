@@ -1,7 +1,9 @@
 /datum/component/internal_wound
+	var/name = "internal injury"
 	dupe_mode = COMPONENT_DUPE_UNIQUE
 
 	var/list/treatments = list()	// list(QUALITY_TOOL = FAILCHANCE, CE_CHEMEFFECT = strength), surgery steps have their own treatment defines
+	var/scar						// If defined, applies this wound type when successfully treated
 
 	var/diagnosis_stat				// BIO for organic, MEC for robotic
 	var/diagnosis_difficulty		// basic - 25, adv - 40
@@ -10,13 +12,11 @@
 	var/severity_max = 2			// How far the wound can progress, default is 2
 
 	var/can_progress = FALSE			// Whether the wound can progress or not
-	var/next_wound						// If defined, applies this wound type when severity is at max
-	var/progression_threshold = 150		// How many ticks until wound progresses, default is 5 minutes
+	var/next_wound						// If defined, applies a wound of this type when severity is at max
+	var/progression_threshold = 150		// How many ticks until the wound progresses, default is 5 minutes
 	var/current_tick					// Current tick towards progression
 
-	var/organ_type					// Make sure we don't apply organic wounds to robotic organs and vice versa
-
-	var/list/symptom_adjectives = list()
+	var/list/organ_types = list()		// Make sure we don't apply organic wounds to robotic organs and vice versa
 
 	// Damage applied each process tick
 	var/hal_damage
@@ -35,28 +35,43 @@
 	var/oxygen_req_multiplier = null
 
 /datum/component/internal_wound/RegisterWithParent()
-	RegisterSignal(O, COMSIG_WOUND_PROCESS, .proc/process)
-	RegisterSignal(O, COMSIG_WOUND_EFFECTS, .proc/apply_effects)
-	RegisterSignal(O, COMSIG_WOUND_TREAT, .proc/try_treatment)
-	RegisterSignal(O, COMSIG_WOUND_DAMAGE, .proc/get_damage)
-	// Might need an attackby for out-of-body treatment
+	RegisterSignal(parent, COMSIG_WOUND_PROCESS, .proc/process)
+	RegisterSignal(parent, COMSIG_WOUND_EFFECTS, .proc/apply_effects)
+	RegisterSignal(parent, COMSIG_WOUND_TREAT, .proc/try_treatment)
+	RegisterSignal(parent, COMSIG_WOUND_DAMAGE, .proc/apply_damage)
+	RegisterSignal(parent, COMSIG_ATTACKBY, .proc/apply_tool)
 
 /datum/component/internal_wound/UnregisterFromParent()
-	UnregisterSignal(O, COMSIG_WOUND_PROCESS)
-	UnregisterSignal(O, COMSIG_WOUND_EFFECTS)
-	UnregisterSignal(O, COMSIG_WOUND_TREAT)
-	UnregisterSignal(O, COMSIG_WOUND_DAMAGE)
+	UnregisterSignal(parent, COMSIG_WOUND_PROCESS)
+	UnregisterSignal(parent, COMSIG_WOUND_EFFECTS)
+	UnregisterSignal(parent, COMSIG_WOUND_TREAT)
+	UnregisterSignal(parent, COMSIG_WOUND_DAMAGE)
+	UnregisterSignal(parent, COMSIG_ATTACKBY)
 
-/datum/component/internal_wound/proc/try_treatment(type, magnitude)
+/datum/component/internal_wound/proc/apply_tool(obj/item/I, mob/user)
+	if(!I.tool_qualities || !I.tool_qualities.len)
+		return try_treatment(I.type, 1, TRUE)
+
+	for(var/tool_quality in I.tool_qualities)
+		if(try_treatment(tool_quality, I.tool_qualities[tool_quality], TRUE))
+			if(user)
+				to_chat(user, SPAN_NOTICE("You treat \the [parent] with \the [I]."))
+			return TRUE
+
+/datum/component/internal_wound/proc/try_treatment(type, magnitude, used_tool = FALSE)
 	if(treatments.Find(type))
 		if(magnitude >= treatments[type])
-			treatment()
+			treatment(used_tool)
+			return TRUE
+	return FALSE
 
-/datum/component/internal_wound/proc/treatment()
-	if(severity > 0)
+/datum/component/internal_wound/proc/treatment(used_tool)
+	if(severity > 0 && !used_tool)
 		--severity
 	else
 		UnregisterFromParent()
+		if(scar && ispath(scar, /datum/component))
+			parent.AddComponent(scar)
 
 /datum/component/internal_wound/proc/progress()
 	if(!can_progress)
@@ -66,9 +81,9 @@
 		++severity
 	else
 		can_progress = FALSE
-		if(next_wound && istype(next_wound, /datum/component))
-			parent.AddComponent(next_wound)
-		
+		if(next_wound && ispath(next_wound, /datum/component))
+			var/chosen_wound_type = pick(typesof(next_wound))
+			parent.AddComponent(chosen_wound_type)
 
 /datum/component/internal_wound/proc/process()
 	var/obj/item/organ/O = parent
@@ -109,8 +124,8 @@
 		H.custom_pain("You feel a sharp pain in your [E.name]", 1)
 
 	if(H.chem_effects && H.chem_effects.len)
-		for(chem_effect in H.chem_effects)
-			try_treatment(chem_effect, chem_effects[chem_effect])
+		for(var/chem_effect in H.chem_effects)
+			try_treatment(chem_effect, H.chem_effects[chem_effect])
 
 /datum/component/internal_wound/proc/apply_effects()
 	var/obj/item/organ/internal/O = parent
@@ -126,7 +141,7 @@
 	if(oxygen_req_multiplier)
 		O.oxygen_req *= 1 - round(oxygen_req_multiplier, 0.01)
 
-/datum/component/internal_wound/proc/get_damage()
+/datum/component/internal_wound/proc/apply_damage()
 	var/obj/item/organ/internal/O = parent
 
 	if(severity)

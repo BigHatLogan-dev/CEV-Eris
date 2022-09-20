@@ -1,5 +1,6 @@
 // Infection 2.0. This will spread to every organ in your body if untreated. Progresses until death.
 /datum/component/internal_wound/infection
+	name = "infection"
 	treatments = list(CE_ANTIBIOTIC = 5)	// 10u Spaceacillin or 5u spaceacillin + dylovene
 	severity = 0
 	severity_max = 10

@@ -57,7 +57,9 @@
 #define CE_DYNAMICFINGERS "dynfingers"
 
 // Chem effects for robotic/assisted organs
-#define CE_MECH_COOLING "coolant"
+#define CE_MECH_STABLE "coolant"
+#define CE_MECH_COOLING "refrigerant"
+#define CE_MECH_ACID "acid_wash"
 
 // Reagent specific heat is not yet implemented, this is here for compatibility reasons
 #define SPECIFIC_HEAT_DEFAULT			200
