@@ -113,6 +113,24 @@
 		contents_list.Add(list(implant_data))
 
 	data["contents"] = contents_list
+
+	// For diagnostics on an internal object
+	if(!internal_organs.Find(selected_internal_object))
+		selected_internal_object = null
+
+	data["viewing_internal"] = selected_internal_object ? TRUE : FALSE
+
+	if(selected_internal_object)
+		var/obj/item/organ/internal/I
+		if(istype(selected_internal_object, /obj/item/organ/internal))
+			I = selected_internal_object
+
+			data["diag_name"] = I.name
+			data["diag_max_damage"] = I.max_damage
+			data["diag_damage"] = I.damage
+			data["diag_health"] = I.max_damage - I.damage
+			data["diag_wounds"] = I.get_wounds()
+
 	return data
 
 
@@ -188,4 +206,7 @@
 					else
 						to_chat(user, SPAN_WARNING("You failed to remove any shrapnel from [get_surgery_name()]!"))
 
+			return TRUE
+		if("view")
+			selected_internal_object = locate(href_list["view"])
 			return TRUE

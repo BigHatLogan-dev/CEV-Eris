@@ -49,14 +49,22 @@
 	UnregisterSignal(parent, COMSIG_ATTACKBY)
 
 /datum/component/internal_wound/proc/apply_tool(obj/item/I, mob/user)
-	if(!I.tool_qualities || !I.tool_qualities.len)
-		return try_treatment(I.type, 1, TRUE)
+	var/success = FALSE
 
-	for(var/tool_quality in I.tool_qualities)
-		if(try_treatment(tool_quality, I.tool_qualities[tool_quality], TRUE))
-			if(user)
-				to_chat(user, SPAN_NOTICE("You treat \the [parent] with \the [I]."))
-			return TRUE
+	if(!I.tool_qualities || !I.tool_qualities.len)
+		success = try_treatment(I.type, 1, TRUE)
+	else
+		for(var/tool_quality in I.tool_qualities)
+			var/quality_and_stat_level = I.tool_qualities[tool_quality] + user.stats.getStat(diagnosis_stat)
+			if(try_treatment(tool_quality, quality_and_stat_level, TRUE))
+				success = TRUE
+				break
+	
+	if(user)
+		if(success)
+			to_chat(user, SPAN_NOTICE("You successfully treat \the [parent] with \the [I]."))
+		else
+			to_chat(user, SPAN_WARNING("You failed to treat \the [parent] with \the [I]."))
 
 /datum/component/internal_wound/proc/try_treatment(type, magnitude, used_tool = FALSE)
 	if(treatments.Find(type))

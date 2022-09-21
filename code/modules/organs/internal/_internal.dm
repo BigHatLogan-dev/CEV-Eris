@@ -183,31 +183,30 @@
 	else
 		return TRUE
 
+/obj/item/organ/internal/proc/get_wounds()
+	var/list/wound_list = GetComponents(/datum/component/internal_wound)
+	var/list/wound_data = list()
 
-// Gets a list of surgically treatable conditions
-/obj/item/organ/internal/get_conditions()
-	var/list/conditions_list = ..()
-	var/list/condition
+	if(wound_list && wound_list.len)
+		for(var/wound in wound_list)
+			var/datum/component/internal_wound/IW = wound
+			var/treatment_info = ""
 
-	if(damage > 0)
-		if(BP_IS_ROBOTIC(src))
-			condition = list(
-				"name" = "Damage",
-				"fix_name" = "Repair",
-				"step" = /datum/surgery_step/robotic/fix_organ,
+			// Make treatments into a string for the UI
+			for(var/treatment in IW.treatments)
+				treatment_info += "[treatment] ([num2text(IW.treatments[treatment])]), "
+			
+			if(length(treatment_info))
+				treatment_info = copytext(treatment_info, 1, length(treatment_info) - 1)
+
+			wound_data += list(list(
+				"name" = IW.name,
+				"treatments" = treatment_info,
+				"step" = /datum/surgery_step/treat_wound,
 				"organ" = "\ref[src]"
-			)
-		else
-			condition = list(
-				"name" = "Damage",
-				"fix_name" = "Heal",
-				"step" = /datum/surgery_step/fix_organ,
-				"organ" = "\ref[src]"
-			)
+			))
 
-		conditions_list.Add(list(condition))
-
-	return conditions_list
+	return wound_data
 
 // Store these so we can properly restore them when installing/removing mods
 /obj/item/organ/internal/proc/initialize_organ_efficiencies()

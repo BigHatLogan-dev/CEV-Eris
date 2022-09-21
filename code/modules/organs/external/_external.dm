@@ -77,6 +77,7 @@
 	var/diagnosed = FALSE
 	var/stage = 0
 	var/cavity = 0
+	var/atom/selected_internal_object = null
 
 	// Used for spawned robotic organs
 	var/default_description
