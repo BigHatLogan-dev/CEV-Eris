@@ -129,7 +129,12 @@
 			data["diag_max_damage"] = I.max_damage
 			data["diag_damage"] = I.damage
 			data["diag_health"] = I.max_damage - I.damage
+			data["diag_examine"] = /datum/surgery_step/examine
 			data["diag_wounds"] = I.get_wounds()
+			data["diag_mods"] = I.get_mods()
+			data["diag_ref"] = "\ref[I]"
+			data["diag_attach"] = /datum/surgery_step/attach_mod
+			data["diag_remove"] = /datum/surgery_step/remove_mod
 
 	return data
 

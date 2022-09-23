@@ -37,10 +37,7 @@
 					{{if organ.processes.length}}
 						<section>
 							<div class="display" style="width: 96%">
-								{{for organ.processes}}
-									<span class="label">{{:value.title}}:</span>
-									<div class="content">{{:value.efficiency}}</div>
-								{{/for}}
+								<div class="item">Organ types (efficiency): <span style="color: pink">{{:organ.processes}}</span></div>
 							</div>
 						</section>
 					{{/if}}
@@ -88,21 +85,37 @@
 						</section>
 					{{/if}}
 				</article>
+				<article>
+					<div class="content">{{:helper.link("Examine", null, {'command' : 'step', 'step' : data.diag_examine, 'organ' : data.diag_ref,}, organ.open ? null : 'disabled')}}</div>
+				</article>
 			</div>
 			<div class="display">
 				<header><h3>Modifications</h3></header>
 				<article>
+					<div class="nanoMap">
+						{{if data.diag_mods}}
+							{{for data.diag_mods :mod:mod_i}}
+								<div class="item">{{:mod.name}}</div>
+							{{/for}}
+						{{/if}}
+					</div>
+					<div class="content">{{:helper.link("Attach", null, {'command' : 'step', 'step' : data.diag_attach, 'organ' : data.diag_ref,}, organ.open ? null : 'disabled')}}</div>
+					<div class="content">{{:helper.link("Remove", null, {'command' : 'step', 'step' : data.diag_remove, 'organ' : data.diag_ref,}, organ.open ? null : 'disabled')}}</div>
 				</article>
 			</div>
 			<div class="display">
 				<header><h3>Wounds</h3></header>
-				{{if data.diag_wounds.length}}
+				{{if data.diag_wounds}}
 					<article>
 						{{for data.diag_wounds :wound:wound_i}}
 							<div class="nanoMap">
 								<div class="item">
 									<div class="itemLabel">Type:</div>
 									<div class="itemContent">{{:wound.name}}</div>
+								</div>
+								<div class="item">
+									<div class="itemLabel">Severity:</div>
+									<div class="itemContent">{{:wound.severity}} / {{:wound.severity_max}}</div>
 								</div>
 								<div class="item">
 									<div class="itemLabel">Treatments:</div>

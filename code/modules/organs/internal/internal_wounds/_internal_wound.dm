@@ -76,6 +76,7 @@
 /datum/component/internal_wound/proc/treatment(used_tool)
 	if(severity > 0 && !used_tool)
 		--severity
+		can_progress = initial(can_progress)	// If it was turned off by reaching the max, turn it on again.
 	else
 		UnregisterFromParent()
 		if(scar && ispath(scar, /datum/component))

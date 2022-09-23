@@ -187,7 +187,7 @@
 	var/list/wound_list = GetComponents(/datum/component/internal_wound)
 	var/list/wound_data = list()
 
-	if(wound_list && wound_list.len)
+	if(wound_list && wound_list.len && wound_list[1])	// GetComponents with no components returns a list with a null element 
 		for(var/wound in wound_list)
 			var/datum/component/internal_wound/IW = wound
 			var/treatment_info = ""
@@ -201,12 +201,27 @@
 
 			wound_data += list(list(
 				"name" = IW.name,
+				"severity" = IW.severity,
+				"severity_max" = IW.severity_max,
 				"treatments" = treatment_info,
 				"step" = /datum/surgery_step/treat_wound,
 				"organ" = "\ref[src]"
 			))
 
 	return wound_data
+
+/obj/item/organ/internal/proc/get_mods()
+	var/list/mod_data = list()
+
+	if(item_upgrades && item_upgrades.len)
+		for(var/mod in item_upgrades)
+			var/obj/item/modification/M = mod
+
+			mod_data += list(list(
+				"name" = M.name
+			))
+
+	return mod_data
 
 // Store these so we can properly restore them when installing/removing mods
 /obj/item/organ/internal/proc/initialize_organ_efficiencies()
