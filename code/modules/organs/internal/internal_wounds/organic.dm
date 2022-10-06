@@ -2,6 +2,7 @@
 	diagnosis_stat = STAT_BIO
 	diagnosis_difficulty = STAT_LEVEL_ADEPT
 	can_progress = TRUE
+	wound_nature = MODIFICATION_ORGANIC
 
 // Blunt
 /datum/component/internal_wound/organic/blunt
@@ -25,7 +26,7 @@
 // Sharp
 /datum/component/internal_wound/organic/sharp
 	name = "perforation"
-	treatments = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL, CE_BLOODCLOT = 0.75)	// (Tricordrazine + polystem) OR (bicaridine) + quickclot OD
+	treatments = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL, CE_BLOODCLOT = 0.85)	// Any brute heal chem + quickclot OD
 	severity = 1
 	next_wound = /datum/component/internal_wound/organic/swelling
 	hal_damage = 1
@@ -45,7 +46,7 @@
 // Edge
 /datum/component/internal_wound/organic/edge
 	name = "laceration"
-	treatments = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL, CE_BLOODCLOT = 0.75)	// (Tricordrazine + polystem) OR (bicaridine) + quickclot OD
+	treatments = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL, CE_BLOODCLOT = 0.85)	// Any brute heal chem + quickclot OD
 	severity = 1
 	next_wound = /datum/component/internal_wound/organic/swelling
 	hal_damage = 1
@@ -114,6 +115,7 @@
 
 // Other wounds
 /datum/component/internal_wound/organic/blood_loss
+	name = "blood loss"
 	treatments = list(CE_OXYGENATED = 2, CE_BLOODRESTORE = 0.01)	// Dex+ treats, but it will come back if you don't get blood
 	severity = 0
 	severity_max = 10

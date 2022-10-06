@@ -16,16 +16,18 @@
 	var/progression_threshold = 150		// How many ticks until the wound progresses, default is 5 minutes
 	var/current_tick					// Current tick towards progression
 
-	var/list/organ_types = list()		// Make sure we don't apply organic wounds to robotic organs and vice versa
+	var/can_spread = FALSE			// Whether the wound can spread throughout the body or not
+	var/spread_threshold = 0		// Severity at which the wound spreads a single time
 
-	// Damage applied each process tick
+	var/wound_nature				// Make sure we don't apply organic wounds to robotic organs and vice versa
+
+	// Damage applied to mob each process tick
+	// Note: brute and burn are not applied because they are abstracted as internal wounds
 	var/hal_damage
 	var/oxy_damage
 	var/tox_damage
-	var/brute_damage
-	var/burn_damage
 	var/clone_damage
-	var/psy_damage
+	var/psy_damage		// Not the same as sanity damage
 
 	// Organ adjustments - preferably used for more severe wounds
 	var/specific_organ_size_multiplier = null
@@ -35,18 +37,14 @@
 	var/oxygen_req_multiplier = null
 
 /datum/component/internal_wound/RegisterWithParent()
-	RegisterSignal(parent, COMSIG_WOUND_PROCESS, .proc/process)
 	RegisterSignal(parent, COMSIG_WOUND_EFFECTS, .proc/apply_effects)
-	RegisterSignal(parent, COMSIG_WOUND_TREAT, .proc/try_treatment)
 	RegisterSignal(parent, COMSIG_WOUND_DAMAGE, .proc/apply_damage)
-	RegisterSignal(parent, COMSIG_ATTACKBY, .proc/apply_tool)
+	RegisterSignal(src, COMSIG_ATTACKBY, .proc/apply_tool)
 
 /datum/component/internal_wound/UnregisterFromParent()
-	UnregisterSignal(parent, COMSIG_WOUND_PROCESS)
 	UnregisterSignal(parent, COMSIG_WOUND_EFFECTS)
-	UnregisterSignal(parent, COMSIG_WOUND_TREAT)
 	UnregisterSignal(parent, COMSIG_WOUND_DAMAGE)
-	UnregisterSignal(parent, COMSIG_ATTACKBY)
+	UnregisterSignal(src, COMSIG_ATTACKBY)
 
 /datum/component/internal_wound/proc/apply_tool(obj/item/I, mob/user)
 	var/success = FALSE
@@ -78,63 +76,9 @@
 		--severity
 		can_progress = initial(can_progress)	// If it was turned off by reaching the max, turn it on again.
 	else
-		UnregisterFromParent()
 		if(scar && ispath(scar, /datum/component))
-			parent.AddComponent(scar)
-
-/datum/component/internal_wound/proc/progress()
-	if(!can_progress)
-		return
-
-	if(severity < severity_max)
-		++severity
-	else
-		can_progress = FALSE
-		if(next_wound && ispath(next_wound, /datum/component))
-			var/chosen_wound_type = pick(typesof(next_wound))
-			parent.AddComponent(chosen_wound_type)
-
-/datum/component/internal_wound/proc/process()
-	var/obj/item/organ/O = parent
-	var/mob/living/carbon/human/H = O.owner
-
-	// Doesn't need to be inside someone to get worse
-	if(can_progress)
-		++current_tick
-		if(current_tick >= progression_threshold)
-			current_tick = 0
-			progress()
-			O.refresh_upgrades()
-
-	if(!H)
-		return
-
-	var/sanity_damage = hal_damage + brute_damage + burn_damage + oxy_damage + tox_damage + clone_damage
-
-	if(hal_damage)
-		H.adjustHalLoss(hal_damage * severity)
-	if(oxy_damage)
-		H.adjustOxyLoss(oxy_damage * severity)
-	if(tox_damage)
-		H.adjustToxLoss(tox_damage * severity)
-	if(brute_damage)
-		H.adjustBruteLoss(brute_damage * severity)
-	if(burn_damage)
-		H.adjustFireLoss(burn_damage * severity)
-	if(clone_damage)
-		H.adjustCloneLoss(clone_damage * severity)
-	if(psy_damage)
-		H.sanity.onPsyDamage(psy_damage * severity)
-	if(sanity_damage)
-		H.sanity.onDamage(sanity_damage * severity)
-
-	if(prob(2) && H.analgesic < 20 * severity)
-		var/obj/item/organ/external/E = O.parent
-		H.custom_pain("You feel a sharp pain in your [E.name]", 1)
-
-	if(H.chem_effects && H.chem_effects.len)
-		for(var/chem_effect in H.chem_effects)
-			try_treatment(chem_effect, H.chem_effects[chem_effect])
+			SEND_SIGNAL(parent, COMSIG_I_ORGAN_ADD_WOUND, scar)
+		qdel(src)
 
 /datum/component/internal_wound/proc/apply_effects()
 	var/obj/item/organ/internal/O = parent

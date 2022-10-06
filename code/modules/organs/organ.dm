@@ -255,9 +255,6 @@
 	else
 		germ_level -= 2 //at germ_level == 1000, this will cure the infection in 5 minutes
 
-	if(antibiotics)
-		SEND_SIGNAL(src, COMSIG_WOUND_TREAT, CE_ANTIBIOTIC, antibiotics)
-
 //Adds autopsy data for used_weapon.
 /obj/item/organ/proc/add_autopsy_data(var/used_weapon, var/damage)
 	var/datum/autopsy_data/W = autopsy_data[used_weapon]

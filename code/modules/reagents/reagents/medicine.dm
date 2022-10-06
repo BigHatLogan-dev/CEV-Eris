@@ -637,7 +637,7 @@
 	metabolism = REM/2
 
 /datum/reagent/medicine/quickclot/affect_blood(mob/living/carbon/M, alien, effect_multiplier)
-	M.add_chemical_effect(CE_BLOODCLOT, min(1,0.1 * effect_multiplier))	// adding 0.01 to be more than 0.1 in order to stop int bleeding from growing
+	M.add_chemical_effect(CE_BLOODCLOT, 0.25)	// adding 0.01 to be more than 0.1 in order to stop int bleeding from growing
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
 		for(var/obj/item/organ/external/E in H.organs)
@@ -646,7 +646,7 @@
 					W.heal_damage(5 * effect_multiplier)
 
 /datum/reagent/medicine/quickclot/overdose(mob/living/carbon/M, alien)
-	M.add_chemical_effect(CE_BLOODCLOT, min(1, 0.50))
+	M.add_chemical_effect(CE_BLOODCLOT, 0.5)
 
 /datum/reagent/medicine/ossisine
 	name = "Ossisine"

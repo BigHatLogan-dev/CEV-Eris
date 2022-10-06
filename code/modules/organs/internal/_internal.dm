@@ -26,13 +26,22 @@
 	initialize_organ_efficiencies()
 	initialize_owner_verbs()
 	update_icon()
+	RegisterSignal(src, COMSIG_I_ORGAN_ADD_WOUND, .proc/add_wound)
+	RegisterSignal(src, COMSIG_I_ORGAN_REFRESH, .proc/refresh_upgrades)
 
 /obj/item/organ/internal/Process()
-	SEND_SIGNAL(src, COMSIG_WOUND_PROCESS)	// Must occur before organ processes due to the robotic check
 	refresh_damage()						// Death check is in the parent proc
 	..()
 	handle_blood()
 	handle_regeneration()
+
+/obj/item/organ/internal/Destroy()
+	SSinternal_wounds.processing.Remove(src)	// We don't use STOP_PROCESSING because we don't use START_PROCESSING
+	var/list/organ_components = GetComponents(/datum/component)
+	QDEL_LIST(organ_components)
+	UnregisterSignal(src, COMSIG_I_ORGAN_ADD_WOUND)
+	UnregisterSignal(src, COMSIG_I_ORGAN_REFRESH)
+	..()
 
 /obj/item/organ/internal/removed_mob()
 	for(var/process in organ_efficiency)
@@ -73,17 +82,12 @@
 		return
 
 	// Determine possible wounds based on nature and damage type
-	var/is_robotic = FALSE
-	var/is_organic = FALSE
+	var/is_robotic = BP_IS_ROBOTIC(src) || BP_IS_ASSISTED(src)
+	var/is_organic = BP_IS_ORGANIC(src) || BP_IS_ASSISTED(src)
 	var/list/possible_wounds = list()
 
 	var/total_damage = amount * (100 / (parent ? parent.limb_efficiency : 100))
 	var/wound_count = max(1, round(total_damage / 10, 1))	// Every 10 points of damage is a wound, minimum 1
-
-	if(BP_IS_ROBOTIC(src) || BP_IS_ASSISTED(src))
-		is_robotic = TRUE
-	if(BP_IS_ORGANIC(src) || BP_IS_ASSISTED(src))
-		is_organic = TRUE
 
 	if(!is_organic && !is_robotic)
 		return
@@ -123,7 +127,7 @@
 	if(possible_wounds.len)
 		for(var/i in 1 to wound_count)
 			var/choice = pick(possible_wounds)
-			AddComponent(choice)	
+			add_wound(choice)	
 			if(ispath(choice, /datum/component/internal_wound/organic))
 				possible_wounds -= choice
 			if(!possible_wounds.len)
@@ -152,7 +156,7 @@
 			if(BV)
 				BV.current_blood = max(BV.current_blood - blood_req, 0)
 			if(BV?.current_blood == 0 && !GetComponent(/datum/component/internal_wound/organic/blood_loss))	//When all blood from the organ and blood vessel is lost, 
-				AddComponent(/datum/component/internal_wound/organic/blood_loss)
+				add_wound(/datum/component/internal_wound/organic/blood_loss)
 
 		return
 
@@ -204,8 +208,7 @@
 				"severity" = IW.severity,
 				"severity_max" = IW.severity_max,
 				"treatments" = treatment_info,
-				"step" = /datum/surgery_step/treat_wound,
-				"organ" = "\ref[src]"
+				"wound" = "\ref[src]"
 			))
 
 	return wound_data
@@ -261,3 +264,18 @@
 /obj/item/organ/internal/proc/refresh_damage()
 	damage = initial(damage)
 	SEND_SIGNAL(src, COMSIG_WOUND_DAMAGE)
+
+/obj/item/organ/internal/proc/add_wound(datum/component/internal_wound/new_wound)
+	if(!new_wound || new_wound.wound_nature != nature)
+		return
+	AddComponent(new_wound)
+	if(!(SSinternal_wounds.processing.Find(src)))
+		SSinternal_wounds.processing |= src		// We don't use START_PROCESSING because it doesn't allow for multiple subsystems
+
+/obj/item/organ/internal/proc/remove_wound(datum/component/wound)
+	wound.RemoveComponent()
+	var/list/organ_components = GetComponents(/datum/component/internal_wound)
+	if(!organ_components || !organ_components.len)
+		if(!(organ_components.len == 1 && !organ_components[1]))	// GetComponents can return a list with a null element
+			return
+		SSinternal_wounds.processing.Remove(src)	// We don't use STOP_PROCESSING because we don't use START_PROCESSING
