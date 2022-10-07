@@ -27,6 +27,7 @@
 	initialize_owner_verbs()
 	update_icon()
 	RegisterSignal(src, COMSIG_I_ORGAN_ADD_WOUND, .proc/add_wound)
+	RegisterSignal(src, COMSIG_I_ORGAN_REMOVE_WOUND, .proc/remove_wound)
 	RegisterSignal(src, COMSIG_I_ORGAN_REFRESH, .proc/refresh_upgrades)
 
 /obj/item/organ/internal/Process()
@@ -195,10 +196,11 @@
 		for(var/wound in wound_list)
 			var/datum/component/internal_wound/IW = wound
 			var/treatment_info = ""
+			var/list/treatments = IW.treatments_item + IW.treatments_tool + IW.treatments_chem
 
 			// Make treatments into a string for the UI
-			for(var/treatment in IW.treatments)
-				treatment_info += "[treatment] ([num2text(IW.treatments[treatment])]), "
+			for(var/treatment in treatments)
+				treatment_info += "[treatment] ([num2text(treatments[treatment])]), "
 			
 			if(length(treatment_info))
 				treatment_info = copytext(treatment_info, 1, length(treatment_info) - 1)
@@ -208,7 +210,7 @@
 				"severity" = IW.severity,
 				"severity_max" = IW.severity_max,
 				"treatments" = treatment_info,
-				"wound" = "\ref[src]"
+				"wound" = "\ref[IW]"
 			))
 
 	return wound_data
@@ -266,7 +268,7 @@
 	SEND_SIGNAL(src, COMSIG_WOUND_DAMAGE)
 
 /obj/item/organ/internal/proc/add_wound(datum/component/internal_wound/new_wound)
-	if(!new_wound || new_wound.wound_nature != nature)
+	if(!new_wound || initial(new_wound.wound_nature) != nature)
 		return
 	var/datum/component/internal_wound/IW = AddComponent(new_wound)
 	SSinternal_wounds.processing |= IW		// We don't use START_PROCESSING because it doesn't allow for multiple subsystems

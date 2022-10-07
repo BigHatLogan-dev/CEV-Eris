@@ -7,7 +7,8 @@
 // Blunt
 /datum/component/internal_wound/organic/blunt
 	name = "rupture"
-	treatments = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL, CE_BLOODCLOT = 0.55)	// Tricordrazine/polystem + bicaridine + meralyne OR quickclot OD
+	treatments_tool = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL)
+	treatments_chem = list(CE_BLOODCLOT = 0.55)	// Tricordrazine/polystem + bicaridine + meralyne OR quickclot OD
 	severity = 1
 	hal_damage = 1
 
@@ -26,7 +27,8 @@
 // Sharp
 /datum/component/internal_wound/organic/sharp
 	name = "perforation"
-	treatments = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL, CE_BLOODCLOT = 0.85)	// Any brute heal chem + quickclot OD
+	treatments_tool = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL)
+	treatments_chem = list(CE_BLOODCLOT = 0.85)	// Any brute heal chem + quickclot OD
 	severity = 1
 	next_wound = /datum/component/internal_wound/organic/swelling
 	hal_damage = 1
@@ -46,7 +48,8 @@
 // Edge
 /datum/component/internal_wound/organic/edge
 	name = "laceration"
-	treatments = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL, CE_BLOODCLOT = 0.85)	// Any brute heal chem + quickclot OD
+	treatments_tool = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL)
+	treatments_chem = list(CE_BLOODCLOT = 0.85)	// Any brute heal chem + quickclot OD
 	severity = 1
 	next_wound = /datum/component/internal_wound/organic/swelling
 	hal_damage = 1
@@ -66,7 +69,8 @@
 // Burn
 /datum/component/internal_wound/organic/burn
 	name = "scorched tissue"
-	treatments = list(QUALITY_CUTTING = FAILCHANCE_NORMAL, CE_STABLE = 1)	// Inaprov will only keep it from killing you
+	treatments_tool = list(QUALITY_CUTTING = FAILCHANCE_NORMAL)
+	treatments_chem = list(CE_STABLE = 1)	// Inaprov will only keep it from killing you
 	scar = /datum/component/internal_wound/organic/damaged_tissue
 	severity = 0
 	severity_max = 3
@@ -75,14 +79,15 @@
 
 /datum/component/internal_wound/organic/damaged_tissue
 	name = "damaged tissue"
-	treatments = list(QUALITY_CUTTING = FAILCHANCE_NORMAL)
+	treatments_tool = list(QUALITY_CUTTING = FAILCHANCE_NORMAL)
 	severity = 0
 	severity_max = 1
 	next_wound = /datum/component/internal_wound/organic/dying_tissue
 
 /datum/component/internal_wound/organic/dying_tissue		// Copy of scorched tissue that doesn't use the burn type
 	name = "dying tissue"
-	treatments = list(QUALITY_CUTTING = FAILCHANCE_NORMAL, CE_STABLE = 1)	// Inaprov will only keep it from killing you
+	treatments_tool = list(QUALITY_CUTTING = FAILCHANCE_NORMAL)
+	treatments_chem = list(CE_STABLE = 1)	// Inaprov will only keep it from killing you
 	scar = /datum/component/internal_wound/organic/damaged_tissue
 	severity = 0
 	severity_max = 3
@@ -92,7 +97,7 @@
 // Tox/chem OD
 /datum/component/internal_wound/organic/poisoning
 	name = "toxin accumulation"
-	treatments = list(CE_PURGER = 3)	// No anti-tox cure, poisoning can occur as a result of too much anti-tox
+	treatments_chem = list(CE_PURGER = 3)	// No anti-tox cure, poisoning can occur as a result of too much anti-tox
 	severity = 0
 	hal_damage = 3
 	tox_damage = 0.5
@@ -103,7 +108,8 @@
 // Secondary wounds
 /datum/component/internal_wound/organic/swelling
 	name = "swelling"
-	treatments = list(QUALITY_CUTTING = FAILCHANCE_NORMAL, CE_ANTIBIOTIC = 3) // 5u Spaceacillin or spaceacillin + dylovene
+	treatments_tool = list(QUALITY_CUTTING = FAILCHANCE_NORMAL)
+	treatments_chem = list(CE_ANTIBIOTIC = 3) // 5u Spaceacillin or spaceacillin + dylovene
 	severity = 0	// Does nothing, at first
 	next_wound = /datum/component/internal_wound/infection
 	hal_damage = 1.5
@@ -116,7 +122,19 @@
 // Other wounds
 /datum/component/internal_wound/organic/blood_loss
 	name = "blood loss"
-	treatments = list(CE_OXYGENATED = 2, CE_BLOODRESTORE = 0.01)	// Dex+ treats, but it will come back if you don't get blood
+	treatments_chem = list(CE_OXYGENATED = 2, CE_BLOODRESTORE = 0.01)	// Dex+ treats, but it will come back if you don't get blood
 	severity = 0
 	severity_max = 10
 	progression_threshold = 3	// Kills the organ in approx. 1 minute
+
+// Infection 2.0. This will spread to every organ in your body if untreated. Progresses until death.
+/datum/component/internal_wound/infection
+	name = "infection"
+	treatments_chem = list(CE_ANTIBIOTIC = 5)	// 10u Spaceacillin or 5u spaceacillin + dylovene
+	severity = 0
+	severity_max = 10
+	progression_threshold = 90	// 3 minutes
+	hal_damage = 1
+	tox_damage = 0.5
+	can_spread = TRUE
+	spread_threshold = 6

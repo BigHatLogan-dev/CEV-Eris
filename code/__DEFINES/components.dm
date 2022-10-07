@@ -139,6 +139,7 @@
 // Internal organ signals
 #define COMSIG_I_ORGAN_REFRESH "refresh_upgrades"   // Move to external when external mods are made
 #define COMSIG_I_ORGAN_ADD_WOUND "add_internal_wound"
+#define COMSIG_I_ORGAN_REMOVE_WOUND "remove_internal_wound"
 
 // Aberrant signals
 #define COMSIG_ABERRANT_INPUT "aberrant_input"

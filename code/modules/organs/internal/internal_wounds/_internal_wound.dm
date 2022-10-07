@@ -2,7 +2,9 @@
 	var/name = "internal injury"
 	dupe_mode = COMPONENT_DUPE_UNIQUE
 
-	var/list/treatments = list()	// list(QUALITY_TOOL = FAILCHANCE, CE_CHEMEFFECT = strength), surgery steps have their own treatment defines
+	var/list/treatments_item = list()	// list(QUALITY_TOOL = FAILCHANCE, CE_CHEMEFFECT = strength)
+	var/list/treatments_tool = list()
+	var/list/treatments_chem = list()
 	var/scar						// If defined, applies this wound type when successfully treated
 
 	var/diagnosis_stat				// BIO for organic, MEC for robotic
@@ -50,25 +52,41 @@
 	var/success = FALSE
 
 	if(!I.tool_qualities || !I.tool_qualities.len)
-		success = try_treatment(I.type, 1, TRUE)
+		var/obj/item/stack/S = I
+		if(S)
+			var/to_remove = try_treatment(TREATMENT_ITEM, S.type, S.amount, TRUE)
+			S.amount -= to_remove
+			success = to_remove ? TRUE : FALSE
 	else
 		for(var/tool_quality in I.tool_qualities)
 			var/quality_and_stat_level = I.tool_qualities[tool_quality] + user.stats.getStat(diagnosis_stat)
-			if(try_treatment(tool_quality, quality_and_stat_level, TRUE))
+			if(try_treatment(TREATMENT_TOOL, tool_quality, quality_and_stat_level, TRUE))
 				success = TRUE
 				break
 	
 	if(user)
 		if(success)
-			to_chat(user, SPAN_NOTICE("You successfully treat \the [parent] with \the [I]."))
+			to_chat(user, SPAN_NOTICE("You treat the [name] with \the [I]."))
 		else
-			to_chat(user, SPAN_WARNING("You failed to treat \the [parent] with \the [I]."))
+			to_chat(user, SPAN_WARNING("You failed to treat the [name] with \the [I]."))
 
-/datum/component/internal_wound/proc/try_treatment(type, magnitude, used_tool = FALSE)
+/datum/component/internal_wound/proc/try_treatment(treatment_type, type, magnitude, used_tool = FALSE)
+	var/list/treatments
+
+	switch(treatment_type)
+		if(TREATMENT_ITEM)
+			treatments = treatments_item
+		if(TREATMENT_TOOL)
+			treatments = treatments_tool
+		if(TREATMENT_CHEM)
+			treatments = treatments_chem
+		else
+			return FALSE
+
 	if(treatments.Find(type))
 		if(magnitude >= treatments[type])
 			treatment(used_tool)
-			return TRUE
+			return treatments[type] ? treatments[type] : TRUE
 	return FALSE
 
 /datum/component/internal_wound/proc/treatment(used_tool)
@@ -78,7 +96,7 @@
 	else
 		if(scar && ispath(scar, /datum/component))
 			SEND_SIGNAL(parent, COMSIG_I_ORGAN_ADD_WOUND, scar)
-		qdel(src)
+		SEND_SIGNAL(parent, COMSIG_I_ORGAN_REMOVE_WOUND, src)
 
 /datum/component/internal_wound/proc/apply_effects()
 	var/obj/item/organ/internal/O = parent

@@ -29,7 +29,7 @@ PROCESSING_SUBSYSTEM_DEF(internal_wounds)
 		var/is_treated = FALSE
 		if(H.chem_effects && H.chem_effects.len)
 			for(var/chem_effect in H.chem_effects)
-				is_treated = IW.try_treatment(chem_effect, H.chem_effects[chem_effect])
+				is_treated = IW.try_treatment(TREATMENT_CHEM, chem_effect, H.chem_effects[chem_effect])
 		if(is_treated)
 			continue
 

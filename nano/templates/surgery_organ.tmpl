@@ -121,7 +121,7 @@
 									<div class="itemLabel">Treatments:</div>
 									<div class="itemContent">{{:wound.treatments}}</div>
 								</div>
-								<div class="content">{{:helper.link('Treat', null, {'command' : 'step', 'step' : wound.step, 'organ' : wound.organ})}}</div>
+								<div class="content">{{:helper.link('Treat', null, {'command' : 'treat_wound', 'wound' : wound.wound})}}</div>
 							</div>
 						{{/for}}
 					</article>
