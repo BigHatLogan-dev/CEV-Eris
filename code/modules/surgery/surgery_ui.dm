@@ -212,6 +212,19 @@
 						to_chat(user, SPAN_WARNING("You failed to remove any shrapnel from [get_surgery_name()]!"))
 
 			return TRUE
+
+		if("treat_wound")
+			var/mob/living/user = usr
+			var/obj/item/I = user.get_active_hand()
+
+			if(!user || !I)
+				return
+
+			var/datum/wound = locate(href_list["wound"])
+			if(wound)
+				SEND_SIGNAL(wound, COMSIG_ATTACKBY, I, user)
+			return TRUE
+
 		if("view")
 			selected_internal_object = locate(href_list["view"])
 			return TRUE

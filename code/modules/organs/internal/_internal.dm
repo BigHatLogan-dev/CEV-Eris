@@ -268,14 +268,9 @@
 /obj/item/organ/internal/proc/add_wound(datum/component/internal_wound/new_wound)
 	if(!new_wound || new_wound.wound_nature != nature)
 		return
-	AddComponent(new_wound)
-	if(!(SSinternal_wounds.processing.Find(src)))
-		SSinternal_wounds.processing |= src		// We don't use START_PROCESSING because it doesn't allow for multiple subsystems
+	var/datum/component/internal_wound/IW = AddComponent(new_wound)
+	SSinternal_wounds.processing |= IW		// We don't use START_PROCESSING because it doesn't allow for multiple subsystems
 
 /obj/item/organ/internal/proc/remove_wound(datum/component/wound)
 	wound.RemoveComponent()
-	var/list/organ_components = GetComponents(/datum/component/internal_wound)
-	if(!organ_components || !organ_components.len)
-		if(!(organ_components.len == 1 && !organ_components[1]))	// GetComponents can return a list with a null element
-			return
-		SSinternal_wounds.processing.Remove(src)	// We don't use STOP_PROCESSING because we don't use START_PROCESSING
+	SSinternal_wounds.processing.Remove(wound)	// We don't use STOP_PROCESSING because we don't use START_PROCESSING
