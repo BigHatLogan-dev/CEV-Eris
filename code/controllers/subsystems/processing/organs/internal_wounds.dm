@@ -10,8 +10,16 @@ PROCESSING_SUBSYSTEM_DEF(internal_wounds)
 	if(!resumed)
 		currentrun = processing.Copy()
 
-	for(var/datum/component/internal_wound/IW in currentrun)
+	// Supposedly this makes it faster (before this: 8ms|33%(23%)|0 P:194)
+	var/list/current_run = currentrun
+
+	for(var/datum/component/internal_wound/IW in current_run)
 		var/obj/item/organ/O = IW.parent
+
+		if(!O)
+			processing -= IW
+			continue
+
 		var/obj/item/organ/external/E = O.parent
 		var/mob/living/carbon/human/H = O.owner
 
@@ -23,13 +31,14 @@ PROCESSING_SUBSYSTEM_DEF(internal_wounds)
 				progress(IW)
 
 		if(!H)
-			return
+			continue
 
 		// Chemical treatment handling
 		var/is_treated = FALSE
-		if(H.chem_effects && H.chem_effects.len)
-			for(var/chem_effect in H.chem_effects)
-				is_treated = IW.try_treatment(TREATMENT_CHEM, chem_effect, H.chem_effects[chem_effect])
+		var/list/owner_ce = H.chem_effects
+		if(owner_ce && owner_ce.len)
+			for(var/chem_effect in owner_ce)
+				is_treated = IW.try_treatment(TREATMENT_CHEM, chem_effect, owner_ce[chem_effect])
 		if(is_treated)
 			continue
 
@@ -41,7 +50,8 @@ PROCESSING_SUBSYSTEM_DEF(internal_wounds)
 				SEND_SIGNAL(next_organ, COMSIG_I_ORGAN_ADD_WOUND, IW.type)
 
 		// Deal damage
-		H.apply_damages(null, null, IW.tox_damage, IW.oxy_damage, IW.clone_damage, IW.hal_damage, E)
+		if(E)
+			H.apply_damages(null, null, IW.tox_damage, IW.oxy_damage, IW.clone_damage, IW.hal_damage, E)
 
 		if(IW.psy_damage)
 			H.apply_damage(IW.psy_damage * IW.severity, PSY)

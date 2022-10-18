@@ -2,10 +2,10 @@
 	var/name = "internal injury"
 	dupe_mode = COMPONENT_DUPE_UNIQUE
 
-	var/list/treatments_item = list()	// list(QUALITY_TOOL = FAILCHANCE, CE_CHEMEFFECT = strength)
-	var/list/treatments_tool = list()
-	var/list/treatments_chem = list()
-	var/scar						// If defined, applies this wound type when successfully treated
+	var/list/treatments_item = list()	// list(/obj/item = amount)
+	var/list/treatments_tool = list()	// list(QUALITY_TOOL = FAILCHANCE)
+	var/list/treatments_chem = list()	// list(CE_CHEMEFFECT = strength)
+	var/scar							// If defined, applies this wound type when successfully treated
 
 	var/diagnosis_stat				// BIO for organic, MEC for robotic
 	var/diagnosis_difficulty		// basic - 25, adv - 40

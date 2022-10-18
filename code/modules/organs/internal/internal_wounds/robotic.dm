@@ -3,7 +3,7 @@
 	diagnosis_stat = STAT_MEC
 	diagnosis_difficulty = STAT_LEVEL_BASIC
 	can_progress = FALSE				// No cascading failures like organics
-	wound_nature = MODIFICATION_ORGANIC
+	wound_nature = MODIFICATION_SILICON
 
 // Blunt
 /datum/component/internal_wound/robotic/blunt
@@ -38,7 +38,6 @@
 	treatments_tool = list(QUALITY_CLAMPING = FAILCHANCE_NORMAL)	// Wiring will be allowed as treatment via surgery steps
 	severity = 2
 	hal_damage = 1
-	//burn_damage = 0.5
 
 /datum/component/internal_wound/robotic/edge/cut
 	name = "exposed wiring"
@@ -53,14 +52,12 @@
 	treatments_tool = list(QUALITY_PULSING = FAILCHANCE_NORMAL)
 	severity = 2
 	hal_damage = 1
-	//burn_damage = 0.25
 
 /datum/component/internal_wound/robotic/emp_burn/overheat
 	name = "overheating component"
 	treatments_item = list(/obj/item/stack/cable_coil = 1)
 	treatments_tool = list(QUALITY_PULSING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_MECH_COOLING = 2)
-	//burn_damage = 0.5
 
 // Tox
 /datum/component/internal_wound/robotic/build_up

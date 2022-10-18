@@ -259,7 +259,7 @@
 #include "code\controllers\subsystems\processing\objs.dm"
 #include "code\controllers\subsystems\processing\processing.dm"
 #include "code\controllers\subsystems\processing\turf.dm"
-#include "code\controllers\subsystems\processing\organs\internal\internal_wounds.dm"
+#include "code\controllers\subsystems\processing\organs\internal_wounds.dm"
 #include "code\controllers\subsystems\tickets\mentor_tickets.dm"
 #include "code\controllers\subsystems\tickets\tickets.dm"
 #include "code\controllers\subsystems\voting\poll.dm"

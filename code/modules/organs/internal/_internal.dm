@@ -37,10 +37,10 @@
 	handle_regeneration()
 
 /obj/item/organ/internal/Destroy()
-	SSinternal_wounds.processing.Remove(src)	// We don't use STOP_PROCESSING because we don't use START_PROCESSING
 	var/list/organ_components = GetComponents(/datum/component)
 	QDEL_LIST(organ_components)
 	UnregisterSignal(src, COMSIG_I_ORGAN_ADD_WOUND)
+	UnregisterSignal(src, COMSIG_I_ORGAN_REMOVE_WOUND)
 	UnregisterSignal(src, COMSIG_I_ORGAN_REFRESH)
 	..()
 
@@ -267,12 +267,16 @@
 	damage = initial(damage)
 	SEND_SIGNAL(src, COMSIG_WOUND_DAMAGE)
 
-/obj/item/organ/internal/proc/add_wound(datum/component/internal_wound/new_wound)
-	if(!new_wound || initial(new_wound.wound_nature) != nature)
+/obj/item/organ/internal/proc/add_wound(new_wound)
+	var/datum/component/internal_wound/IW = new_wound
+	if(!IW || initial(IW.wound_nature) != nature)
 		return
-	var/datum/component/internal_wound/IW = AddComponent(new_wound)
-	SSinternal_wounds.processing |= IW		// We don't use START_PROCESSING because it doesn't allow for multiple subsystems
+
+	var/datum/component/internal_wound/to_add = AddComponent(new_wound)
+	SSinternal_wounds.processing |= to_add		// We don't use START_PROCESSING because it doesn't allow for multiple subsystems
 
 /obj/item/organ/internal/proc/remove_wound(datum/component/wound)
+	if(!wound)
+		return
 	wound.RemoveComponent()
 	SSinternal_wounds.processing.Remove(wound)	// We don't use STOP_PROCESSING because we don't use START_PROCESSING
