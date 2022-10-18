@@ -88,9 +88,9 @@
 	var/list/possible_wounds = list()
 
 	var/total_damage = amount * (100 / (parent ? parent.limb_efficiency : 100))
-	var/wound_count = max(1, round(total_damage / 10, 1))	// Every 10 points of damage is a wound, minimum 1
+	var/wound_count = max(0, round(total_damage / 10, 1))	// Every 10 points of damage is a wound
 
-	if(!is_organic && !is_robotic)
+	if((!is_organic && !is_robotic) || !wound_count)
 		return
 
 	switch(damage_type)

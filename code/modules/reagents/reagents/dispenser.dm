@@ -459,7 +459,8 @@
 		var/mob/living/carbon/human/H = M
 		var/obj/item/organ/internal/heart/L = H.random_organ_by_process(OP_HEART)
 		if(istype(L))
-			L.take_damage(1, 0)
+			var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
+			SEND_SIGNAL(L, COMSIG_I_ORGAN_ADD_WOUND, IW)
 	if(prob(5))
 		M.emote(pick("twitch", "blink_r", "shiver"))
 

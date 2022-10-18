@@ -99,6 +99,7 @@
 	name = "toxin accumulation"
 	treatments_chem = list(CE_PURGER = 3)	// No anti-tox cure, poisoning can occur as a result of too much anti-tox
 	severity = 0
+	severity_max = 5
 	hal_damage = 3
 	tox_damage = 0.5
 

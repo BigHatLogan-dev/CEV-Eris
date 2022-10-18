@@ -83,7 +83,9 @@
 		adjustToxLoss(-(liver_efficiency * 0.001))
 
 	if(chem_effects[CE_ALCOHOL_TOXIC])
-		liver.take_damage(chem_effects[CE_ALCOHOL_TOXIC], prob(90)) // Chance to warn them
+		if(chem_effects[CE_ALCOHOL_TOXIC] > 1)
+			var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
+			SEND_SIGNAL(liver, COMSIG_I_ORGAN_ADD_WOUND, IW)
 
 	//Blood regeneration if there is some space
 	regenerate_blood(0.1 + chem_effects[CE_BLOODRESTORE])
