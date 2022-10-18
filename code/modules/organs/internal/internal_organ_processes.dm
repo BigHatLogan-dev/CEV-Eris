@@ -82,10 +82,9 @@
 		// this will filter some toxins out of owners body
 		adjustToxLoss(-(liver_efficiency * 0.001))
 
-	if(chem_effects[CE_ALCOHOL_TOXIC])
-		if(chem_effects[CE_ALCOHOL_TOXIC] > 1)
-			var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
-			SEND_SIGNAL(liver, COMSIG_I_ORGAN_ADD_WOUND, IW)
+	var/toxin_strength = chem_effects[CE_ALCOHOL_TOXIC] + chem_effects[CE_TOXIN]
+	if(toxin_strength)
+		liver.take_damage(16 * toxin_strength, FALSE, TOX)
 
 	//Blood regeneration if there is some space
 	regenerate_blood(0.1 + chem_effects[CE_BLOODRESTORE])

@@ -44,13 +44,12 @@
 /datum/reagent/medicine/bicaridine/overdose(mob/living/carbon/human/user, alien)
 	var/obj/item/organ/internal/muscle/user_muscle = user.random_organ_by_process(OP_MUSCLE)
 	var/obj/item/organ/internal/nerve/user_nerve = user.random_organ_by_process(OP_NERVE)
-	var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
 	if(!user_muscle)
 		return FALSE
-	SEND_SIGNAL(user_muscle, COMSIG_I_ORGAN_ADD_WOUND, IW)
+	user_muscle.take_damage(rand(1,15), FALSE, TOX)
 	if(!user_nerve)
 		return FALSE
-	SEND_SIGNAL(user_nerve, COMSIG_I_ORGAN_ADD_WOUND, IW)
+	user_nerve.take_damage(rand(1,15), FALSE, TOX)
 	if(prob(3))
 		to_chat(user, span_danger("Your muscles ache with agonizing pain!"))
 		user.Weaken(2)
@@ -59,7 +58,7 @@
 		if(!user_heart || BP_IS_ROBOTIC(user_heart))
 			return FALSE
 		to_chat(user, span_danger("You feel like your heart just exploded!"))
-		SEND_SIGNAL(user_heart, COMSIG_I_ORGAN_ADD_WOUND, IW)
+		user_heart.take_damage(15, FALSE, TOX)
 
 /datum/reagent/medicine/meralyne
 	name = "Meralyne"
@@ -122,10 +121,9 @@
 
 /datum/reagent/medicine/dylovene/overdose(mob/living/carbon/human/user, alien)
 	var/obj/item/organ/internal/blood_vessel/user_vessel = user.random_organ_by_process(OP_BLOOD_VESSEL)
-	var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
 	if(!user_vessel)
 		return FALSE
-	SEND_SIGNAL(user_vessel, COMSIG_I_ORGAN_ADD_WOUND, IW)
+	user_vessel.take_damage(rand(1,15), FALSE, TOX)
 	if(prob(1))
 		to_chat(user, "You feel a sharp pain in your chest.")
 
@@ -181,10 +179,9 @@
 
 /datum/reagent/medicine/tricordrazine/overdose(mob/living/carbon/human/user, alien)
 	var/obj/item/organ/internal/liver/user_liver = user.random_organ_by_process(OP_LIVER)
-	var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
 	if(!user_liver)
 		return FALSE
-	SEND_SIGNAL(user_liver, COMSIG_I_ORGAN_ADD_WOUND, IW)
+	user_liver.take_damage(rand(1,15), FALSE, TOX)
 	// For those special people
 	if(volume > 300 && prob(10))
 		var/obj/item/organ/internal/blood_vessel/user_vessel = user.random_organ_by_process(OP_BLOOD_VESSEL)
@@ -192,7 +189,7 @@
 			return FALSE
 		to_chat(user, "You feel intense swelling in your [user_vessel.loc?.name], and you notice it going numb and red!")
 		user.AdjustParalysis(5)
-		SEND_SIGNAL(user_vessel, COMSIG_I_ORGAN_ADD_WOUND, IW)
+		user_vessel.take_damage(15, FALSE, TOX)
 
 /datum/reagent/medicine/cryoxadone
 	name = "Cryoxadone"

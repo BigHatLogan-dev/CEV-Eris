@@ -2316,8 +2316,7 @@
 		var/obj/item/organ/internal/heart/L = H.random_organ_by_process(OP_HEART)
 		if(L && istype(L))
 			if(dose > 120)
-				var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
-				SEND_SIGNAL(L, COMSIG_I_ORGAN_ADD_WOUND, IW)
+				L.take_damage(rand(1,15), FALSE, TOX)
 
 /datum/reagent/alcohol/red_mead
 	name = "Red Mead"

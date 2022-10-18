@@ -36,8 +36,7 @@
 		var/mob/living/carbon/human/H = M
 		var/obj/item/organ/internal/liver/L = H.random_organ_by_process(OP_LIVER)
 		if(istype(L))
-			var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
-			SEND_SIGNAL(L, COMSIG_I_ORGAN_ADD_WOUND, IW)
+			L.take_damage(rand(5,20), FALSE, TOX)
 
 /datum/reagent/stim/cherrydrops
 	name = "Cherry Drops"
@@ -176,8 +175,7 @@
 		var/mob/living/carbon/human/H = M
 		var/obj/item/organ/internal/heart/L = H.random_organ_by_process(OP_HEART)
 		if(istype(L))
-			var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
-			SEND_SIGNAL(L, COMSIG_I_ORGAN_ADD_WOUND, IW)
+			L.take_damage(rand(5,20), FALSE, TOX)
 	M.add_chemical_effect(CE_SPEEDBOOST, -1)
 
 /datum/reagent/stim/machine_spirit
@@ -211,8 +209,7 @@
 		var/mob/living/carbon/human/H = M
 		var/obj/item/organ/internal/liver/L = H.random_organ_by_process(OP_LIVER)
 		if(istype(L))
-			var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
-			SEND_SIGNAL(L, COMSIG_I_ORGAN_ADD_WOUND, IW)
+			L.take_damage(rand(5,20), FALSE, TOX)
 
 /datum/reagent/stim/grape_drops
 	name = "Grape Drops"
@@ -361,8 +358,7 @@
 		var/mob/living/carbon/human/H = M
 		var/obj/item/organ/internal/heart/L = H.random_organ_by_process(OP_HEART)
 		if(istype(L))
-			var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
-			SEND_SIGNAL(L, COMSIG_I_ORGAN_ADD_WOUND, IW)
+			L.take_damage(rand(5,20), FALSE, TOX)
 	M.add_chemical_effect(CE_SPEEDBOOST, -1)
 	if(prob(5 - (2 * M.stats.getMult(STAT_TGH))))
 		M.paralysis = max(M.paralysis, 20)

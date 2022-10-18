@@ -179,6 +179,17 @@
 /obj/item/organ/internal/heal_damage(amount, natural = TRUE)
 	return
 
+/obj/item/organ/internal/emp_act(severity)
+	if(!BP_IS_ROBOTIC(src))
+		return
+	switch(severity)
+		if(1)
+			take_damage(18, FALSE, BURN)
+		if(2)
+			take_damage(12, FALSE, BURN)
+		if(3)
+			take_damage(6, FALSE, BURN)
+
 // Is body part open for most surgerical operations?
 /obj/item/organ/internal/is_open()
 	var/obj/item/organ/external/limb = get_limb()

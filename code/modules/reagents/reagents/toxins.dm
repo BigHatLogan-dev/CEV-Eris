@@ -80,8 +80,7 @@
 		var/mob/living/carbon/human/H = M
 		var/obj/item/organ/internal/liver/L = H.random_organ_by_process(OP_LIVER)
 		if(istype(L))
-			var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
-			SEND_SIGNAL(L, COMSIG_I_ORGAN_ADD_WOUND, IW)
+			L.take_damage(rand(5,20), FALSE, TOX)
 	M.stats.addTempStat(STAT_VIG, STAT_LEVEL_ADEPT, STIM_TIME, "carpotoxin")
 
 /datum/reagent/toxin/carpotoxin/withdrawal_act(mob/living/carbon/M)
@@ -541,8 +540,7 @@
 		var/mob/living/carbon/human/H = M
 		var/obj/item/organ/internal/liver/L = H.random_organ_by_process(OP_LIVER)
 		if(istype(L))
-			var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
-			SEND_SIGNAL(L, COMSIG_I_ORGAN_ADD_WOUND, IW)
+			L.take_damage(rand(5,20), FALSE, TOX)
 	if(issmall(M))
 		M.adjustToxLoss(strength * 2)
 	else
@@ -579,12 +577,11 @@
 		return
 	var/mob/living/carbon/human/H = M
 	var/obj/item/organ/internal/heart/S = H.random_organ_by_process(OP_HEART)
-	var/datum/component/internal_wound/IW = pick(types(/datum/component/internal_wound/organic/poisoning))
 	if(istype(S))
-		SEND_SIGNAL(S, COMSIG_I_ORGAN_ADD_WOUND, IW)
+		S.take_damage(rand(5,20), FALSE, TOX)
 	var/obj/item/organ/internal/liver/L = H.random_organ_by_process(OP_LIVER)
 	if(istype(L))
-		SEND_SIGNAL(L, COMSIG_I_ORGAN_ADD_WOUND, IW)
+		L.take_damage(rand(5,20), FALSE, TOX)
 
 /datum/reagent/toxin/starkellin
 	name = "Starkellin"
