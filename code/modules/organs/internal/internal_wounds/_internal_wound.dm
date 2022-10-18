@@ -63,7 +63,7 @@
 			if(try_treatment(TREATMENT_TOOL, tool_quality, quality_and_stat_level, TRUE))
 				success = TRUE
 				break
-	
+
 	if(user)
 		if(success)
 			to_chat(user, SPAN_NOTICE("You treat the [name] with \the [I]."))

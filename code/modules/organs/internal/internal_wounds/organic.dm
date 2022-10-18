@@ -10,6 +10,7 @@
 	treatments_tool = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_BLOODCLOT = 0.55)	// Tricordrazine/polystem + bicaridine + meralyne OR quickclot OD
 	severity = 1
+	severity_max = 2
 	hal_damage = 1
 
 /datum/component/internal_wound/organic/blunt/bruising
@@ -30,6 +31,7 @@
 	treatments_tool = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_BLOODCLOT = 0.85)	// Any brute heal chem + quickclot OD
 	severity = 1
+	severity_max = 2
 	next_wound = /datum/component/internal_wound/organic/swelling
 	hal_damage = 1
 
@@ -51,6 +53,7 @@
 	treatments_tool = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_BLOODCLOT = 0.85)	// Any brute heal chem + quickclot OD
 	severity = 1
+	severity_max = 2
 	next_wound = /datum/component/internal_wound/organic/swelling
 	hal_damage = 1
 
@@ -112,6 +115,7 @@
 	treatments_tool = list(QUALITY_CUTTING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_ANTIBIOTIC = 3) // 5u Spaceacillin or spaceacillin + dylovene
 	severity = 0	// Does nothing, at first
+	severity_max = 2
 	next_wound = /datum/component/internal_wound/infection
 	hal_damage = 1.5
 	tox_damage = 0.25
