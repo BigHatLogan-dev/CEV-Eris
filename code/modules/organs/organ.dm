@@ -155,7 +155,8 @@
 			if(B && prob(40))
 				reagents.remove_reagent("blood",0.1)
 				blood_splatter(src,B,1)
-		if(config.organs_decay) damage += rand(1,3)
+		if(config.organs_decay)
+			take_damage(rand(1,3), TRUE, TOX)
 		if(damage >= max_damage)
 			damage = max_damage
 		germ_level += rand(2,6)

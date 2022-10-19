@@ -26,6 +26,13 @@
 	initialize_organ_efficiencies()
 	initialize_owner_verbs()
 	update_icon()
+
+/obj/item/organ/internal/Initialize()
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD		// Needs to late init due to reference tags not being set until 
+
+/obj/item/organ/internal/LateInitialize()
+	. = ..()
 	RegisterSignal(src, COMSIG_I_ORGAN_ADD_WOUND, .proc/add_wound)
 	RegisterSignal(src, COMSIG_I_ORGAN_REMOVE_WOUND, .proc/remove_wound)
 	RegisterSignal(src, COMSIG_I_ORGAN_REFRESH, .proc/refresh_upgrades)
