@@ -637,13 +637,7 @@
 	metabolism = REM/2
 
 /datum/reagent/medicine/quickclot/affect_blood(mob/living/carbon/M, alien, effect_multiplier)
-	M.add_chemical_effect(CE_BLOODCLOT, 0.25)	// adding 0.01 to be more than 0.1 in order to stop int bleeding from growing
-	if(ishuman(M))
-		var/mob/living/carbon/human/H = M
-		for(var/obj/item/organ/external/E in H.organs)
-			for(var/datum/wound/W in E.wounds)
-				if(W.internal)
-					W.heal_damage(5 * effect_multiplier)
+	M.add_chemical_effect(CE_BLOODCLOT, 0.25)
 
 /datum/reagent/medicine/quickclot/overdose(mob/living/carbon/M, alien)
 	M.add_chemical_effect(CE_BLOODCLOT, 0.5)
@@ -766,7 +760,7 @@
 /datum/reagent/medicine/purger
 	name = "Purger"
 	id = "purger"
-	description = "Temporary purges all addictions."
+	description = "Temporary purges all addictions and treats chemical poisoning in large doses."
 	taste_description = "bitterness"
 	reagent_state = LIQUID
 	color = "#d4cf3b"
@@ -775,11 +769,15 @@
 
 /datum/reagent/medicine/purger/affect_blood(mob/living/carbon/M, alien, effect_multiplier)
 	M.add_chemical_effect(CE_PURGER, 1)
+	if(dose > 4)
+		M.add_chemical_effect(CE_PURGER, 1)
+	if(dose > 9)
+		M.add_chemical_effect(CE_PURGER, 1)
 
 /datum/reagent/medicine/addictol
 	name = "Addictol"
 	id = "addictol"
-	description = "Purges all addictions."
+	description = "Purges all addictions and treats chemical poisoning."
 	taste_description = "bitterness"
 	reagent_state = LIQUID
 	color = "#0179e7"
@@ -791,9 +789,10 @@
 	if(istype(C) && C.metabolism_effects.addiction_list.len)
 		if(prob(5 * effect_multiplier + dose))
 			var/datum/reagent/R = pick(C.metabolism_effects.addiction_list)
-			to_chat(C, SPAN_NOTICE("You dont crave for [R.name] anymore."))
+			to_chat(C, SPAN_NOTICE("You dont crave [R.name] anymore."))
 			C.metabolism_effects.addiction_list.Remove(R)
 			qdel(R)
+	M.add_chemical_effect(CE_PURGER, 3)
 
 /datum/reagent/medicine/addictol/on_mob_delete(mob/living/L)
 	..()

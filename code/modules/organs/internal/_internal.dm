@@ -21,31 +21,39 @@
 	var/oxygen_req = 0	//If oxygen reqs are not satisfied, get debuff and brain starts taking damage
 	var/list/prefixes = list()
 
+	// Internal
+	var/signals_registered = FALSE		// Needs to exist because mobs don't get their tags until after organs are created. Tags are needed to register signals.
+
 /obj/item/organ/internal/New(mob/living/carbon/human/holder, datum/organ_description/OD)
 	..()
 	initialize_organ_efficiencies()
 	initialize_owner_verbs()
 	update_icon()
 
-/obj/item/organ/internal/Initialize()
-	. = ..()
-	return INITIALIZE_HINT_LATELOAD		// Needs to late init due to reference tags not being set until 
-
-/obj/item/organ/internal/LateInitialize()
-	. = ..()
-	RegisterSignal(src, COMSIG_I_ORGAN_ADD_WOUND, .proc/add_wound)
-	RegisterSignal(src, COMSIG_I_ORGAN_REMOVE_WOUND, .proc/remove_wound)
-	RegisterSignal(src, COMSIG_I_ORGAN_REFRESH, .proc/refresh_upgrades)
-
 /obj/item/organ/internal/Process()
-	refresh_damage()						// Death check is in the parent proc
+	// Needs to exist because mobs don't get their tags until after organs are created. Tags are needed to register signals.
+	if(!signals_registered)
+		RegisterSignal(src, COMSIG_I_ORGAN_ADD_WOUND, .proc/add_wound)
+		RegisterSignal(src, COMSIG_I_ORGAN_REMOVE_WOUND, .proc/remove_wound)
+		RegisterSignal(src, COMSIG_I_ORGAN_REFRESH, .proc/refresh_upgrades)
+		signals_registered = TRUE
+
+	refresh_damage()	// Death check is in the parent proc
 	..()
 	handle_blood()
 	handle_regeneration()
 
 /obj/item/organ/internal/Destroy()
 	var/list/organ_components = GetComponents(/datum/component)
-	QDEL_LIST(organ_components)
+	for(var/datum/component/comp in organ_components)
+		if(istype(comp, /datum/component/wound))
+			remove_wound(comp)
+		else
+			comp.RemoveComponent()
+		qdel(comp)
+	for(var/mod in item_upgrades)
+		qdel(mod)
+	item_upgrades.Cut()
 	UnregisterSignal(src, COMSIG_I_ORGAN_ADD_WOUND)
 	UnregisterSignal(src, COMSIG_I_ORGAN_REMOVE_WOUND)
 	UnregisterSignal(src, COMSIG_I_ORGAN_REFRESH)
@@ -163,7 +171,7 @@
 					break
 			if(BV)
 				BV.current_blood = max(BV.current_blood - blood_req, 0)
-			if(BV?.current_blood == 0 && !GetComponent(/datum/component/internal_wound/organic/blood_loss))	//When all blood from the organ and blood vessel is lost, 
+			if(BV?.current_blood == 0)	//When all blood from the organ and blood vessel is lost, 
 				add_wound(/datum/component/internal_wound/organic/blood_loss)
 
 		return
@@ -292,9 +300,11 @@
 
 	var/datum/component/internal_wound/to_add = AddComponent(new_wound)
 	SSinternal_wounds.processing |= to_add		// We don't use START_PROCESSING because it doesn't allow for multiple subsystems
+	refresh_upgrades()
 
 /obj/item/organ/internal/proc/remove_wound(datum/component/wound)
 	if(!wound)
 		return
 	wound.RemoveComponent()
 	SSinternal_wounds.processing.Remove(wound)	// We don't use STOP_PROCESSING because we don't use START_PROCESSING
+	refresh_upgrades()

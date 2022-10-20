@@ -114,7 +114,7 @@
 	name = "swelling"
 	treatments_tool = list(QUALITY_CUTTING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_ANTIBIOTIC = 3) // 5u Spaceacillin or spaceacillin + dylovene
-	severity = 0	// Does nothing, at first
+	severity = 0
 	severity_max = 2
 	next_wound = /datum/component/internal_wound/infection
 	hal_damage = 1.5
@@ -127,10 +127,10 @@
 // Other wounds
 /datum/component/internal_wound/organic/blood_loss
 	name = "blood loss"
-	treatments_chem = list(CE_OXYGENATED = 2, CE_BLOODRESTORE = 0.01)	// Dex+ treats, but it will come back if you don't get blood
+	treatments_chem = list(CE_OXYGENATED = 2, CE_BLOODRESTORE = 1)	// Dex+ treats, but it will come back if you don't get blood
 	severity = 0
 	severity_max = 10
-	progression_threshold = 3	// Kills the organ in approx. 1 minute
+	progression_threshold = 9	// Kills the organ in approx. 3 minutes
 
 // Infection 2.0. This will spread to every organ in your body if untreated. Progresses until death.
 /datum/component/internal_wound/infection

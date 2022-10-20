@@ -24,7 +24,6 @@
 	var/wound_nature				// Make sure we don't apply organic wounds to robotic organs and vice versa
 
 	// Damage applied to mob each process tick
-	// Note: brute and burn are not applied because they are abstracted as internal wounds
 	var/hal_damage
 	var/oxy_damage
 	var/tox_damage
@@ -52,23 +51,32 @@
 	var/success = FALSE
 
 	if(!I.tool_qualities || !I.tool_qualities.len)
-		var/obj/item/stack/S = I
-		if(S)
+		if(istype(I, /obj/item/stack))
+			var/obj/item/stack/S = I
 			var/to_remove = try_treatment(TREATMENT_ITEM, S.type, S.amount, TRUE)
-			S.amount -= to_remove
-			success = to_remove ? TRUE : FALSE
+			if(to_remove > 0 && to_remove < S.amount)
+				S.amount -= to_remove
+				success = TRUE
+			else if(user)
+				to_chat(user, SPAN_WARNING("You failed to treat the [name] with \the [I]. Not enough charges."))
+				return
+		else
+			success = try_treatment(TREATMENT_ITEM, S.type, null, TRUE)
 	else
 		for(var/tool_quality in I.tool_qualities)
 			var/quality_and_stat_level = I.tool_qualities[tool_quality] + user.stats.getStat(diagnosis_stat)
 			if(try_treatment(TREATMENT_TOOL, tool_quality, quality_and_stat_level, TRUE))
 				success = TRUE
 				break
+		if(user && !success)
+			to_chat(user, SPAN_WARNING("You failed to treat the [name] with \the [I]. Incorrect tool quality."))
+			return
 
 	if(user)
 		if(success)
 			to_chat(user, SPAN_NOTICE("You treat the [name] with \the [I]."))
 		else
-			to_chat(user, SPAN_WARNING("You failed to treat the [name] with \the [I]."))
+			to_chat(user, SPAN_WARNING("You cannot treat the [name] with \the [I]."))
 
 /datum/component/internal_wound/proc/try_treatment(treatment_type, type, magnitude, used_tool = FALSE)
 	var/list/treatments
