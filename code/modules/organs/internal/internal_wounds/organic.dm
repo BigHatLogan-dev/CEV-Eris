@@ -4,6 +4,9 @@
 	can_progress = TRUE
 	wound_nature = MODIFICATION_ORGANIC
 
+// TODO
+// Bone wounds, brain wounds
+
 // Blunt
 /datum/component/internal_wound/organic/blunt
 	name = "rupture"

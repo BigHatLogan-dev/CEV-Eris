@@ -320,27 +320,33 @@
 				if(B.parent.status & ORGAN_BROKEN)
 					internal_wounds += "[B.broken_description]"
 	
-			var/list/internal_wound_comps = I.GetComponents(/datum/component/internal_wound)
-
-			for(var/datum/component/internal_wound/IW in internal_wound_comps)
-				internal_wounds += "[IW.name] ([IW.severity]/[IW.severity_max])"
-				// Separate brute damage from burn damage
-
 			if(I.rejecting)
 				internal_wounds += "being rejected"
 
-			// Parse internal wounds list into readable string
+			var/list/internal_wound_comps = I.GetComponents(/datum/component/internal_wound)
+			var/total_brute_and_misc_damage = 0
+			var/total_burn_damage = 0
 
+			for(var/datum/component/internal_wound/IW in internal_wound_comps)
+				var/severity = IW.severity
+				internal_wounds += "[IW.name] ([severity]/[IW.severity_max])"
+				if(istype(IW, /datum/component/internal_wound/organic/burn) || istype(IW, /datum/component/internal_wound/robotic/emp_burn))
+					total_burn_damage += severity
+				else
+					total_brute_and_misc_damage += severity
 
-			if (I.damage || internal_wounds.len)
+			// Format internal wounds
+			var/internal_wounds_details
+			if(internal_wounds.len)
+				internal_wounds_details = jointext(internal_wounds, ",<br>")
+				internal_wounds_details = copytext(internal_wounds_details, 1, internal_wounds_details.len - 5)
+
+			if(internal_wounds_details)
 				significant = TRUE
 				dat += "<tr>"
-				dat += "<td>[I.name]</td><td>N/A</td><td>[I.damage]</td><td>[internal_wounds.len ? jointext(internal_wounds, "<br>") : "None"]</td><td></td>"
+				dat += "<td>[I.name]</td><td>[total_burn_damage]</td><td>[total_brute_and_misc_damage]</td><td>[internal_wounds_details ? internal_wounds_details : "None"]</td><td></td>"
 				dat += "</tr>"
 
-		for(var/datum/wound/W in e.wounds) if(W.internal)
-			other_wounds += "Internal bleeding"
-			break
 		if(e.organ_tag == BP_CHEST && occ["lung_ruptured"])
 			other_wounds += "Lung ruptured"
 		if(e.status & ORGAN_SPLINTED)

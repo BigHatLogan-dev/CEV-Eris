@@ -40,6 +40,7 @@
 /datum/component/internal_wound/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_WOUND_EFFECTS, .proc/apply_effects)
 	RegisterSignal(parent, COMSIG_WOUND_DAMAGE, .proc/apply_damage)
+	RegisterSignal(parent, COMSIG_WOUND_AUTODOC, .proc/treatment)
 	RegisterSignal(src, COMSIG_ATTACKBY, .proc/apply_tool)
 
 /datum/component/internal_wound/UnregisterFromParent()
@@ -97,12 +98,12 @@
 			return treatments[type] ? treatments[type] : TRUE
 	return FALSE
 
-/datum/component/internal_wound/proc/treatment(used_tool)
+/datum/component/internal_wound/proc/treatment(used_tool, used_autodoc = FALSE)
 	if(severity > 0 && !used_tool)
 		--severity
 		can_progress = initial(can_progress)	// If it was turned off by reaching the max, turn it on again.
 	else
-		if(scar && ispath(scar, /datum/component))
+		if(!used_autodoc && scar && ispath(scar, /datum/component))
 			SEND_SIGNAL(parent, COMSIG_I_ORGAN_ADD_WOUND, scar)
 		SEND_SIGNAL(parent, COMSIG_I_ORGAN_REMOVE_WOUND, src)
 
