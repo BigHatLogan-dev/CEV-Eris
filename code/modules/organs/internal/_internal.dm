@@ -46,7 +46,7 @@
 /obj/item/organ/internal/Destroy()
 	var/list/organ_components = GetComponents(/datum/component)
 	for(var/datum/component/comp in organ_components)
-		if(istype(comp, /datum/component/wound))
+		if(istype(comp, /datum/component/internal_wound))
 			remove_wound(comp)
 		else
 			comp.RemoveComponent()
@@ -57,6 +57,12 @@
 	UnregisterSignal(src, COMSIG_I_ORGAN_ADD_WOUND)
 	UnregisterSignal(src, COMSIG_I_ORGAN_REMOVE_WOUND)
 	UnregisterSignal(src, COMSIG_I_ORGAN_REFRESH)
+	if(parent)
+		UnregisterSignal(parent, COMSIG_I_ORGAN_WOUND_COUNT)
+	..()
+
+/obj/item/organ/internal/removed()
+	UnregisterSignal(parent, COMSIG_I_ORGAN_WOUND_COUNT)
 	..()
 
 /obj/item/organ/internal/removed_mob()
@@ -78,6 +84,7 @@
 /obj/item/organ/internal/replaced(obj/item/organ/external/affected)
 	..()
 	parent.internal_organs |= src
+	RegisterSignal(parent, COMSIG_I_ORGAN_WOUND_COUNT, .proc/wound_count)
 
 /obj/item/organ/internal/replaced_mob(mob/living/carbon/human/target)
 	..()
@@ -308,3 +315,10 @@
 	wound.RemoveComponent()
 	SSinternal_wounds.processing.Remove(wound)	// We don't use STOP_PROCESSING because we don't use START_PROCESSING
 	refresh_upgrades()
+
+/obj/item/organ/internal/proc/wound_count()
+	if(!parent)
+		return
+	var/list/wounds = GetComponents(/datum/component/internal_wound)
+	parent.number_internal_wounds += wounds.len
+	parent.severity_internal_wounds += damage

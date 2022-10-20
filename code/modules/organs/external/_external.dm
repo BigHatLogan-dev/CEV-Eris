@@ -45,6 +45,8 @@
 	var/wound_update_accuracy = 1		// how often wounds should be updated, a higher number means less often
 	var/list/wounds = list()			// wound datum list.
 	var/number_wounds = 0				// number of wounds, which is NOT wounds.len!
+	var/number_internal_wounds = 0		// Number of internal wounds
+	var/severity_internal_wounds = 0	// Total damage from internal wounds
 	var/list/children = list()			// Sub-limbs.
 	var/list/internal_organs = list()	// Internal organs of this body part
 	var/default_bone_type
@@ -627,6 +629,9 @@ Note that amputating the affected organ does in fact remove the infection from t
 
 //Updating wounds. Handles wound natural I had some free spachealing, internal bleedings and infections
 /obj/item/organ/external/proc/update_wounds()
+	number_internal_wounds = 0
+	severity_internal_wounds = 0
+	SEND_SIGNAL(src, COMSIG_I_ORGAN_WOUND_COUNT)
 
 	if(BP_IS_ROBOTIC(src)) //Robotic limbs don't heal or get worse.
 		for(var/datum/wound/W in wounds) //Repaired wounds disappear though
@@ -640,13 +645,6 @@ Note that amputating the affected organ does in fact remove the infection from t
 			wounds -= W
 			continue
 			// let the GC handle the deletion of the wound
-
-		// Internal wounds get worse over time. Low temperatures (cryo) stop them.
-		if(W.internal && owner.bodytemperature >= 170)
-			//meds can stop internal wounds from growing bigger with time,
-			// unless it is so small that it is already healing
-			if(!(W.can_autoheal() || owner.chem_effects[CE_STABLE] || owner.chem_effects[CE_BLOODCLOT] > 0.1))
-				W.open_wound(0.05 * wound_update_accuracy)
 
 		// slow healing
 		var/heal_amt = 0

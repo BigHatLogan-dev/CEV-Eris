@@ -61,7 +61,7 @@
 				to_chat(user, SPAN_WARNING("You failed to treat the [name] with \the [I]. Not enough charges."))
 				return
 		else
-			success = try_treatment(TREATMENT_ITEM, S.type, null, TRUE)
+			success = try_treatment(TREATMENT_ITEM, I.type, null, TRUE)
 	else
 		for(var/tool_quality in I.tool_qualities)
 			var/quality_and_stat_level = I.tool_qualities[tool_quality] + user.stats.getStat(diagnosis_stat)

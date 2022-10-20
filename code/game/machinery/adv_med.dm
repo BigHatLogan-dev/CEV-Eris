@@ -320,26 +320,22 @@
 				if(B.parent.status & ORGAN_BROKEN)
 					internal_wounds += "[B.broken_description]"
 	
-			switch (I.germ_level)
-				if (0 to INFECTION_LEVEL_ONE - 1) //in the case of no infection, do nothing.
-				if (1 to INFECTION_LEVEL_ONE + 200)
-					internal_wounds += "Mild Infection"
-				if (INFECTION_LEVEL_ONE + 200 to INFECTION_LEVEL_ONE + 300)
-					internal_wounds += "Mild Infection+"
-				if (INFECTION_LEVEL_ONE + 300 to INFECTION_LEVEL_ONE + 400)
-					internal_wounds += "Mild Infection++"
-				if (INFECTION_LEVEL_TWO to INFECTION_LEVEL_TWO + 200)
-					internal_wounds += "Acute Infection"
-				if (INFECTION_LEVEL_TWO + 200 to INFECTION_LEVEL_TWO + 300)
-					internal_wounds += "Acute Infection+"
-				if (INFECTION_LEVEL_TWO + 300 to INFINITY)
-					internal_wounds += "Acute Infection++"
+			var/list/internal_wound_comps = I.GetComponents(/datum/component/internal_wound)
+
+			for(var/datum/component/internal_wound/IW in internal_wound_comps)
+				internal_wounds += "[IW.name] ([IW.severity]/[IW.severity_max])"
+				// Separate brute damage from burn damage
+
 			if(I.rejecting)
 				internal_wounds += "being rejected"
+
+			// Parse internal wounds list into readable string
+
+
 			if (I.damage || internal_wounds.len)
 				significant = TRUE
 				dat += "<tr>"
-				dat += "<td>[I.name]</td><td>N/A</td><td>[I.damage]</td><td>[other_wounds.len ? jointext(other_wounds, ":") : "None"]</td><td></td>"
+				dat += "<td>[I.name]</td><td>N/A</td><td>[I.damage]</td><td>[internal_wounds.len ? jointext(internal_wounds, "<br>") : "None"]</td><td></td>"
 				dat += "</tr>"
 
 		for(var/datum/wound/W in e.wounds) if(W.internal)
