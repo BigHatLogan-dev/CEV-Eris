@@ -10,7 +10,7 @@ PROCESSING_SUBSYSTEM_DEF(internal_wounds)
 	if(!resumed)
 		currentrun = processing.Copy()
 
-	// Supposedly this makes it faster (before this: 8ms|33%(23%)|0 P:194)
+	// Supposedly this makes it faster (before: 8ms|33%(23%)|0 P:194)
 	var/list/current_run = currentrun
 
 	for(var/datum/component/internal_wound/IW in current_run)

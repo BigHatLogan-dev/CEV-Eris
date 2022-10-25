@@ -5,7 +5,7 @@
 	organ_efficiency = list(OP_BONE = 100)
 	price_tag = 100
 	force = WEAPON_FORCE_NORMAL
-	max_damage = 100
+	max_damage = 10
 	var/broken_description = ""
 	var/reinforced = FALSE
 
@@ -31,6 +31,60 @@
 	// Fractures have a chance of getting you out of restraints
 	if(prob(25))
 		parent.release_restraints()
+
+/obj/item/organ/internal/bone/take_damage(amount, silent, damage_type = null, sharp = FALSE, edge = FALSE)	//Deals damage to the organ itself
+	if(!damage_type)
+		return
+
+	// Determine possible wounds based on nature and damage type
+	var/is_robotic = BP_IS_ROBOTIC(src) || BP_IS_ASSISTED(src)
+	var/is_organic = BP_IS_ORGANIC(src) || BP_IS_ASSISTED(src)
+	var/list/possible_wounds = list()
+
+	var/total_damage = amount * (100 / (parent ? parent.limb_efficiency : 100))
+	var/wound_count = max(0, round(total_damage / 10, 1))	// Every 10 points of damage is a wound
+
+	if((!is_organic && !is_robotic) || !wound_count)
+		return
+
+	switch(damage_type)
+		if(BRUTE)
+			if(!edge)
+				if(sharp)
+					if(is_organic)
+						possible_wounds |= typesof(/datum/component/internal_wound/organic/bone_sharp)
+					if(is_robotic)
+						possible_wounds |= typesof(/datum/component/internal_wound/robotic/sharp)
+				else
+					if(is_organic)
+						possible_wounds |= typesof(/datum/component/internal_wound/organic/bone_blunt)
+					if(is_robotic)
+						possible_wounds |= typesof(/datum/component/internal_wound/robotic/blunt)
+			else
+				if(is_organic)
+					possible_wounds |= typesof(/datum/component/internal_wound/organic/bone_edge)
+				if(is_robotic)
+					possible_wounds |= typesof(/datum/component/internal_wound/robotic/edge)
+		if(BURN)
+			if(is_organic)
+				possible_wounds |= typesof(/datum/component/internal_wound/organic/burn)
+			if(is_robotic)
+				possible_wounds |= typesof(/datum/component/internal_wound/robotic/emp_burn)
+
+	if(is_organic)
+		possible_wounds -= GetComponents(/datum/component/internal_wound/organic)	// Organic wounds don't stack
+
+	if(possible_wounds.len)
+		for(var/i in 1 to wound_count)
+			var/choice = pick(possible_wounds)
+			add_wound(choice)	
+			if(ispath(choice, /datum/component/internal_wound/organic))
+				possible_wounds -= choice
+			if(!possible_wounds.len)
+				break
+
+	if(!BP_IS_ROBOTIC(src) && owner && parent && amount > 0 && !silent)
+		owner.custom_pain("Something inside your [parent.name] hurts a lot.", 1)
 
 /obj/item/organ/internal/bone/get_actions()
 	var/list/actions_list = list()

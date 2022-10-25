@@ -55,6 +55,7 @@
 #define CE_NOWITHDRAW "no_withdrawal"
 #define CE_VOICEMIMIC "voice_mimic"
 #define CE_DYNAMICFINGERS "dynfingers"
+#define CE_BONE_MEND "bonemending"   // Ossisine
 
 // Chem effects for robotic/assisted organs
 #define CE_MECH_STABLE "coolant"

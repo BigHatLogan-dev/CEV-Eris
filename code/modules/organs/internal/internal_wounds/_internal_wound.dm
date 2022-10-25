@@ -126,3 +126,6 @@
 
 	if(severity)
 		O.damage += severity
+
+/datum/component/internal_wound/proc/apply_parent_flags()
+/datum/component/internal_wound/proc/remove_parent_flags()
