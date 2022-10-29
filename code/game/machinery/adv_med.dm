@@ -339,7 +339,7 @@
 			var/internal_wounds_details
 			if(internal_wounds.len)
 				internal_wounds_details = jointext(internal_wounds, ",<br>")
-				internal_wounds_details = copytext(internal_wounds_details, 1, internal_wounds_details.len - 5)
+				internal_wounds_details = copytext(internal_wounds_details, 1, LAZYLEN(internal_wounds_details) - 5)
 
 			if(internal_wounds_details)
 				significant = TRUE

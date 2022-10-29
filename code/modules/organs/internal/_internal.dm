@@ -32,10 +32,12 @@
 
 /obj/item/organ/internal/Process()
 	// Needs to exist because mobs don't get their tags until after organs are created. Tags are needed to register signals.
-	if(!signals_registered)
+	if(!signals_registered && tag)
 		RegisterSignal(src, COMSIG_I_ORGAN_ADD_WOUND, .proc/add_wound)
 		RegisterSignal(src, COMSIG_I_ORGAN_REMOVE_WOUND, .proc/remove_wound)
 		RegisterSignal(src, COMSIG_I_ORGAN_REFRESH, .proc/refresh_upgrades)
+		if(parent)
+			RegisterSignal(parent, COMSIG_I_ORGAN_WOUND_COUNT, .proc/wound_count)
 		signals_registered = TRUE
 
 	refresh_damage()	// Death check is in the parent proc
@@ -84,7 +86,6 @@
 /obj/item/organ/internal/replaced(obj/item/organ/external/affected)
 	..()
 	parent.internal_organs |= src
-	RegisterSignal(parent, COMSIG_I_ORGAN_WOUND_COUNT, .proc/wound_count)
 
 /obj/item/organ/internal/replaced_mob(mob/living/carbon/human/target)
 	..()
@@ -120,29 +121,29 @@
 			if(!edge)
 				if(sharp)
 					if(is_organic)
-						possible_wounds |= typesof(/datum/component/internal_wound/organic/sharp)
+						possible_wounds += typesof(/datum/component/internal_wound/organic/sharp)
 					if(is_robotic)
-						possible_wounds |= typesof(/datum/component/internal_wound/robotic/sharp)
+						possible_wounds += typesof(/datum/component/internal_wound/robotic/sharp)
 				else
 					if(is_organic)
-						possible_wounds |= typesof(/datum/component/internal_wound/organic/blunt)
+						possible_wounds += typesof(/datum/component/internal_wound/organic/blunt)
 					if(is_robotic)
-						possible_wounds |= typesof(/datum/component/internal_wound/robotic/blunt)
+						possible_wounds += typesof(/datum/component/internal_wound/robotic/blunt)
 			else
 				if(is_organic)
-					possible_wounds |= typesof(/datum/component/internal_wound/organic/edge)
+					possible_wounds += typesof(/datum/component/internal_wound/organic/edge)
 				if(is_robotic)
-					possible_wounds |= typesof(/datum/component/internal_wound/robotic/edge)
+					possible_wounds += typesof(/datum/component/internal_wound/robotic/edge)
 		if(BURN)
 			if(is_organic)
-				possible_wounds |= typesof(/datum/component/internal_wound/organic/burn)
+				possible_wounds += typesof(/datum/component/internal_wound/organic/burn)
 			if(is_robotic)
-				possible_wounds |= typesof(/datum/component/internal_wound/robotic/emp_burn)
+				possible_wounds += typesof(/datum/component/internal_wound/robotic/emp_burn)
 		if(TOX)
 			if(is_organic)
-				possible_wounds |= typesof(/datum/component/internal_wound/organic/poisoning)
+				possible_wounds += typesof(/datum/component/internal_wound/organic/poisoning)
 			if(is_robotic)
-				possible_wounds |= typesof(/datum/component/internal_wound/robotic/build_up)
+				possible_wounds += typesof(/datum/component/internal_wound/robotic/build_up)
 
 	if(is_organic)
 		possible_wounds -= GetComponents(/datum/component/internal_wound/organic)	// Organic wounds don't stack
@@ -305,20 +306,21 @@
 	if(!IW || initial(IW.wound_nature) != nature)
 		return
 
-	var/datum/component/internal_wound/to_add = AddComponent(new_wound)
-	SSinternal_wounds.processing |= to_add		// We don't use START_PROCESSING because it doesn't allow for multiple subsystems
+	var/datum/component/internal_wound/to_add = AddComponent(IW)
+	SSinternal_wounds.processing += to_add		// We don't use START_PROCESSING because it doesn't allow for multiple subsystems
 	refresh_upgrades()
 
 /obj/item/organ/internal/proc/remove_wound(datum/component/wound)
 	if(!wound)
 		return
 	wound.RemoveComponent()
-	SSinternal_wounds.processing.Remove(wound)	// We don't use STOP_PROCESSING because we don't use START_PROCESSING
+	SSinternal_wounds.processing -= wound	// We don't use STOP_PROCESSING because we don't use START_PROCESSING
 	refresh_upgrades()
 
 /obj/item/organ/internal/proc/wound_count()
 	if(!parent)
 		return
 	var/list/wounds = GetComponents(/datum/component/internal_wound)
-	parent.number_internal_wounds += wounds.len
-	parent.severity_internal_wounds += damage
+	if(wounds)
+		parent.number_internal_wounds += LAZYLEN(wounds)
+		parent.severity_internal_wounds += damage

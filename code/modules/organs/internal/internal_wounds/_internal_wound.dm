@@ -5,7 +5,7 @@
 	var/list/treatments_item = list()	// list(/obj/item = amount)
 	var/list/treatments_tool = list()	// list(QUALITY_TOOL = FAILCHANCE)
 	var/list/treatments_chem = list()	// list(CE_CHEMEFFECT = strength)
-	var/scar							// If defined, applies this wound type when successfully treated
+	var/datum/component/scar							// If defined, applies this wound type when successfully treated
 
 	var/diagnosis_stat				// BIO for organic, MEC for robotic
 	var/diagnosis_difficulty		// basic - 25, adv - 40
@@ -14,7 +14,7 @@
 	var/severity_max = 2			// How far the wound can progress, default is 2
 
 	var/can_progress = FALSE			// Whether the wound can progress or not
-	var/next_wound						// If defined, applies a wound of this type when severity is at max
+	var/datum/component/next_wound						// If defined, applies a wound of this type when severity is at max
 	var/progression_threshold = 150		// How many ticks until the wound progresses, default is 5 minutes
 	var/current_tick					// Current tick towards progression
 
@@ -47,6 +47,58 @@
 	UnregisterSignal(parent, COMSIG_WOUND_EFFECTS)
 	UnregisterSignal(parent, COMSIG_WOUND_DAMAGE)
 	UnregisterSignal(src, COMSIG_ATTACKBY)
+
+/datum/component/internal_wound/Process(delta_time)
+	var/obj/item/organ/O = parent
+	var/obj/item/organ/external/E = O.parent
+	var/mob/living/carbon/human/H = O.owner
+
+	// Doesn't need to be inside someone to get worse
+	if(can_progress)
+		++current_tick
+		if(current_tick >= progression_threshold)
+			current_tick = 0
+			progress()
+
+	if(!H)
+		return
+
+	// Chemical treatment handling
+	var/is_treated = FALSE
+	var/list/owner_ce = H.chem_effects
+	if(owner_ce && owner_ce.len)
+		for(var/chem_effect in owner_ce)
+			is_treated = try_treatment(TREATMENT_CHEM, chem_effect, owner_ce[chem_effect])
+	if(is_treated)
+		return
+
+	// Spread once
+	if(can_spread)
+		if(severity == spread_threshold)
+			var/list/internal_organs_sans_parent = H.internal_organs.Copy() - O
+			var/obj/item/organ/next_organ = pick(internal_organs_sans_parent)
+			SEND_SIGNAL(next_organ, COMSIG_I_ORGAN_ADD_WOUND, type)
+
+	// Deal damage
+	if(E)
+		H.apply_damages(null, null, tox_damage, oxy_damage, clone_damage, hal_damage, E)
+
+	if(psy_damage)
+		H.apply_damage(psy_damage * severity, PSY)
+
+/datum/component/internal_wound/proc/progress()
+	if(!can_progress)
+		return
+
+	if(severity < severity_max)
+		++severity
+	else
+		can_progress = FALSE
+		if(next_wound && ispath(next_wound, /datum/component))
+			var/chosen_wound_type = pick(typesof(next_wound))
+			SEND_SIGNAL(parent, COMSIG_I_ORGAN_ADD_WOUND, chosen_wound_type)
+
+	SEND_SIGNAL(parent, COMSIG_I_ORGAN_REFRESH)
 
 /datum/component/internal_wound/proc/apply_tool(obj/item/I, mob/user)
 	var/success = FALSE
@@ -126,6 +178,3 @@
 
 	if(severity)
 		O.damage += severity
-
-/datum/component/internal_wound/proc/apply_parent_flags()
-/datum/component/internal_wound/proc/remove_parent_flags()

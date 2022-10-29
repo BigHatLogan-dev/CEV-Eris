@@ -70,14 +70,15 @@
 		picked_patchnotes.Add(toxnote.Copy())
 
 	if(AUTODOC_INTERNAL_WOUNDS in possible_operations)
-		if(external.number_internal_wounds)
-			for(var/obj/item/organ/internal/internal in patient.internal_organs)
-				if(GetComponent(/datum/component/internal_wound))
-					var/datum/autodoc_patchnote/patchnote = new()
-					patchnote.organ = internal
-					patchnote.surgery_operations |= AUTODOC_INTERNAL_WOUNDS
-					scanned_patchnotes.Add(patchnote)
-					picked_patchnotes.Add(patchnote.Copy())
+		for(var/obj/item/organ/external/external in patient.organs)
+			if(external.number_internal_wounds)
+				for(var/obj/item/organ/internal/internal in patient.internal_organs)
+					if(GetComponent(/datum/component/internal_wound))
+						var/datum/autodoc_patchnote/patchnote = new()
+						patchnote.organ = internal
+						patchnote.surgery_operations |= AUTODOC_INTERNAL_WOUNDS
+						scanned_patchnotes.Add(patchnote)
+						picked_patchnotes.Add(patchnote.Copy())
 
 	for(var/obj/item/organ/external/external in patient.bad_external_organs)
 		var/datum/autodoc_patchnote/patchnote = new()
@@ -158,7 +159,7 @@
 	else if(patchnote.surgery_operations & AUTODOC_INTERNAL_WOUNDS)
 		to_chat(patient, SPAN_NOTICE("Treating internal wounds in the patient's [external]."))
 		for(var/obj/item/organ/internal/I in external.internal_organs)
-			SEND_SIGNAL(I, COMSIGN_WOUND_AUTODOC, TRUE, TRUE)
+			SEND_SIGNAL(I, COMSIG_WOUND_AUTODOC, TRUE, TRUE)
 		patchnote.surgery_operations &= ~AUTODOC_INTERNAL_WOUNDS
 
 	else if(patchnote.surgery_operations & AUTODOC_FRACTURE)
