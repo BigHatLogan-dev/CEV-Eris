@@ -12,7 +12,7 @@
 	treatments_tool = list(QUALITY_HAMMERING = FAILCHANCE_NORMAL)	// Nanopaste will be allowed as treatment via surgery steps
 	scar = /datum/component/internal_wound/robotic/deformation
 	severity = 2
-	hal_damage = 1
+	hal_damage = 0.25
 
 /datum/component/internal_wound/robotic/blunt/deformation
 	name = "bent structure"
@@ -26,7 +26,8 @@
 	treatments_item = list(/obj/item/stack/nanopaste = 1)
 	treatments_tool = list(QUALITY_SEALING = FAILCHANCE_NORMAL)	// Nanopaste will be allowed as treatment via surgery steps
 	severity = 2
-	tox_damage = 0.5	// Fluid leak
+	hal_damage = 0.25
+	tox_damage = 0.25	// Fluid leak
 
 /datum/component/internal_wound/robotic/sharp/leak
 	name = "weeping leak"
@@ -40,7 +41,7 @@
 	treatments_item = list(/obj/item/stack/cable_coil = 1)
 	treatments_tool = list(QUALITY_CLAMPING = FAILCHANCE_NORMAL)	// Wiring will be allowed as treatment via surgery steps
 	severity = 2
-	hal_damage = 1
+	hal_damage = 0.25
 
 /datum/component/internal_wound/robotic/edge/cut
 	name = "exposed wiring"
@@ -54,7 +55,7 @@
 	treatments_item = list(/obj/item/stack/cable_coil = 1)
 	treatments_tool = list(QUALITY_PULSING = FAILCHANCE_NORMAL)
 	severity = 2
-	hal_damage = 1
+	hal_damage = 0.25
 
 /datum/component/internal_wound/robotic/emp_burn/overheat
 	name = "overheating component"
@@ -67,6 +68,7 @@
 	name = "clogged filter"
 	treatments_tool = list(QUALITY_PRYING = FAILCHANCE_NORMAL)	// Pop it out and replace the filter
 	severity = 1
+	tox_damage = 0.25
 
 /datum/component/internal_wound/robotic/build_up/fod
 	name = "foreign object debris"
@@ -77,7 +79,7 @@
 	treatments_chem = list(CE_MECH_ACID = 1)
 	scar = /datum/component/internal_wound/robotic/deformation
 	severity = 2
-	tox_damage = 0.5
+	tox_damage = 0.25
 
 /datum/component/internal_wound/robotic/corrosion/rust
 	name = "rust"
@@ -86,3 +88,4 @@
 	name = "plastic deformation"
 	treatments_tool = list(QUALITY_WELDING = FAILCHANCE_NORMAL)
 	severity = 1
+	hal_damage = 1

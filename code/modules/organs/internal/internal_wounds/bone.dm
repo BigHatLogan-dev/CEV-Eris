@@ -5,7 +5,7 @@
 	treatments_chem = list(CE_BONE_MEND = 1)
 	severity = 1
 	severity_max = 2
-	hal_damage = 1
+	hal_damage = 0.25
 
 /datum/component/internal_wound/organic/bone_blunt/sprain
 	name = "sprained ligament"
@@ -27,7 +27,7 @@
 	severity = 1
 	severity_max = 2
 	next_wound = /datum/component/internal_wound/organic/swelling
-	hal_damage = 1
+	hal_damage = 0.25
 
 /datum/component/internal_wound/organic/bone_sharp/cavity
 	name = "cavitation"
@@ -48,7 +48,7 @@
 	treatments_chem = list(CE_BONE_MEND = 1)
 	severity = 1
 	severity_max = 2
-	hal_damage = 1
+	hal_damage = 0.25
 
 /datum/component/internal_wound/organic/bone_edge/avulsion
 	name = "avulsion"

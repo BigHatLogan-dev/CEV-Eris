@@ -15,7 +15,7 @@
 	treatments_chem = list(CE_BLOODCLOT = 0.55)	// Tricordrazine/polystem + bicaridine + meralyne OR quickclot OD
 	severity = 1
 	severity_max = 2
-	hal_damage = 1
+	hal_damage = 0.5
 
 /datum/component/internal_wound/organic/blunt/bruising
 	name = "severe bruising"
@@ -38,7 +38,7 @@
 	severity = 1
 	severity_max = 2
 	next_wound = /datum/component/internal_wound/organic/swelling
-	hal_damage = 1
+	hal_damage = 0.5
 
 /datum/component/internal_wound/organic/sharp/cavity
 	name = "cavitation"
@@ -61,7 +61,7 @@
 	severity = 1
 	severity_max = 2
 	next_wound = /datum/component/internal_wound/organic/swelling
-	hal_damage = 1
+	hal_damage = 0.5
 
 /datum/component/internal_wound/organic/edge/gash
 	name = "deep gash"
@@ -110,7 +110,7 @@
 	treatments_chem = list(CE_PURGER = 3)	// No anti-tox cure, poisoning can occur as a result of too much anti-tox
 	severity = 0
 	severity_max = 5
-	hal_damage = 3
+	hal_damage = 0.5
 	tox_damage = 0.5
 
 /datum/component/internal_wound/organic/poisoning/chem
@@ -124,7 +124,7 @@
 	severity = 0
 	severity_max = 2
 	next_wound = /datum/component/internal_wound/infection
-	hal_damage = 1.5
+	hal_damage = 0.5
 	tox_damage = 0.25
 	specific_organ_size_multiplier = 0.2
 
@@ -146,7 +146,7 @@
 	severity = 0
 	severity_max = 10
 	progression_threshold = 90	// 3 minutes
-	hal_damage = 1
+	hal_damage = 0.5
 	tox_damage = 0.5
 	can_spread = TRUE
 	spread_threshold = 6
