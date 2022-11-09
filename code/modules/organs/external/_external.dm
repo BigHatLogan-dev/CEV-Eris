@@ -709,8 +709,8 @@ Note that amputating the affected organ does in fact remove the infection from t
 		src.setBleeding()
 
 	//Bone fractures
-	if(src.should_fracture())
-		src.fracture()
+	if(should_fracture())
+		fracture()
 
 	SSnano.update_uis(src)
 
@@ -841,19 +841,21 @@ Note that amputating the affected organ does in fact remove the infection from t
 /obj/item/organ/external/proc/fracture()
 	if((status & ORGAN_BROKEN) || cannot_break)
 		return
-	var/obj/item/organ/internal/bone/bone = get_bone()
-	bone?.fracture()
+	var/obj/item/organ/internal/bone = get_bone()
+	if(bone)
+		bone.fracture()
 
 /obj/item/organ/external/proc/mend_fracture()
 	if(should_fracture())
 		return FALSE	//will just immediately fracture again
 
-	var/obj/item/organ/internal/bone/bone = get_bone()
-	bone?.mend()
+	for(var/obj/item/organ/internal/bone in owner.internal_organs_by_efficiency[OP_BONE])
+		bone.fracture()
 	return TRUE
 
 /obj/item/organ/external/proc/get_bone()
-	return locate(/obj/item/organ/internal/bone) in internal_organs
+	var/obj/item/organ/internal/bone = pick(owner.internal_organs_by_efficiency[OP_BONE])
+	return bone
 
 /obj/item/organ/external/proc/mutate()
 	if(BP_IS_ROBOTIC(src))

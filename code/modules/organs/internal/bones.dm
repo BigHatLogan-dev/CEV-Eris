@@ -6,31 +6,10 @@
 	price_tag = 100
 	force = WEAPON_FORCE_NORMAL
 	max_damage = 10
-	var/broken_description = ""
-	var/reinforced = FALSE
 
 /obj/item/organ/internal/bone/Initialize()
     . = ..()
     src.transform *= 0.5 // this little trick makes bone size small while keeping detail level of 32x32 bones.
-
-/obj/item/organ/internal/bone/proc/fracture()
-	if(owner)
-		owner.visible_message(
-			SPAN_DANGER("You hear a loud cracking sound coming from \the [owner]."),
-			SPAN_DANGER("Something feels like it shattered in your [name]"),
-			SPAN_DANGER("You hear a sickening crack.")
-		)
-		if(owner.species && !(owner.species.flags & NO_PAIN))
-			owner.emote("scream")
-
-	parent.status |= ORGAN_BROKEN	//Holding the status on the parent organ to make transition to erismed organ processes easier.
-	broken_description = pick("broken","fracture","hairline fracture")
-	parent.perma_injury = parent.brute_dam
-	take_damage(10, FALSE, BRUTE)
-
-	// Fractures have a chance of getting you out of restraints
-	if(prob(25))
-		parent.release_restraints()
 
 /obj/item/organ/internal/bone/take_damage(amount, silent, damage_type = null, sharp = FALSE, edge = FALSE)	//Deals damage to the organ itself
 	if(!damage_type)
@@ -52,81 +31,39 @@
 			if(!edge)
 				if(sharp)
 					if(is_organic)
-						possible_wounds += typesof(/datum/component/internal_wound/organic/bone_sharp)
+						LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/organic/bone_sharp))
 					if(is_robotic)
-						possible_wounds += typesof(/datum/component/internal_wound/robotic/sharp)
+						LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/robotic/sharp))
 				else
 					if(is_organic)
-						possible_wounds += typesof(/datum/component/internal_wound/organic/bone_blunt)
+						LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/organic/bone_blunt))
 					if(is_robotic)
-						possible_wounds += typesof(/datum/component/internal_wound/robotic/blunt)
+						LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/robotic/blunt))
 			else
 				if(is_organic)
-					possible_wounds += typesof(/datum/component/internal_wound/organic/bone_edge)
+					LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/organic/bone_edge))
 				if(is_robotic)
-					possible_wounds += typesof(/datum/component/internal_wound/robotic/edge)
+					LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/robotic/edge))
 		if(BURN)
 			if(is_organic)
-				possible_wounds += typesof(/datum/component/internal_wound/organic/burn)
+				LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/organic/burn))
 			if(is_robotic)
-				possible_wounds += typesof(/datum/component/internal_wound/robotic/emp_burn)
+				LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/robotic/emp_burn))
 
 	if(is_organic)
-		possible_wounds -= GetComponents(/datum/component/internal_wound/organic)	// Organic wounds don't stack
+		LAZYREMOVE(possible_wounds, GetComponents(/datum/component/internal_wound/organic))	// Organic wounds don't stack
 
-	if(possible_wounds.len)
+	if(LAZYLEN(possible_wounds))
 		for(var/i in 1 to wound_count)
 			var/choice = pick(possible_wounds)
 			add_wound(choice)	
 			if(ispath(choice, /datum/component/internal_wound/organic))
-				possible_wounds -= choice
-			if(!possible_wounds.len)
+				LAZYREMOVE(possible_wounds, choice)
+			if(!LAZYLEN(possible_wounds))
 				break
 
 	if(!BP_IS_ROBOTIC(src) && owner && parent && amount > 0 && !silent)
 		owner.custom_pain("Something inside your [parent.name] hurts a lot.", 1)
-
-/obj/item/organ/internal/bone/get_actions()
-	var/list/actions_list = list()
-	if(BP_IS_ROBOTIC(src))
-		if(parent.status & ORGAN_BROKEN)
-			actions_list.Add(list(list(
-				"name" = "Mend break",
-				"organ" = "\ref[src]",
-				"step" = /datum/surgery_step/robotic/fix_bone
-			)))
-	else
-		actions_list.Add(list(list(
-			"name" = (parent.status & ORGAN_BROKEN) ? "Mend" : "Break",
-			"organ" = "\ref[src]",
-			"step" = (parent.status & ORGAN_BROKEN) ? /datum/surgery_step/mend_bone : /datum/surgery_step/break_bone
-		)))
-		if(parent.status & ORGAN_BROKEN)
-			actions_list.Add(list(list(
-					"name" = "Reinforce",
-					"organ" = "\ref[src]",
-					"step" = /datum/surgery_step/reinforce_bone
-				)))
-		actions_list.Add(list(list(
-				"name" = "Replace",
-				"organ" = "\ref[src]",
-				"step" = /datum/surgery_step/replace_bone
-			)))
-
-	return actions_list
-
-/obj/item/organ/internal/bone/proc/mend()
-	parent.status &= ~ORGAN_BROKEN
-	parent.status &= ~ORGAN_SPLINTED
-	parent.perma_injury = 0
-
-
-/obj/item/organ/internal/bone/proc/reinforce()
-	if(!reinforced) //Just in case
-		organ_efficiency[OP_BONE] += 33
-		reinforced = TRUE
-		name = "reinforced [name]"
-		icon_state = "reinforced_[icon_state]"
 
 /obj/item/organ/internal/bone/chest
 	name = "ribcage"
@@ -207,12 +144,3 @@
 	icon_state = "metal_left_leg"
 	nature = MODIFICATION_SILICON
 	matter = list(MATERIAL_STEEL = 2, MATERIAL_PLASTIC = 2)
-
-//Bone braces
-/obj/item/bone_brace
-	name = "bone braces"
-	desc = "Little metal bits that bones can be reinforced with"
-	icon = 'icons/obj/surgery.dmi'
-	icon_state = "bone_braces"
-	w_class = ITEM_SIZE_SMALL
-	matter = list(MATERIAL_PLASTEEL = 3)

@@ -39,7 +39,7 @@
 	name = "penetrating trauma"
 
 /datum/component/internal_wound/organic/bone_sharp/depressed
-	name = "depressed fracture"
+	name = "depressed tissue"
 
 // Edge
 /datum/component/internal_wound/organic/bone_edge
@@ -51,7 +51,7 @@
 	hal_damage = 1
 
 /datum/component/internal_wound/organic/bone_edge/avulsion
-	name = "avulsion fracture"
+	name = "avulsion"
 
 /datum/component/internal_wound/organic/bone_edge/chip
 	name = "chipped tissue"
@@ -61,3 +61,9 @@
 
 /datum/component/internal_wound/organic/bone_edge/cut
 	name = "grazed tissue"
+
+// Fracture
+/datum/component/internal_wound/organic/bone_fracture
+	name = "fracture"
+	hal_damage = 2
+	status_flag = ORGAN_BROKEN

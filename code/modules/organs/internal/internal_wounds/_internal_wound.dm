@@ -5,23 +5,23 @@
 	var/list/treatments_item = list()	// list(/obj/item = amount)
 	var/list/treatments_tool = list()	// list(QUALITY_TOOL = FAILCHANCE)
 	var/list/treatments_chem = list()	// list(CE_CHEMEFFECT = strength)
-	var/datum/component/scar							// If defined, applies this wound type when successfully treated
+	var/datum/component/scar			// If defined, applies this wound type when successfully treated
 
-	var/diagnosis_stat				// BIO for organic, MEC for robotic
-	var/diagnosis_difficulty		// basic - 25, adv - 40
+	var/diagnosis_stat					// BIO for organic, MEC for robotic
+	var/diagnosis_difficulty			// basic - 25, adv - 40
 
-	var/severity					// How much the wound contributes to internal organ damage
-	var/severity_max = 2			// How far the wound can progress, default is 2
+	var/severity						// How much the wound contributes to internal organ damage
+	var/severity_max = 2				// How far the wound can progress, default is 2
 
 	var/can_progress = FALSE			// Whether the wound can progress or not
 	var/datum/component/next_wound						// If defined, applies a wound of this type when severity is at max
 	var/progression_threshold = 150		// How many ticks until the wound progresses, default is 5 minutes
 	var/current_tick					// Current tick towards progression
 
-	var/can_spread = FALSE			// Whether the wound can spread throughout the body or not
-	var/spread_threshold = 0		// Severity at which the wound spreads a single time
+	var/can_spread = FALSE				// Whether the wound can spread throughout the body or not
+	var/spread_threshold = 0			// Severity at which the wound spreads a single time
 
-	var/wound_nature				// Make sure we don't apply organic wounds to robotic organs and vice versa
+	var/wound_nature					// Make sure we don't apply organic wounds to robotic organs and vice versa
 
 	// Damage applied to mob each process tick
 	var/hal_damage
@@ -29,6 +29,7 @@
 	var/tox_damage
 	var/clone_damage
 	var/psy_damage		// Not the same as sanity damage
+	var/radiation_damage
 
 	// Organ adjustments - preferably used for more severe wounds
 	var/specific_organ_size_multiplier = null
@@ -37,15 +38,26 @@
 	var/nutriment_req_multiplier = null
 	var/oxygen_req_multiplier = null
 
+	// Parent organ adjustments
+	var/status_flag
+
 /datum/component/internal_wound/RegisterWithParent()
+	// Internal organ parent
 	RegisterSignal(parent, COMSIG_WOUND_EFFECTS, .proc/apply_effects)
+	RegisterSignal(parent, COMSIG_WOUND_FLAGS_ADD, .proc/apply_flags)
+	RegisterSignal(parent, COMSIG_WOUND_FLAGS_REMOVE, .proc/remove_flags)
 	RegisterSignal(parent, COMSIG_WOUND_DAMAGE, .proc/apply_damage)
 	RegisterSignal(parent, COMSIG_WOUND_AUTODOC, .proc/treatment)
+
+	// Surgery
 	RegisterSignal(src, COMSIG_ATTACKBY, .proc/apply_tool)
 
 /datum/component/internal_wound/UnregisterFromParent()
 	UnregisterSignal(parent, COMSIG_WOUND_EFFECTS)
+	UnregisterSignal(parent, COMSIG_WOUND_FLAGS_ADD)
+	UnregisterSignal(parent, COMSIG_WOUND_FLAGS_REMOVE)
 	UnregisterSignal(parent, COMSIG_WOUND_DAMAGE)
+	UnregisterSignal(parent, COMSIG_WOUND_AUTODOC)
 	UnregisterSignal(src, COMSIG_ATTACKBY)
 
 /datum/component/internal_wound/Process(delta_time)
@@ -81,10 +93,13 @@
 
 	// Deal damage
 	if(E)
-		H.apply_damages(null, null, tox_damage, oxy_damage, clone_damage, hal_damage, E)
+		H.apply_damages(null, null, tox_damage * severity, oxy_damage * severity, clone_damage * severity, hal_damage * severity, E)
 
 	if(psy_damage)
 		H.apply_damage(psy_damage * severity, PSY)
+
+	if(radiation_damage)
+		H.radiation += radiation_damage
 
 /datum/component/internal_wound/proc/progress()
 	if(!can_progress)
@@ -172,6 +187,24 @@
 		O.nutriment_req *= 1 - round(nutriment_req_multiplier, 0.01)
 	if(oxygen_req_multiplier)
 		O.oxygen_req *= 1 - round(oxygen_req_multiplier, 0.01)
+
+/datum/component/internal_wound/proc/apply_flags()
+	var/obj/item/organ/internal/O = parent
+
+	if(!O.parent)
+		return
+
+	if(status_flag)
+		O.parent.status |= status_flag
+
+/datum/component/internal_wound/proc/remove_flags()
+	var/obj/item/organ/internal/O = parent
+
+	if(!O.parent)
+		return
+	
+	if(status_flag)
+		O.parent.status &= ~status_flag
 
 /datum/component/internal_wound/proc/apply_damage()
 	var/obj/item/organ/internal/O = parent

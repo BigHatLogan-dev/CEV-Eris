@@ -144,6 +144,8 @@
 
 // Internal wound signals
 #define COMSIG_WOUND_EFFECTS "wound_effects"
+#define COMSIG_WOUND_FLAGS_ADD "wound_flags_add"
+#define COMSIG_WOUND_FLAGS_REMOVE "wound_flags_remove"
 #define COMSIG_WOUND_DAMAGE "wound_damage"
 #define COMSIG_WOUND_AUTODOC "wound_autodoc"
 
