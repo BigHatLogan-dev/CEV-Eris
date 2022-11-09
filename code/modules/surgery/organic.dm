@@ -74,7 +74,7 @@
 		SPAN_NOTICE("You keep the incision open on [organ.get_surgery_name()] with \the [tool].")
 	)
 	organ.open = 2
-	organ.ui_interact(user)
+	organ.nano_ui_interact(user)
 
 /datum/surgery_step/retract_skin/fail_step(mob/living/user, obj/item/organ/external/organ, obj/item/tool)
 	user.visible_message(
@@ -141,7 +141,9 @@
 		SPAN_NOTICE("[user] reattaches [organ.get_surgery_name()] with \the [tool]."),
 		SPAN_NOTICE("You reattach [organ.get_surgery_name()] with \the [tool].")
 	)
+
 	organ.status &= ~ORGAN_CUT_AWAY
+	organ.replaced(organ.get_limb())
 
 /datum/surgery_step/attach_organ/fail_step(mob/living/user, obj/item/organ/internal/organ, obj/item/stack/tool)
 	user.visible_message(

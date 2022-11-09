@@ -427,7 +427,8 @@ obj/item/clothing/under/genericr
 	desc = "Comfortable red silk uniform. It is emblazoned with One Star insignia on the collar. Strangely, it seems to fit you perfectly."
 	icon_state = "onestar_uniform"
 	item_state = "onestar_uniform"
-	spawn_blacklisted = TRUE // TODO: make onestar clothing/armor spawner -Valo
+	spawn_tags = SPAWN_TAG_CLOTHING_OS
+	spawn_blacklisted = TRUE
 	style = STYLE_HIGH
 	price_tag = 500
 	armor = list(
@@ -473,6 +474,14 @@ obj/item/clothing/under/genericr
 	icon_state = "nanosec"
 	item_state = "nanosec"
 	siemens_coefficient = 0.8
+
+/obj/item/clothing/under/joker
+	name = "red suit with yellow waistcoat"
+	desc = "I mean, don\'t you have to be funny to be a comedian?"
+	icon_state = "joker"
+	item_state = "joker"
+	style = STYLE_HIGH
+	price_tag = 450
 
 //Adminbus versions with extremly high armor, should never spawn in game
 /obj/item/clothing/under/tuxedo/adminspawn

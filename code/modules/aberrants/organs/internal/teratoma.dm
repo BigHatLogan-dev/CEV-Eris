@@ -8,7 +8,6 @@
 	ruined_description_info = "Useless organ tissue. Recycle this in a disgorger."
 	ruined_color = "#696969"
 	icon_state = "teratoma"
-	price_tag = 200
 
 	max_upgrades = 1
 	use_generated_name = FALSE
@@ -40,14 +39,21 @@
 			if(!specific_input_type_pool?.len)
 				if(req_num_inputs > 1)
 					specific_input_type_pool = ALL_DAMAGE_TYPES
+					if(req_num_inputs > 2)
+						input_threshold = 15
+					else
+						input_threshold = 30
 				else
 					specific_input_type_pool = DAMAGE_TYPES_BASIC
+					input_threshold = 45
+					
 			input_mode = NOT_USED
 
 		if(/obj/item/modification/organ/internal/input/power_source)
 			if(!specific_input_type_pool?.len)
 				specific_input_type_pool = ALL_USABLE_POWER_SOURCES
 			input_mode = NOT_USED
+			input_threshold = 0
 
 		if(/obj/item/modification/organ/internal/input/reagents)
 			if(!input_mode)
@@ -60,6 +66,7 @@
 				if(input_mode == CHEM_BLOOD)
 					possible_reagent_classes |= list(REAGENTS_MEDICINE_BASIC, REAGENTS_DRUGS)
 				specific_input_type_pool = pick(possible_reagent_classes)
+			input_threshold = 0
 
 	switch(output_mod_path)
 		if(/obj/item/modification/organ/internal/output/reagents_blood)
@@ -94,7 +101,7 @@
 				output_pool = ALL_STATS
 			if(!output_info?.len)
 				for(var/i in 1 to req_num_outputs)
-					output_info += 3
+					output_info += MID_OUTPUT
 
 		if(/obj/item/modification/organ/internal/output/damaging_insight_gain)
 			if(!output_pool?.len)
@@ -114,7 +121,7 @@
 	..()
 	use_generated_name = FALSE
 	max_upgrades = 0
-	price_tag = 50
+	price_tag = 25
 	matter = list(MATERIAL_BIOMATTER = 5)
 	STOP_PROCESSING(SSobj, src)
 

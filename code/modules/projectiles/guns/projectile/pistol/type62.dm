@@ -1,5 +1,5 @@
 /obj/item/gun/projectile/pistol/type_62
-	name = "OS Type 62 PDW .40 \"Nezha\"" //god forgive me, Name = Protection Deity
+	name = "OS Type 62 PDW .40 \"Nezha\"" //god forgive me i dont know chineese, Name = Protection Deity
 	desc = "A compact and powerful prototype PDW typically issued to high ranking officials and spies. Unwieldy, but extremely deadly, this is the perfect gun for self defense and urban warfare. Takes both pistol and SMG .40 magazines."
 	icon = 'icons/obj/guns/projectile/os/type_62.dmi'
 	icon_state = "type_62"
@@ -26,9 +26,9 @@
 		SEMI_AUTO_300
         )
 	spawn_tags = SPAWN_TAG_GUN_OS
-	price_tag = 3000
+	spawn_blacklisted = TRUE
+	price_tag = 2700
 
-	spawn_blacklisted = TRUE //until loot rework
 	serial_type = "OS"
 
 /obj/item/gun/projectile/pistol/type_62/update_icon()

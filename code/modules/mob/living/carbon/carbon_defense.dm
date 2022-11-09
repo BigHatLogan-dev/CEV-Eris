@@ -25,7 +25,7 @@
 		weapon_edge = 0
 
 	hit_impact(effective_force, get_step(user, src))
-	damage_through_armor(effective_force, I.damtype, hit_zone, ARMOR_MELEE, armour_divisor = I.armor_divisor, used_weapon = I, sharp = weapon_sharp, edge = weapon_edge)
+	damage_through_armor(effective_force, I.damtype, hit_zone, ARMOR_MELEE, armor_divisor = I.armor_divisor, used_weapon = I, sharp = weapon_sharp, edge = weapon_edge)
 
 /*Its entirely possible that we were gibbed or dusted by the above. Check if we still exist before
 continuing. Being gibbed or dusted has a 1.5 second delay, during which it sets the transforming var to
@@ -67,7 +67,7 @@ true, and the mob is not yet deleted, so we need to check that as well*/
 	user.visible_message(SPAN_DANGER("\The [user] begins to slit [src]'s throat with \the [W]!"))
 
 	user.next_move = world.time + 50 //also should prevent user from triggering this repeatedly
-	if(do_after(user, 50, progress=1))
+	if(!do_mob(user, src, 50, progress = 1))
 		if(!(G && G.assailant == user && G.affecting == src)) //check that we still have a grab
 			return 0
 

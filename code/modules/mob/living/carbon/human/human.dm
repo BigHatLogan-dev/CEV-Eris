@@ -56,6 +56,9 @@
 	for(var/organ in organs)
 		qdel(organ)
 	organs.Cut()
+
+	QDEL_NULL(sanity)
+
 	return ..()
 
 /mob/living/carbon/human/Stat()
@@ -94,15 +97,9 @@
 		if(C)
 			stat("Cruciform", "[C.power]/[C.max_power]")
 
-/mob/living/carbon/human/flash(duration = 0, drop_items = FALSE, doblind = FALSE, doblurry = FALSE, eye_damage = 0)
+/mob/living/carbon/human/flash(duration = 0, drop_items = FALSE, doblind = FALSE, doblurry = FALSE)
 	if(blinded)
 		return
-	if(eye_damage)
-		eye_damage *= species.flash_mod // increase based on how susceptible they are
-		var/obj/item/organ/internal/eyes/E = src.random_organ_by_process(OP_EYES)
-		E.take_damage(eye_damage, FALSE, BRUTE)
-		if (E && E.damage >= E.min_bruised_damage)
-			to_chat(src, SPAN_DANGER("Your eyes start to burn badly!"))
 	..(duration, drop_items, doblind, doblurry)
 
 /mob/living/carbon/human/ex_act(severity, epicenter)
@@ -218,9 +215,10 @@
 	dat += "<BR><A href='?src=\ref[user];refresh=1'>Refresh</A>"
 	dat += "<BR><A href='?src=\ref[user];mach_close=mob[name]'>Close</A>"
 
-	user << browse(dat, text("window=mob[name];size=340x540"))
-	onclose(user, "mob[name]")
-	return
+	var/datum/browser/panel = new(user, "mob[name]", "Mob", 340, 540)
+	panel.set_content(dat)
+	panel.open()
+
 
 // called when something steps onto a human
 // this handles mulebots and vehicles
@@ -1162,9 +1160,9 @@ var/list/rank_prefix = list(\
 	set desc		= "Browse your character sanity."
 	set category	= "IC"
 	set src			= usr
-	ui_interact(src)
+	nano_ui_interact(src)
 
-/mob/living/carbon/human/ui_data()
+/mob/living/carbon/human/nano_ui_data()
 	var/list/data = list()
 
 	data["style"] = get_total_style()
@@ -1184,8 +1182,8 @@ var/list/rank_prefix = list(\
 
 	return data
 
-/mob/living/carbon/human/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
-	var/list/data = ui_data()
+/mob/living/carbon/human/nano_ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
+	var/list/data = nano_ui_data()
 
 	ui = SSnano.try_update_ui(user, user, ui_key, ui, data, force_open)
 	if(!ui)
@@ -1589,6 +1587,36 @@ var/list/rank_prefix = list(\
 	dodging = !dodging
 	to_chat(src, "<span class='notice'>You are now [dodging ? "dodging incoming fire" : "not dodging incoming fire"].</span>")
 	return
+
+/mob/living/carbon/human/verb/access_holster()
+	set name = "Holster"
+	set desc = "Try to access your holsters."
+	set category = "IC"
+	if(stat)
+		return
+	var/holster_found = FALSE
+
+	for(var/obj/item/storage/pouch/holster/holster in list(back, s_store, belt, l_store, r_store))
+	//found a pouch holster
+		holster_found = TRUE
+		if(holster.holster_verb(src))//did it do something? If not, we ignore it
+			return
+	//no pouch holsters, anything on our uniform then?
+	if(w_uniform)
+		if(istype(w_uniform,/obj/item/clothing/under))
+			var/obj/item/clothing/under/U = w_uniform
+			if(U.accessories.len)
+				for(var/obj/item/clothing/accessory/holster/H in U.accessories)
+					if(get_active_hand())//do we hold something?
+						H.attackby(get_active_hand(), src)
+					else
+						H.attack_hand(src)
+					holster_found = TRUE
+					return
+	//nothing at all!
+	if(!holster_found)
+		to_chat(src, SPAN_NOTICE("You don\'t have any holsters."))
+
 //generates realistic-ish pulse output based on preset levels
 /mob/living/carbon/human/proc/get_pulse(method)	//method 0 is for hands, 1 is for machines, more accurate
 	var/temp = 0
@@ -1760,3 +1788,37 @@ var/list/rank_prefix = list(\
 				pick(subtypesof(/datum/mutation/t3)) = 10,
 				pick(subtypesof(/datum/mutation/t4)) = 5))
 			dormant_mutations |= new M
+
+/mob/living/carbon/human/verb/blocking()
+	set name = "Blocking"
+	set desc = "Block an incoming melee attack, or lower your guard."
+	set category = "IC"
+
+	if(stat || restrained())
+		return
+	if(!blocking)
+		start_blocking()
+	else
+		stop_blocking()
+
+/mob/living/carbon/human/proc/start_blocking()
+	if(blocking)//already blocking with an item somehow?
+		return
+	blocking = TRUE
+	visible_message(SPAN_WARNING("[src] tenses up, ready to block!"))
+	if(HUDneed.Find("block"))
+		var/obj/screen/block/HUD = HUDneed["block"]
+		HUD.update_icon()
+	update_block_overlay()
+	return
+
+/mob/living/carbon/human/proc/stop_blocking()
+	if(!blocking)//already blockingn't with an item somehow?
+		return
+	blocking = FALSE
+	visible_message(SPAN_NOTICE("[src] lowers \his guard."))
+	if(HUDneed.Find("block"))
+		var/obj/screen/block/HUD = HUDneed["block"]
+		HUD.update_icon()
+	update_block_overlay()
+	return

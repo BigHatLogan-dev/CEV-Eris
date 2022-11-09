@@ -14,7 +14,8 @@
 	if (HUDtech.Find("flash"))
 		flick("e_flash", HUDtech["flash"])
 	if(duration)
-		Weaken(duration, drop_items)
+		if(!ishuman(src))
+			Weaken(duration)
 		if(doblind)
 			eye_blind += duration
 		if(doblurry)
@@ -889,8 +890,10 @@ default behaviour is:
 		update_z(T.z)
 
 /mob/living/Destroy()
-	qdel(stats)
-	stats = null
+	if(registered_z)
+		SSmobs.mob_living_by_zlevel[registered_z] -= src	// STOP_PROCESSING() doesn't remove the mob from this list
+	QDEL_NULL(stats)
+	QDEL_NULL(static_overlay)
 	return ..()
 
 /mob/living/proc/vomit()

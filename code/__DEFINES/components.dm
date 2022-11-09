@@ -33,11 +33,6 @@
 
 //////////////////////////////////////////////////////////////////
 
-// /zone signals
-
-#define COMSIG_ZAS_TICK "z_tick"
-#define COMSIG_ZAS_DELETE "z_del"
-
 // /datum signals
 #define COMSIG_COMPONENT_ADDED "component_added"				//when a component is added to a datum: (/datum/component)
 #define COMSIG_COMPONENT_REMOVING "component_removing"			//before a component is removed from a datum because of RemoveComponent: (/datum/component)
@@ -50,6 +45,9 @@
 #define COMSIG_RITUAL_REVELATION "revelation_ritual"
 #define COMSIG_GROUP_RITUAL "grup_ritual"
 #define COMSIG_TRANSATION "transation"          //from transfer_funds()
+
+/// from datum ui_act (usr, action)
+#define COMSIG_UI_ACT "COMSIG_UI_ACT"
 
 // /atom signals
 #define COMSIG_EXAMINE "examine"								//from atom/examine(): (mob/user, distance)
@@ -155,6 +153,10 @@
 #define COMSIG_ABERRANT_OUTPUT "aberrant_output"
 #define COMSIG_ABERRANT_SECONDARY "aberrant_secondary"
 #define COMSIG_ABERRANT_COOLDOWN "aberrant_cooldown"
+
+// Overmap and expeditions signals
+#define COMSIG_GENERATE_DUNGEON "generate_dungeon"
+#define COMSIG_DUNGEON_GENERATED "dungeon_generated"
 
 /*******Component Specific Signals*******/
 //Janitor

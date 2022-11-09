@@ -221,7 +221,7 @@
 	return null
 
 // UI data used by chemical catalog
-/datum/chemical_reaction/ui_data()
+/datum/chemical_reaction/nano_ui_data()
 	var/list/dat = list()
 	if(required_reagents)
 		dat["reagents"] = list()
@@ -993,7 +993,7 @@
 /datum/chemical_reaction/slime
 	var/required = null
 
-/datum/chemical_reaction/slime/ui_data()
+/datum/chemical_reaction/slime/nano_ui_data()
 	var/list/dat = ..()
 	dat["required_object"] = required
 	return dat
@@ -2160,4 +2160,11 @@
 /datum/chemical_reaction/kaiserbeer
 	result = "kaiserbeer"
 	required_reagents = list("fuhrerole" = 1, "kaiseraurum" = 1, "roachbeer" = 2)
+	result_amount = 2
+
+/* Other */
+
+/datum/chemical_reaction/protein_shake
+	result = "protein_shake"
+	required_reagents = list("milk" = 1, "protein" = 1)
 	result_amount = 2

@@ -101,7 +101,8 @@
 		verbs |= proc_path
 
 /obj/item/organ/internal/proc/get_process_efficiency(process_define)
-	return organ_efficiency[process_define] - (organ_efficiency[process_define] * (damage / max_damage))
+	var/organ_eff = organ_efficiency[process_define]
+	return organ_eff - (organ_eff * (damage / max_damage))
 
 /obj/item/organ/internal/take_damage(amount, silent, damage_type = null, sharp = FALSE, edge = FALSE)	//Deals damage to the organ itself
 	if(!damage_type)
@@ -165,10 +166,10 @@
 /obj/item/organ/internal/proc/handle_blood()
 	if(BP_IS_ROBOTIC(src) || !owner)
 		return
-	if(OP_BLOOD_VESSEL in organ_efficiency && !(owner.status_flags & BLEEDOUT))
-		current_blood = min(current_blood + 5, max_blood_storage)	//Blood vessels get an extra flat 5 blood regen
 	if(!blood_req)
 		return
+	if(OP_BLOOD_VESSEL in organ_efficiency && !(owner.status_flags & BLEEDOUT))
+		current_blood = min(current_blood + 5, max_blood_storage)	//Blood vessels get an extra flat 5 blood regen
 
 	if(owner.status_flags & BLEEDOUT)
 		current_blood = max(current_blood - blood_req, 0)
@@ -196,7 +197,16 @@
 	if(user.stats?.getStat(STAT_BIO) > STAT_LEVEL_BASIC)
 		to_chat(user, SPAN_NOTICE("Organ size: [specific_organ_size]"))
 	if(user.stats?.getStat(STAT_BIO) > STAT_LEVEL_EXPERT - 5)
+		var/organs
+		for(var/organ in organ_efficiency)
+			organs += organ + " ([organ_efficiency[organ]]), "
+		organs = copytext(organs, 1, length(organs) - 1)
+
 		to_chat(user, SPAN_NOTICE("Requirements: <span style='color:red'>[blood_req]</span>/<span style='color:blue'>[oxygen_req]</span>/<span style='color:orange'>[nutriment_req]</span>"))
+		to_chat(user, SPAN_NOTICE("Organ tissues present (efficiency): <span style='color:pink'>[organs ? organs : "none"]</span>"))
+
+		if(item_upgrades.len)
+			to_chat(user, SPAN_NOTICE("Organ grafts present ([item_upgrades.len]/[max_upgrades]). Use a laser cutting tool to remove."))
 
 /obj/item/organ/internal/is_usable()
 	return ..() && !is_broken()
