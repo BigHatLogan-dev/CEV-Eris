@@ -32,7 +32,7 @@
 
 /obj/item/organ/internal/Process()
 	// Needs to exist because mobs don't get their tags until after organs are created. Tags are needed to register signals.
-	if(!signals_registered && tag)
+	if(!signals_registered)
 		RegisterSignal(src, COMSIG_I_ORGAN_ADD_WOUND, .proc/add_wound)
 		RegisterSignal(src, COMSIG_I_ORGAN_REMOVE_WOUND, .proc/remove_wound)
 		RegisterSignal(src, COMSIG_I_ORGAN_REFRESH, .proc/refresh_upgrades)
@@ -385,8 +385,8 @@
 /obj/item/organ/internal/proc/remove_wound(datum/component/wound)
 	if(!wound)
 		return
-	qdel(wound)
 	SSinternal_wounds.processing -= wound	// We don't use STOP_PROCESSING because we don't use START_PROCESSING
+	qdel(wound)
 	refresh_upgrades()
 
 /obj/item/organ/internal/proc/wound_count()

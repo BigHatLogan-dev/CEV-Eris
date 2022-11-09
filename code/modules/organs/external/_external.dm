@@ -850,7 +850,7 @@ Note that amputating the affected organ does in fact remove the infection from t
 		return FALSE	//will just immediately fracture again
 
 	for(var/obj/item/organ/internal/bone in owner.internal_organs_by_efficiency[OP_BONE])
-		bone.fracture()
+		bone.mend()
 	return TRUE
 
 /obj/item/organ/external/proc/get_bone()

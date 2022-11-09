@@ -67,5 +67,5 @@
 	name = "fracture"
 	severity = 4
 	severity_max = 4
-	hal_damage = 2
+	hal_damage = 0.5
 	status_flag = ORGAN_BROKEN

@@ -72,8 +72,8 @@
 	if(AUTODOC_INTERNAL_WOUNDS in possible_operations)
 		for(var/obj/item/organ/external/external in patient.organs)
 			if(external.number_internal_wounds)
-				for(var/obj/item/organ/internal/internal in patient.internal_organs)
-					if(GetComponent(/datum/component/internal_wound))
+				for(var/obj/item/organ/internal/internal in external.internal_organs)
+					if(internal.GetComponent(/datum/component/internal_wound))
 						var/datum/autodoc_patchnote/patchnote = new()
 						patchnote.organ = internal
 						patchnote.surgery_operations |= AUTODOC_INTERNAL_WOUNDS
@@ -92,6 +92,7 @@
 		if(AUTODOC_FRACTURE in possible_operations)
 			if(external.status & ORGAN_BROKEN)
 				patchnote.surgery_operations |= AUTODOC_FRACTURE
+
 		if(AUTODOC_EMBED_OBJECT in possible_operations)
 			if(external.implants)
 				if(locate(/obj/item/material/shard/shrapnel) in external.implants)
@@ -156,16 +157,17 @@
 			wound.germ_level = 0
 		patchnote.surgery_operations &= ~AUTODOC_OPEN_WOUNDS
 
-	else if(patchnote.surgery_operations & AUTODOC_INTERNAL_WOUNDS)
-		to_chat(patient, SPAN_NOTICE("Treating internal wounds in the patient's [external]."))
-		for(var/obj/item/organ/internal/I in external.internal_organs)
-			SEND_SIGNAL(I, COMSIG_WOUND_AUTODOC, TRUE, TRUE)
-		patchnote.surgery_operations &= ~AUTODOC_INTERNAL_WOUNDS
-
 	else if(patchnote.surgery_operations & AUTODOC_FRACTURE)
 		to_chat(patient, SPAN_NOTICE("Mending fractures in the patient's [external]."))
 		external.mend_fracture()
 		patchnote.surgery_operations &= ~AUTODOC_FRACTURE
+
+	else if(patchnote.surgery_operations & AUTODOC_INTERNAL_WOUNDS)
+		if(istype(patchnote.organ, /obj/item/organ/internal))
+			var/obj/item/organ/internal/I = patchnote.organ
+			to_chat(patient, SPAN_NOTICE("Treating internal wounds in the patient's [I.name]."))
+			SEND_SIGNAL(I, COMSIG_WOUND_AUTODOC, TRUE, TRUE)
+			patchnote.surgery_operations &= ~AUTODOC_INTERNAL_WOUNDS
 
 /datum/autodoc/Process()
 	if(!patient)
