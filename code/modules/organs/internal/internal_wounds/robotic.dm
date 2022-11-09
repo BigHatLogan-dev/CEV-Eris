@@ -8,6 +8,7 @@
 // Blunt
 /datum/component/internal_wound/robotic/blunt
 	name = "mechanical malfunction"
+	treatments_item = list(/obj/item/stack/nanopaste = 1)
 	treatments_tool = list(QUALITY_HAMMERING = FAILCHANCE_NORMAL)	// Nanopaste will be allowed as treatment via surgery steps
 	scar = /datum/component/internal_wound/robotic/deformation
 	severity = 2
@@ -22,6 +23,7 @@
 // Sharp
 /datum/component/internal_wound/robotic/sharp
 	name = "perforation"
+	treatments_item = list(/obj/item/stack/nanopaste = 1)
 	treatments_tool = list(QUALITY_SEALING = FAILCHANCE_NORMAL)	// Nanopaste will be allowed as treatment via surgery steps
 	severity = 2
 	tox_damage = 0.5	// Fluid leak
@@ -35,6 +37,7 @@
 // Edge
 /datum/component/internal_wound/robotic/edge
 	name = "electrical short"
+	treatments_item = list(/obj/item/stack/cable_coil = 1)
 	treatments_tool = list(QUALITY_CLAMPING = FAILCHANCE_NORMAL)	// Wiring will be allowed as treatment via surgery steps
 	severity = 2
 	hal_damage = 1

@@ -10,6 +10,7 @@
 // Blunt
 /datum/component/internal_wound/organic/blunt
 	name = "rupture"
+	treatments_item = list(/obj/item/stack/medical/advanced/bruise_pack = 1)
 	treatments_tool = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_BLOODCLOT = 0.55)	// Tricordrazine/polystem + bicaridine + meralyne OR quickclot OD
 	severity = 1
@@ -31,6 +32,7 @@
 // Sharp
 /datum/component/internal_wound/organic/sharp
 	name = "perforation"
+	treatments_item = list(/obj/item/stack/medical/advanced/bruise_pack = 1)
 	treatments_tool = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_BLOODCLOT = 0.85)	// Any brute heal chem + quickclot OD
 	severity = 1
@@ -53,6 +55,7 @@
 // Edge
 /datum/component/internal_wound/organic/edge
 	name = "laceration"
+	treatments_item = list(/obj/item/stack/medical/advanced/bruise_pack = 1)
 	treatments_tool = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_BLOODCLOT = 0.85)	// Any brute heal chem + quickclot OD
 	severity = 1
@@ -75,6 +78,7 @@
 // Burn
 /datum/component/internal_wound/organic/burn
 	name = "scorched tissue"
+	treatments_item = list(/obj/item/stack/medical/advanced/ointment = 1)
 	treatments_tool = list(QUALITY_CUTTING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_STABLE = 1)	// Inaprov will only keep it from killing you
 	scar = /datum/component/internal_wound/organic/damaged_tissue
