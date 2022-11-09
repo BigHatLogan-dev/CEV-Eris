@@ -51,8 +51,7 @@
 		if(istype(comp, /datum/component/internal_wound))
 			remove_wound(comp)
 		else
-			comp.RemoveComponent()
-		qdel(comp)
+			qdel(comp)
 	for(var/mod in item_upgrades)
 		qdel(mod)
 	item_upgrades.Cut()
@@ -65,7 +64,7 @@
 
 /obj/item/organ/internal/removed()
 	UnregisterSignal(parent, COMSIG_I_ORGAN_WOUND_COUNT)
-	SEND_SIGNAL(src, COMSIG_WOUND_FLAG_REMOVE)
+	SEND_SIGNAL(src, COMSIG_WOUND_FLAGS_REMOVE)
 	..()
 
 /obj/item/organ/internal/removed_mob()
@@ -87,7 +86,8 @@
 /obj/item/organ/internal/replaced(obj/item/organ/external/affected)
 	..()
 	parent.internal_organs |= src
-	refresh_upgrades()
+	RegisterSignal(parent, COMSIG_I_ORGAN_WOUND_COUNT, .proc/wound_count)
+	SEND_SIGNAL(src, COMSIG_WOUND_FLAGS_ADD)
 
 /obj/item/organ/internal/replaced_mob(mob/living/carbon/human/target)
 	..()
@@ -335,13 +335,10 @@
 
 // Store these so we can properly restore them when installing/removing mods
 /obj/item/organ/internal/proc/initialize_organ_efficiencies()
-	for(var/organ in organ_efficiency)
-		initial_organ_efficiency.Add(organ)
-		initial_organ_efficiency[organ] = organ_efficiency[organ]
+	initial_organ_efficiency = organ_efficiency.Copy()
 
 /obj/item/organ/internal/proc/initialize_owner_verbs()
-	for(var/V in owner_verbs)
-		initial_owner_verbs.Add(V)
+	initial_owner_verbs = owner_verbs.Copy()
 
 /obj/item/organ/internal/refresh_upgrades()
 	name = initial(name)
@@ -361,13 +358,13 @@
 	blood_req = initial(blood_req)
 	nutriment_req = initial(nutriment_req)
 	oxygen_req = initial(oxygen_req)
-	SEND_SIGNAL(src, COMSIG_WOUND_FLAG_REMOVE)
+	SEND_SIGNAL(src, COMSIG_WOUND_FLAGS_REMOVE)
 
 	// Should split this into two procs due to the flags overwriting each other
 
 	SEND_SIGNAL(src, COMSIG_WOUND_EFFECTS)
 	SEND_SIGNAL(src, COMSIG_APPVAL, src)
-	SEND_SIGNAL(src, COMSIG_WOUND_FLAG_ADD)
+	SEND_SIGNAL(src, COMSIG_WOUND_FLAGS_ADD)
 
 	for(var/prefix in prefixes)
 		name = "[prefix] [name]"
@@ -388,7 +385,7 @@
 /obj/item/organ/internal/proc/remove_wound(datum/component/wound)
 	if(!wound)
 		return
-	wound.RemoveComponent()
+	qdel(wound)
 	SSinternal_wounds.processing -= wound	// We don't use STOP_PROCESSING because we don't use START_PROCESSING
 	refresh_upgrades()
 

@@ -65,5 +65,7 @@
 // Fracture
 /datum/component/internal_wound/organic/bone_fracture
 	name = "fracture"
+	severity = 4
+	severity_max = 4
 	hal_damage = 2
 	status_flag = ORGAN_BROKEN

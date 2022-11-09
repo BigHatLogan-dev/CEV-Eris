@@ -315,11 +315,6 @@
 			if(BP_IS_ROBOTIC(I))
 				internal_wounds += "Prosthetic"
 	
-			var/obj/item/organ/internal/bone/B = I
-			if(istype(B))
-				if(B.parent.status & ORGAN_BROKEN)
-					internal_wounds += "[B.broken_description]"
-	
 			if(I.rejecting)
 				internal_wounds += "being rejected"
 
