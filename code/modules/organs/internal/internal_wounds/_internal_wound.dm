@@ -113,7 +113,7 @@
 			var/chosen_wound_type = pick(typesof(next_wound))
 			SEND_SIGNAL(parent, COMSIG_I_ORGAN_ADD_WOUND, chosen_wound_type)
 
-	SEND_SIGNAL(parent, COMSIG_I_ORGAN_REFRESH)
+	SEND_SIGNAL(parent, COMSIG_I_ORGAN_REFRESH_SELF)
 
 /datum/component/internal_wound/proc/apply_tool(obj/item/I, mob/user)
 	var/success = FALSE
