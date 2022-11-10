@@ -4,16 +4,13 @@
 	can_progress = TRUE
 	wound_nature = MODIFICATION_ORGANIC
 
-// TODO
-// Bone wounds, brain wounds
-
 // Blunt
 /datum/component/internal_wound/organic/blunt
 	name = "rupture"
 	treatments_item = list(/obj/item/stack/medical/advanced/bruise_pack = 2)
 	treatments_tool = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_BLOODCLOT = 0.55)	// Tricordrazine/polystem + bicaridine + meralyne OR quickclot OD
-	severity = 1
+	severity = 0
 	severity_max = 2
 	hal_damage = 0.5
 
@@ -35,7 +32,7 @@
 	treatments_item = list(/obj/item/stack/medical/advanced/bruise_pack = 2)
 	treatments_tool = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_BLOODCLOT = 0.85)	// Any brute heal chem + quickclot OD
-	severity = 1
+	severity = 0
 	severity_max = 2
 	next_wound = /datum/component/internal_wound/organic/swelling
 	hal_damage = 0.5
@@ -58,7 +55,7 @@
 	treatments_item = list(/obj/item/stack/medical/advanced/bruise_pack = 2)
 	treatments_tool = list(QUALITY_CAUTERIZING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_BLOODCLOT = 0.85)	// Any brute heal chem + quickclot OD
-	severity = 1
+	severity = 0
 	severity_max = 2
 	next_wound = /datum/component/internal_wound/organic/swelling
 	hal_damage = 0.5

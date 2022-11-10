@@ -3,7 +3,7 @@
 	name = "skeletal bruising"
 	treatments_tool = list(QUALITY_SEALING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_BONE_MEND = 1)
-	severity = 1
+	severity = 0
 	severity_max = 2
 	hal_damage = 0.25
 
@@ -24,7 +24,7 @@
 	name = "perforation"
 	treatments_tool = list(QUALITY_SEALING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_BONE_MEND = 1)
-	severity = 1
+	severity = 0
 	severity_max = 2
 	next_wound = /datum/component/internal_wound/organic/swelling
 	hal_damage = 0.25
@@ -46,7 +46,7 @@
 	name = "laceration"
 	treatments_tool = list(QUALITY_SEALING = FAILCHANCE_NORMAL)
 	treatments_chem = list(CE_BONE_MEND = 1)
-	severity = 1
+	severity = 0
 	severity_max = 2
 	hal_damage = 0.25
 

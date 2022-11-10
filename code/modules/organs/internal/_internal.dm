@@ -21,8 +21,8 @@
 	var/oxygen_req = 0	//If oxygen reqs are not satisfied, get debuff and brain starts taking damage
 	var/list/prefixes = list()
 
-/obj/item/organ/internal/New(mob/living/carbon/human/holder, datum/organ_description/OD)
-	..()
+/obj/item/organ/internal/Initialize()
+	. = ..()
 	initialize_organ_efficiencies()
 	initialize_owner_verbs()
 	update_icon()
@@ -52,7 +52,7 @@
 	item_upgrades.Cut()
 	UnregisterSignal(src, COMSIG_I_ORGAN_ADD_WOUND)
 	UnregisterSignal(src, COMSIG_I_ORGAN_REMOVE_WOUND)
-	UnregisterSignal(src, COMSIG_I_ORGAN_REFRESH)
+	UnregisterSignal(src, COMSIG_I_ORGAN_REFRESH_SELF)
 	if(parent)
 		UnregisterSignal(parent, COMSIG_I_ORGAN_WOUND_COUNT)
 		UnregisterSignal(parent, COMSIG_I_ORGAN_REFRESH_PARENT)
@@ -359,7 +359,7 @@
 	refresh_organ_stats()
 	apply_modifiers()
 
-/obj/item/organ/internal/refresh_organ_stats()
+/obj/item/organ/internal/proc/refresh_organ_stats()
 	name = initial(name)
 	color = initial(color)
 	max_upgrades = initial(max_upgrades)
@@ -379,7 +379,7 @@
 	oxygen_req = initial(oxygen_req)
 	SEND_SIGNAL(src, COMSIG_WOUND_FLAGS_REMOVE)
 
-/obj/item/organ/internal/apply_modifiers()
+/obj/item/organ/internal/proc/apply_modifiers()
 	SEND_SIGNAL(src, COMSIG_WOUND_EFFECTS)
 	SEND_SIGNAL(src, COMSIG_APPVAL, src)
 	SEND_SIGNAL(src, COMSIG_WOUND_FLAGS_ADD)
