@@ -1,6 +1,6 @@
 /obj/item/organ/internal/brain
 	name = "brain"
-	health = 400 //They need to live awhile longer than other organs. Is this even used by organ code anymore?
+	health = 100 //They need to live awhile longer than other organs. Is this even used by organ code anymore?
 	desc = "A piece of juicy meat found in a person's head."
 	organ_efficiency = list(BP_BRAIN = 100)
 	parent_organ_base = BP_HEAD
@@ -34,6 +34,15 @@
 		qdel(brainmob)
 		brainmob = null
 	. = ..()
+
+/obj/item/organ/internal/brain/take_damage(amount, silent, damage_type = null, sharp = FALSE, edge = FALSE)	//Deals damage to the organ itself
+	if(!damage_type)
+		return
+
+	health = max(0, health - amount * (100 / (parent ? parent.limb_efficiency : 100)))
+
+	if(!health)
+		..()
 
 /obj/item/organ/internal/brain/proc/transfer_identity(mob/living/carbon/H)
 	name = "\the [H]'s [initial(src.name)]"
