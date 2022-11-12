@@ -114,7 +114,8 @@
 	var/is_organic = BP_IS_ORGANIC(src) || BP_IS_ASSISTED(src)
 	var/list/possible_wounds = list()
 
-	var/total_damage = amount * (100 / (parent ? parent.limb_efficiency : 100))
+	var/pierce_divisor = 1 + sharp + edge					// Armor divisor, but for meat
+	var/total_damage = amount - ((parent ? parent.limb_efficiency : 100) / 10) / pierce_divisor
 	var/wound_count = max(0, round(total_damage / 10, 1))	// Every 10 points of damage is a wound
 
 	if((!is_organic && !is_robotic) || !wound_count)
@@ -148,6 +149,15 @@
 				LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/organic/poisoning))
 			if(is_robotic)
 				LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/robotic/build_up))
+		if(CLONE)
+			if(is_organic)
+				LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/organic/radiation))
+		if(IRRADIATE)	// Effect type, not damage type. Still usable here.
+			if(is_organic)
+				LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/organic/radiation))
+			if(is_robotic)
+				LAZYADD(possible_wounds, typesof(/datum/component/internal_wound/robotic/emp_burn))		// Radiation can fry electronics
+
 
 	if(is_organic)
 		LAZYREMOVE(possible_wounds, GetComponents(/datum/component/internal_wound/organic))	// Organic wounds don't stack
@@ -303,6 +313,18 @@
 
 	return actions_list
 // End of the bone zone
+
+// Mutations
+/obj/item/organ/internal/proc/unmutate()
+	var/is_organic = BP_IS_ORGANIC(src) || BP_IS_ASSISTED(src)
+
+	if(!is_organic)
+		return
+
+	var/list/wounds = GetComponents(/datum/component/internal_wound/organic/radiation)
+
+	for(var/datum/component/wound in wounds)
+		remove_wound(wound)
 
 /obj/item/organ/internal/proc/get_wounds()
 	var/list/wound_list = GetComponents(/datum/component/internal_wound)

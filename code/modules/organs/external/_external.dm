@@ -862,12 +862,19 @@ Note that amputating the affected organ does in fact remove the infection from t
 /obj/item/organ/external/proc/mutate()
 	if(BP_IS_ROBOTIC(src))
 		return
-	status |= ORGAN_MUTATED
-	if(owner) owner.update_body()
+	var/obj/item/organ/internal/I = pick(internal_organs)
+	if(I)
+		I.take_damage(15, TRUE, CLONE)
+	if(owner)
+		owner.update_body()
 
 /obj/item/organ/external/proc/unmutate()
-	status &= ~ORGAN_MUTATED
-	if(owner) owner.update_body()
+	if(BP_IS_ROBOTIC(src))
+		return
+	for(var/obj/item/organ/internal/I in internal_organs)
+		I.unmutate()
+	if(owner)
+		owner.update_body()
 
 /obj/item/organ/external/proc/get_damage()	//returns total damage
 	return max(brute_dam + burn_dam - perma_injury, perma_injury)	//could use max_damage?

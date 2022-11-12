@@ -20,7 +20,8 @@
 	var/is_organic = BP_IS_ORGANIC(src) || BP_IS_ASSISTED(src)
 	var/list/possible_wounds = list()
 
-	var/total_damage = amount * (100 / (parent ? parent.limb_efficiency : 100))
+	var/pierce_divisor = 1 + sharp + edge					// Armor divisor, but for meat
+	var/total_damage = amount - ((parent ? parent.limb_efficiency : 100) / 10) / pierce_divisor
 	var/wound_count = max(0, round(total_damage / 10, 1))	// Every 10 points of damage is a wound
 
 	if((!is_organic && !is_robotic) || !wound_count)

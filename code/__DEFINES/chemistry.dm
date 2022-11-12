@@ -45,17 +45,18 @@
 #define CE_SPEEDBOOST		"speed" 			// Hyperzine
 #define CE_PULSE			"heart rate"		// increases or decreases heart rate
 #define CE_NOPULSE			"arresting agent" 	// stops heartbeat
-#define CE_MIND				"mindbending"  		// Stabilizes or wrecks mind. Used for hallucinations
+#define CE_MIND				"mind stabilization"// Stabilizes or wrecks mind. Used for hallucinations
 #define CE_ANTITOX			"antitoxin"    		// Dylovene
 #define CE_TOXIN			"toxin"       		// Generic toxins, stops autoheal.
 #define CE_SPEECH_VOLUME	"speech volume"    	// speech volume multiplier , default volume is integer and equals 2
 #define CE_BLOODCLOT		"blood clotting"	// Promote healing but thickens blood, slows and stops bleeding (range 0 - 1)
-#define CE_OXYGENATED		"oxygenation"       // Dexalin.
+#define CE_OXYGENATED		"oxygenation"       // Dexalin
 #define CE_PURGER			"purger"			// Purger
 #define CE_NOWITHDRAW 		"withdrawal suppressant"
 #define CE_VOICEMIMIC		"voice mimic"
 #define CE_DYNAMICFINGERS	"dynamic fingers"
 #define CE_BONE_MEND		"bone mending"   	// Ossisine
+#define CE_ONCOCIDAL        "anti-cancer"
 
 // Chem effects for robotic/assisted organs
 #define CE_MECH_STABLE 		"coolant"

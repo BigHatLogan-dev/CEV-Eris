@@ -1,4 +1,5 @@
 /datum/component/internal_wound/organic
+	dupe_mode = COMPONENT_DUPE_UNIQUE
 	diagnosis_stat = STAT_BIO
 	diagnosis_difficulty = STAT_LEVEL_ADEPT
 	can_progress = TRUE
@@ -101,7 +102,7 @@
 	next_wound = /datum/component/internal_wound/infection
 	tox_damage = 0.25
 
-// Tox/chem OD
+// Tox/chem OD/atmos
 /datum/component/internal_wound/organic/poisoning
 	name = "toxin accumulation"
 	treatments_chem = list(CE_PURGER = 3)	// No anti-tox cure, poisoning can occur as a result of too much anti-tox
@@ -112,6 +113,26 @@
 
 /datum/component/internal_wound/organic/poisoning/chem
 	name = "chemical poisoning"
+
+// Clone/radiation
+/datum/component/internal_wound/organic/radiation
+	name = "benign tumor"
+	treatments_tool = list(QUALITY_CUTTING = FAILCHANCE_NORMAL)
+	treatments_chem = list(CE_ONCOCIDAL = 1)
+	severity = 1
+	severity_max = 1
+	hal_damage = 0.25
+	tox_damage = 0.25
+	status_flag = ORGAN_MUTATED
+
+/datum/component/internal_wound/organic/radiation/malignant
+	name = "malignant tumor"
+	treatments_tool = list()
+	treatments_chem = list(CE_ONCOCIDAL = 2)
+	severity = 0
+	severity_max = 10
+	can_spread = TRUE
+	spread_threshold = 8
 
 // Secondary wounds
 /datum/component/internal_wound/organic/swelling

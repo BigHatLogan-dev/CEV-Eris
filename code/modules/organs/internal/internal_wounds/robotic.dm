@@ -85,7 +85,8 @@
 	name = "rust"
 
 /datum/component/internal_wound/robotic/deformation
+	dupe_mode = COMPONENT_DUPE_UNIQUE
 	name = "plastic deformation"
 	treatments_tool = list(QUALITY_WELDING = FAILCHANCE_NORMAL)
-	severity = 1
-	hal_damage = 1
+	severity = 4
+	hal_damage = 0.5

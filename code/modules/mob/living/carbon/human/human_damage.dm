@@ -353,6 +353,8 @@ This function restores all organs.
 	//Handle PSY damage
 	if(damagetype == PSY)
 		sanity.onPsyDamage(damage)
+		var/obj/item/organ/brain = random_organ_by_process[BP_BRAIN]
+		brain.take_damage(damage / 3, FALSE, PSY)
 		return 1
 
 	//Handle other types of damage
