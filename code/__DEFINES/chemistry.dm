@@ -42,8 +42,8 @@
 #define CE_PAINKILLER		"painkiller"
 #define CE_ALCOHOL			"alcohol" 			// Liver filtering
 #define CE_ALCOHOL_TOXIC	"alcohol poisoning" // Liver damage
-#define CE_SPEEDBOOST		"speed" 			// Hyperzine
-#define CE_PULSE			"heart rate"		// increases or decreases heart rate
+#define CE_SPEEDBOOST		"agility augment" 	// Hyperzine
+#define CE_PULSE			"heart stimulant"	// increases or decreases heart rate
 #define CE_NOPULSE			"arresting agent" 	// stops heartbeat
 #define CE_MIND				"mind stabilization"// Stabilizes or wrecks mind. Used for hallucinations
 #define CE_ANTITOX			"antitoxin"    		// Dylovene
@@ -56,7 +56,7 @@
 #define CE_VOICEMIMIC		"voice mimic"
 #define CE_DYNAMICFINGERS	"dynamic fingers"
 #define CE_BONE_MEND		"bone mending"   	// Ossisine
-#define CE_ONCOCIDAL        "anti-cancer"
+#define CE_ONCOCIDAL        "anticancer"
 
 // Chem effects for robotic/assisted organs
 #define CE_MECH_STABLE 		"coolant"
