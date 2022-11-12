@@ -1,0 +1,1 @@
+/datum/component/internal_wound/sanity

@@ -1,6 +1,5 @@
 /obj/item/organ/internal/brain
 	name = "brain"
-	health = 100 //They need to live awhile longer than other organs. Is this even used by organ code anymore?
 	desc = "A piece of juicy meat found in a person's head."
 	organ_efficiency = list(BP_BRAIN = 100)
 	parent_organ_base = BP_HEAD
@@ -20,16 +19,18 @@
 	max_blood_storage = 80
 	oxygen_req = 8
 	nutriment_req = 6
+	health = 100
 	var/mob/living/carbon/brain/brainmob = null
+	var/timer_id
 
 /obj/item/organ/internal/brain/New()
 	..()
 	health = config.default_brain_health
-	spawn(5)
-		if(brainmob && brainmob.client)
-			brainmob.client.screen.len = null //clear the hud
+	timer_id = addtimer(CALLBACK(src, .proc/clear_hud), 5, TIMER_STOPPABLE)
 
 /obj/item/organ/internal/brain/Destroy()
+	if(timer_id)
+		deltimer(timer_id)
 	if(brainmob)
 		qdel(brainmob)
 		brainmob = null
@@ -39,10 +40,17 @@
 	if(!damage_type)
 		return
 
-	health = max(0, health - amount * (100 / (parent ? parent.limb_efficiency : 100)))
+	health -= amount * (100 / (parent ? parent.limb_efficiency : 100))
 
-	if(!health)
-		..()
+	if(health < 0)
+		var/wound_damage = -health
+		health = 0
+		..(wound_damage, silent, damage_type, sharp, edge)
+
+/obj/item/organ/internal/brain/proc/clear_hud()
+	if(brainmob && brainmob.client)
+		brainmob.client.screen.len = null //clear the hud
+	timer_id = null
 
 /obj/item/organ/internal/brain/proc/transfer_identity(mob/living/carbon/H)
 	name = "\the [H]'s [initial(src.name)]"
