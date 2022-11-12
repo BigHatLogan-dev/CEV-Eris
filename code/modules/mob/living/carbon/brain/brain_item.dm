@@ -40,7 +40,8 @@
 	if(!damage_type)
 		return
 
-	health -= amount * (100 / (parent ? parent.limb_efficiency : 100))
+	var/pierce_divisor = 1 + sharp + edge					// Armor divisor, but for meat
+	health -= amount - ((parent ? parent.limb_efficiency : 100) / 10) / pierce_divisor
 
 	if(health < 0)
 		var/wound_damage = -health
