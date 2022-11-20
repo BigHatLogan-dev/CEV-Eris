@@ -28,6 +28,7 @@
 	var/grind_rate = 8						// How many ticks between each processed item
 	var/current_tick = 0
 	var/substrate_conversion_factor = 1		// Multiplier for converting reagents/biomatter into substrate
+	var/throughput_divisor = 8
 
 	// Lazy research placeholder
 	var/spits_until_unlock = 4
@@ -99,8 +100,10 @@
 
 	component_parts += new /obj/item/organ/internal/brain
 	component_parts += new /obj/item/organ/internal/bone/head		// Doesn't do anything
+	component_parts += new /obj/item/organ/internal/bone/chest		// Doesn't do anything
+	component_parts += new /obj/item/organ/internal/bone/groin		// Doesn't do anything
 	component_parts += new /obj/item/organ/internal/nerve			// Doesn't do anything
-	component_parts += new /obj/item/organ/internal/blood_vessel	// Doesn't do anything
+	component_parts += new /obj/item/organ/internal/lungs			// Doesn't do anything
 
 	RefreshParts()
 
@@ -193,7 +196,7 @@
 				amount_to_take += max(0, O.matter[MATERIAL_BIOMATTER])
 			qdel(O)
 		if(amount_to_take)
-			biomatter_counter += round(amount_to_take * substrate_conversion_factor, 0.01)
+			biomatter_counter += round(amount_to_take * substrate_conversion_factor / throughput_divisor, 0.01)
 		break
 
 	// Make sure the object is qdel'd
@@ -293,6 +296,8 @@
 	var/carrion_chem_eff = 0
 	var/stomach_eff = 0
 	var/muscle_eff = 0
+	var/blood_vessel_eff = 0
+	var/heart_eff = 0
 	var/carrion_maw_eff = 0
 	var/brain_eff = 0
 
@@ -300,6 +305,7 @@
 	var/tick_reduction = 0
 	var/conversion_mod = 0
 	var/research_mod = 0
+	var/throughput_mod = 0
 
 	has_brain = FALSE
 
@@ -325,6 +331,10 @@
 					stomach_eff += O.organ_efficiency[eff]
 				if(OP_MUSCLE)
 					muscle_eff += O.organ_efficiency[eff]
+				if(OP_BLOOD_VESSEL)
+					blood_vessel_eff += O.organ_efficiency[eff]
+				if(OP_HEART)
+					heart_eff += O.organ_efficiency[eff]
 				if(BP_BRAIN)
 					has_brain = TRUE
 					brain_eff += O.organ_efficiency[eff]
@@ -361,12 +371,14 @@
 	capacity_mod = round(stomach_eff / 15, 1) 
 	tick_reduction = round(muscle_eff / 20, 1) 
 	conversion_mod = round((stomach_eff + (liver_eff * 0.25) + (kidney_eff * 0.25) + (carrion_maw_eff * 4)) / 100, 0.01)
-	research_mod = clamp(round(brain_eff / 65, 1) - 1, 0, spits_until_unlock - 1)
+	research_mod = CLAMP(round(brain_eff / 65, 1) - 1, 0, spits_until_unlock - 1)
+	throughput_mod = (heart_eff > 80) ? max(round(blood_vessel_eff / 65, 0.25), 4) : 0
 
 	limit = initial(limit) + capacity_mod
 	grind_rate = initial(grind_rate) - tick_reduction
 	substrate_conversion_factor = initial(substrate_conversion_factor) + conversion_mod
 	spits_until_unlock = initial(spits_until_unlock) - research_mod
+	throughput_divisor = initial(throughput_divisor) - throughput_mod
 
 /obj/machinery/reagentgrinder/industrial/disgorger/on_deconstruction()
 	..()
