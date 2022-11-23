@@ -27,7 +27,7 @@
 	parent.status |= ORGAN_BROKEN	//Holding the status on the parent organ to make transition to erismed organ processes easier.
 	broken_description = pick("broken","fracture","hairline fracture")
 	parent.perma_injury = parent.brute_dam
-	take_damage(10, 0)
+	take_damage(45, TRUE)
 
 	// Fractures have a chance of getting you out of restraints
 	if(prob(25))
