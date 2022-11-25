@@ -4,7 +4,7 @@
 	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN_RARE		// Rare because 4 upgrade slots
 	spawn_blacklisted = TRUE	// More of a novel thing to find in the deep maint vendors
 	bad_type = /obj/item/organ/internal/scaffold/aberrant/dependent
-	aberrant_cooldown_time = DEPENDENT_ABERRANT_COOLDOWN
+	aberrant_cooldown_time = EXTENDED_ABERRANT_COOLDOWN
 	input_mod_path = /obj/item/modification/organ/internal/input/reagents
 	process_mod_path = /obj/item/modification/organ/internal/process/condense
 	output_mod_path = /obj/item/modification/organ/internal/output/activate_organ_functions

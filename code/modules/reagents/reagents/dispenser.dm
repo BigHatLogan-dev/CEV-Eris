@@ -26,6 +26,7 @@
 	return
 
 /datum/reagent/metal
+	name = "metal"
 	reagent_type = "Metal"
 
 /datum/reagent/metal/aluminum

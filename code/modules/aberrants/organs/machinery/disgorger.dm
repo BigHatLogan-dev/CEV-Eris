@@ -25,15 +25,17 @@
 	var/spit_target
 	var/spit_range = 2		// For var-edits
 	var/has_brain = FALSE
-	var/grind_rate = 8						// How many ticks between each processed item
-	var/current_tick = 0
-	var/substrate_conversion_factor = 1		// Multiplier for converting reagents/biomatter into substrate
-	var/throughput_divisor = 8
 
-	// Lazy research placeholder
-	var/spits_until_unlock = 4
-	var/current_spit = 0
+	// Production
+	var/grind_rate = 8				// How many ticks between each processed item
+	var/current_tick = 0
+	var/production_denominator = 2	// Affects the multiplier for converting reagents/biomatter into substrate
+
+	// Research
+	var/research_denominator = 2	// Affects the multiplier for researching new designs
 	var/datum/research/knowledge
+	var/list/tech_progress = list(0,0,0,0)
+
 	var/list/designs_to_unlock = list(
 		/datum/design/organ/teratoma/special/chemical_effect,
 		/datum/design/organ/teratoma/special/stat_boost,
@@ -102,8 +104,6 @@
 	component_parts += new /obj/item/organ/internal/bone/head		// Doesn't do anything
 	component_parts += new /obj/item/organ/internal/bone/chest		// Doesn't do anything
 	component_parts += new /obj/item/organ/internal/bone/groin		// Doesn't do anything
-	component_parts += new /obj/item/organ/internal/nerve			// Doesn't do anything
-	component_parts += new /obj/item/organ/internal/lungs			// Doesn't do anything
 
 	RefreshParts()
 
@@ -175,13 +175,16 @@
 	// Check reagents first
 	if(I.reagents)
 		holdingitems -= I
-		for(var/reagent in I.reagents.reagent_list)
-			var/datum/reagent/R = reagent
-			if(!is_type_in_list(R, blacklisted_reagents))
-				for(var/reagent_type in accepted_reagents)
-					if(istype(R, reagent_type))
-						biomatter_counter += round(R.volume * accepted_reagents[reagent_type] * substrate_conversion_factor, 0.01)
-	
+		for(var/datum/reagent/R in I.reagents.reagent_list)
+			if(is_type_in_list(R, blacklisted_reagents))
+				continue
+			for(var/reagent_path in accepted_reagents)
+				if(!istype(R, reagent_path))
+					continue
+				var/reagent_amount = round(R.volume * (accepted_reagents[reagent_path] / production_denominator), 0.01)
+				var/reagent_research = round(R.volume / research_denominator)
+				biomatter_counter += reagent_amount
+				progress(R.reagent_type, reagent_research)
 	// Check biomatter content and contained objects (depth of 2, include self)
 	for(var/path in accepted_objects)
 		if(!istype(I, path))
@@ -192,11 +195,13 @@
 		var/amount_to_take
 
 		for(var/obj/item/O in I.GetAllContents(2, TRUE))
-			if(O.matter.Find(MATERIAL_BIOMATTER))
-				amount_to_take += max(0, O.matter[MATERIAL_BIOMATTER])
+			amount_to_take += max(0, O.matter[MATERIAL_BIOMATTER] / 2)
 			qdel(O)
 		if(amount_to_take)
-			biomatter_counter += round(amount_to_take * substrate_conversion_factor / throughput_divisor, 0.01)
+			var/biomatter_amount = round(amount_to_take / production_denominator, 0.01)
+			var/biomatter_research = round(amount_to_take / research_denominator)
+			biomatter_counter += biomatter_amount
+			progress("Viscera", reagent_research)
 		break
 
 	// Make sure the object is qdel'd
@@ -222,28 +227,37 @@
 
 	while(biomatter_counter > 59.99)
 		bottle()
-		if(current_spit >= spits_until_unlock && designs_to_unlock.len)
-			unlock_design()
+
 
 	SSnano.update_uis(src)
 
 /obj/machinery/reagentgrinder/industrial/disgorger/bottle()
 	biomatter_counter = max(biomatter_counter - 60, 0)		// Flesh cubes have 60 biomatter
 	addtimer(CALLBACK(src, .proc/spit), 1 SECONDS, TIMER_STOPPABLE)
-	if(has_brain)
-		++current_spit
 
 /obj/machinery/reagentgrinder/industrial/disgorger/proc/spit()
 	flick("[initial(icon_state)]_spit", src)
 	var/obj/item/fleshcube/new_cube = new(get_turf(src))
 	new_cube.throw_at(spit_target, 3, 1)
 
-/obj/machinery/reagentgrinder/industrial/disgorger/proc/unlock_design()
-	current_spit = 0
-	var/datum/design/D = SSresearch.get_design(designs_to_unlock[1])
-	designs_to_unlock.Remove(D.type)
-	knowledge.AddDesign2Known(D)
+/obj/machinery/reagentgrinder/industrial/disgorger/proc/progress(tech_type, amount)
+	switch(tech_type)
+		if("Toxin")
+			tech_progress[BIOTECH_TOXIN] += amount
+		if("Organic")
+			tech_progress[BIOTECH_ORGANIC] += amount
+		if("Stimulator")
+			tech_progress[BIOTECH_STIM] += amount
+		if("Viscera")
+			tech_progress[BIOTECH_VISCERA] += amount
+		if("Toxin/Stimulator")
+			tech_progress[BIOTECH_TOXIN] += amount / 2
+			tech_progress[BIOTECH_STIM] += amount / 2
 
+	// Check if any unlock
+
+/obj/machinery/reagentgrinder/industrial/disgorger/proc/try_unlock_tech()
+	// Attempt to unlock tech, say message, transmit to organ fabs
 	var/message = pickweight(list(
 		"When you study and object from a distance, only its principle may be seen." = 1,									// Children of Dune
 		"Knowledge is an unending adventure at the edge of uncertainty." = 1,												// 
@@ -303,9 +317,9 @@
 
 	var/capacity_mod = 0
 	var/tick_reduction = 0
-	var/conversion_mod = 0
+	var/production_mod = 0
 	var/research_mod = 0
-	var/throughput_mod = 0
+	var/throughput_mult = 0
 
 	has_brain = FALSE
 
@@ -359,7 +373,9 @@
 	if(kidney_eff > 49)
 		LAZYADD(accepted_reagents, list(
 			/datum/reagent/organic/blood = 0.1,		// Internet says blood plasma is 10% solids, 90% water
-			/datum/reagent/drink/milk = 0.13		// Internet says milk is 13% solids, 87% water
+			/datum/reagent/drink/milk = 0.13,		// Internet says milk is 13% solids, 87% water
+			/datum/reagent/stim = 0.25,
+			/datum/reagent/metal = 0.25
 		))
 
 	if(carrion_chem_eff > 99)
@@ -368,17 +384,17 @@
 			/datum/reagent/toxin/aranecolmin = 2
 		))
 
-	capacity_mod = round(stomach_eff / 15, 1) 
-	tick_reduction = round(muscle_eff / 20, 1) 
-	conversion_mod = round((stomach_eff + (liver_eff * 0.25) + (kidney_eff * 0.25) + (carrion_maw_eff * 4)) / 100, 0.01)
-	research_mod = CLAMP(round(brain_eff / 65, 1) - 1, 0, spits_until_unlock - 1)
-	throughput_mod = (heart_eff > 80) ? max(round(blood_vessel_eff / 65, 0.25), 4) : 0
+	throughput_mult = (heart_eff > 79) ? round(blood_vessel_eff / 650, 0.05) : 0.05
+
+	capacity_mod = round(stomach_eff / 15) 
+	tick_reduction = round(muscle_eff / 20) 
+	production_mod = round(throughput_mult * ((stomach_eff / 4) + (liver_eff / 4) + (kidney_eff / 4) + (carrion_maw_eff)) / 100, 0.01)
+	research_mod = round(throughput_mult * brain_eff / 65, 0.01)
 
 	limit = initial(limit) + capacity_mod
 	grind_rate = initial(grind_rate) - tick_reduction
-	substrate_conversion_factor = initial(substrate_conversion_factor) + conversion_mod
-	spits_until_unlock = initial(spits_until_unlock) - research_mod
-	throughput_divisor = initial(throughput_divisor) - throughput_mod
+	production_denominator = max(initial(production_denominator) - production_mod, 0.5)
+	research_denominator = max(initial(research_denominator) - research_mod, 0.5)
 
 /obj/machinery/reagentgrinder/industrial/disgorger/on_deconstruction()
 	..()
@@ -390,6 +406,8 @@
 	. = ..()
 
 	.["biomatter_counter"] = biomatter_counter
+	.["research_rate"] = round(1 / research_denominator, 0.01)
+	.["production_rate"] = round(1 / production_denominator, 0.01)
 
 /obj/machinery/reagentgrinder/industrial/disgorger/nano_ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = NANOUI_FOCUS)
 	if(!nano_template)
