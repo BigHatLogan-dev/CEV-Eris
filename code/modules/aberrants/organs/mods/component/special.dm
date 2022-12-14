@@ -1,5 +1,4 @@
 /datum/component/modification/organ/on_item_examine
-	exclusive_type = /obj/item/modification/organ/internal/special/on_item_examine
 	trigger_signal = COMSIG_EXAMINE
 
 /datum/component/modification/organ/on_item_examine/brainloss
@@ -22,7 +21,6 @@
 
 
 /datum/component/modification/organ/on_pickup
-	exclusive_type = /obj/item/modification/organ/internal/special/on_pickup
 	trigger_signal = COMSIG_ITEM_PICKED
 
 /datum/component/modification/organ/on_pickup/shock
@@ -43,31 +41,7 @@
 		var/mob/living/L = owner
 		L.electrocute_act(damage, parent)
 
-/datum/component/modification/organ/on_pickup/parasitic
-
-/datum/component/modification/organ/on_pickup/parasitic/get_function_info()
-	var/description = "<span style='color:purple'>Functional information (secondary):</span> attempts to implant itself into the holder"
-	return description
-
-/datum/component/modification/organ/on_pickup/parasitic/trigger(obj/item/holder, mob/owner)
-	if(!holder || !owner)
-		return
-
-	if(ishuman(owner))
-		var/mob/living/carbon/human/H = owner
-		var/obj/item/organ/external/active_hand = H.get_active_hand_organ()
-		if(H.getarmor_organ(active_hand, ARMOR_MELEE) < 3 && active_hand.get_total_occupied_volume() < active_hand.max_volume)
-			if(istype(holder, /obj/item/organ/internal))
-				var/obj/item/organ/internal/I = holder
-				H.drop_item()
-				I.replaced(active_hand)
-				H.apply_damage(10, HALLOSS, active_hand)
-				H.apply_damage(10, BRUTE, active_hand)
-				to_chat(owner, SPAN_WARNING("\The [holder] forces its way into your [active_hand.name]!"))
-
-
 /datum/component/modification/organ/on_cooldown
-	exclusive_type = /obj/item/modification/organ/internal/special/on_cooldown
 	trigger_signal = COMSIG_ABERRANT_SECONDARY
 
 /datum/component/modification/organ/on_cooldown/chemical_effect
@@ -135,3 +109,82 @@
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
 		H.stats.addTempStat(stat, boost * effect_multiplier, delay, "\ref[parent]")
+
+
+/datum/component/modification/organ/parasitic
+	adjustable = TRUE
+	trigger_signal = COMSIG_ITEM_PICKED
+
+/datum/component/modification/organ/parasitic/get_function_info()
+	var/description
+
+	if(trigger_signal == COMSIG_IATTACK)
+		description = "<span style='color:purple'>Functional information (secondary):</span> can be implanted through unprotected skin"
+	else if(trigger_signal == COMSIG_ITEM_PICKED)
+		description = "<span style='color:purple'>Functional information (secondary):</span> can implant itself through unprotected skin"
+
+	return description
+
+/datum/component/modification/organ/parasitic/modify(obj/item/I, mob/living/user)
+	var/list/possibilities = list(
+		"on pick-up" = COMSIG_ITEM_PICKED,
+		"on insertion" = COMSIG_IATTACK
+		)
+	var/list/inverted_possibles = list(
+		COMSIG_ITEM_PICKED = "on pick-up",
+		COMSIG_IATTACK = "on insertion"
+	)
+
+	var/decision = input("Choose an implant method (current: [inverted_possibles[trigger_signal]])","Adjusting Organoid") as null|anything in possibilities
+	if(!decision)
+		return
+	
+	trigger_signal = possibilities[decision]
+
+/datum/component/modification/organ/parasitic/trigger(atom/A, mob/M)
+	if(!A || !M)
+		return
+
+	if(trigger_signal == COMSIG_IATTACK)
+		trigger_iattack(A, M)
+	else if(trigger_signal == COMSIG_ITEM_PICKED)
+		trigger_pickup(A, M)
+
+/datum/component/modification/organ/parasitic/proc/trigger_pickup(obj/item/holder, mob/owner)
+	if(!holder || !owner)
+		return
+
+	if(ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		var/obj/item/organ/external/active_hand = H.get_active_hand_organ()
+		if(H.getarmor_organ(active_hand, ARMOR_BIO) < 75 && active_hand.get_total_occupied_volume() < active_hand.max_volume)
+			if(istype(holder, /obj/item/organ/internal))
+				var/obj/item/organ/internal/I = holder
+				H.drop_item()
+				I.replaced(active_hand)
+				H.apply_damage(10, HALLOSS, active_hand)
+				H.apply_damage(5, BRUTE, active_hand)
+				to_chat(owner, SPAN_WARNING("\The [holder] forces its way into your [active_hand.name]!"))
+
+/datum/component/modification/organ/parasitic/proc/trigger_iattack(atom/A, mob/living/user)
+	if(!A || !user)
+		return
+
+	if(ishuman(A) && ishuman(user))
+		var/mob/living/carbon/human/target = A
+		var/mob/living/carbon/human/attacker = user
+		var/obj/item/organ/external/affected = target.organs_by_name[attacker.targeted_organ]
+		if(!affected)
+			user.visible_message(SPAN_NOTICE("[user.name] attempts to implant [target.name], but misses!"), SPAN_WARNING("The target limb is missing."))
+		var/duration = max(3 SECONDS - round(attacker.stats.getStat(STAT_BIO) / 10), 0)		// Every 10 points of BIO reduces the duration by a tick (tenth of a second)
+		if(!do_after(attacker, duration, target))
+			return
+		if(target.getarmor_organ(affected, ARMOR_BIO) < 75 && affected.get_total_occupied_volume() < affected.max_volume)
+			var/atom/movable/AM = parent
+			if(istype(AM.loc, /obj/item/organ/internal))
+				var/obj/item/organ/internal/I = AM.loc
+				attacker.drop_item()
+				I.replaced(affected)
+				target.apply_damage(10, HALLOSS, affected)
+				target.apply_damage(5, BRUTE, affected)
+				user.visible_message(SPAN_WARNING("[user.name] implants \the [I] into [target.name]'s [affected.name]!"), SPAN_WARNING("You implant \the [I] into [target.name]'s [affected.name]!"))

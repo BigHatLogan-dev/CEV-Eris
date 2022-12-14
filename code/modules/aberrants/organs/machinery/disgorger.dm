@@ -39,7 +39,6 @@
 	var/list/designs_to_unlock = list(
 		/datum/design/organ/teratoma/special/chemical_effect,
 		/datum/design/organ/teratoma/special/stat_boost,
-		/datum/design/organ/teratoma/output/reagents_blood_medicine_simple,
 		/datum/design/organ/teratoma/output/chemical_effects_type_2,
 		/datum/design/organ/teratoma/input/uncommon/reagents_roach,
 		/datum/design/organ/teratoma/input/uncommon/reagents_spider,
@@ -54,15 +53,12 @@
 		/datum/design/organ/teratoma/process/boost,
 		/datum/design/organ/teratoma/output/uncommon/reagents_blood_roach,
 		/datum/design/organ/teratoma/output/uncommon/reagents_blood_drugs,
-		/datum/design/organ/teratoma/output/uncommon/reagents_blood_medicine_simple,
 		/datum/design/organ/teratoma/output/uncommon/reagents_ingest_edible,
 		/datum/design/organ/teratoma/output/uncommon/reagents_ingest_alcohol,
 		/datum/design/organ/teratoma/output/uncommon/chemical_effects_type_1,
 		/datum/design/organ/teratoma/output/uncommon/chemical_effects_type_2,
 		/datum/design/organ/teratoma/output/uncommon/stat_boost,
 		/datum/design/organ/scaffold/rare,
-		/datum/design/organ/teratoma/output/reagents_blood_medicine_intermediate,
-		/datum/design/organ/teratoma/output/uncommon/reagents_blood_medicine_intermediate,
 		/datum/design/organ/teratoma/input/rare/reagents_roach,
 		//datum/design/organ/teratoma/input/rare/reagents_spider,		// Not enough spider chems in the pool
 		/datum/design/organ/teratoma/input/rare/reagents_toxin,
@@ -74,7 +70,6 @@
 		/datum/design/organ/teratoma/input/rare/power_source,
 		/datum/design/organ/teratoma/output/rare/reagents_blood_roach,
 		/datum/design/organ/teratoma/output/rare/reagents_blood_drugs,
-		/datum/design/organ/teratoma/output/rare/reagents_blood_medicine_intermediate,
 		/datum/design/organ/teratoma/output/rare/reagents_ingest_edible,
 		/datum/design/organ/teratoma/output/rare/reagents_ingest_alcohol,
 		/datum/design/organ/teratoma/output/rare/chemical_effects_type_1,
@@ -201,7 +196,7 @@
 			var/biomatter_amount = round(amount_to_take / production_denominator, 0.01)
 			var/biomatter_research = round(amount_to_take / research_denominator)
 			biomatter_counter += biomatter_amount
-			progress("Viscera", reagent_research)
+			progress("Viscera", biomatter_research)
 		break
 
 	// Make sure the object is qdel'd
@@ -273,8 +268,8 @@
 	for(var/mob/O as anything in hearers(src, null))
 		O.show_message("\icon[src] <b>\The [src]</b> says, \"[message]\"", 2)
 
-	for(var/obj/machinery/autolathe/organ_fabricator/OF in get_area_all_atoms(get_area(src)))
-		OF.files.AddDesign2Known(D)
+	//for(var/obj/machinery/autolathe/organ_fabricator/OF in get_area_all_atoms(get_area(src)))
+	//	OF.files.AddDesign2Known(D)
 
 /obj/machinery/reagentgrinder/industrial/disgorger/default_deconstruction(obj/item/I, mob/user)
 	var/qualities = list(QUALITY_RETRACTING)

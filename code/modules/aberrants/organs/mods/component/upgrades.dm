@@ -100,6 +100,9 @@
 		var/list/organ_stats = ALL_ORGAN_STATS[decision]
 		var/modifier = round(organ_efficiency_mod[organ] / 100, 0.01)
 
+		if(!modifier)
+			return
+
 		organ_efficiency_mod.Remove(organ)
 		organ_efficiency_mod.Add(decision)
 		organ_efficiency_mod[decision] 	= round(organ_stats[1] * modifier, 1)

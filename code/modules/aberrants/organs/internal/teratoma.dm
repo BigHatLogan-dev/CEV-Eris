@@ -64,7 +64,7 @@
 				if(input_mode == CHEM_INGEST)
 					possible_reagent_classes |= list(REAGENTS_EDIBLE, REAGENTS_ALCOHOL)
 				if(input_mode == CHEM_BLOOD)
-					possible_reagent_classes |= list(REAGENTS_MEDICINE_BASIC, REAGENTS_DRUGS)
+					possible_reagent_classes |= list(REAGENTS_DRUGS)
 				specific_input_type_pool = pick(possible_reagent_classes)
 			input_threshold = 0
 
@@ -72,7 +72,7 @@
 		if(/obj/item/modification/organ/internal/output/reagents_blood)
 			if(!output_pool?.len)
 				var/list/possible_reagent_classes = list()
-				possible_reagent_classes |= list(REAGENTS_DRUGS, REAGENTS_ROACH, REAGENTS_MEDICINE_SIMPLE, REAGENTS_MEDICINE_INTERMEDIATE)
+				possible_reagent_classes |= list(REAGENTS_DRUGS, REAGENTS_ROACH)
 				output_pool = pick(possible_reagent_classes)
 			if(!output_info?.len)
 				for(var/i in 1 to req_num_outputs)
@@ -81,7 +81,7 @@
 		if(/obj/item/modification/organ/internal/output/reagents_ingest)
 			if(!output_pool?.len)
 				var/list/possible_reagent_classes = list()
-				possible_reagent_classes |= list(REAGENTS_EDIBLE, REAGENTS_ALCOHOL, REAGENTS_ROACH, REAGENTS_MEDICINE_SIMPLE, REAGENTS_MEDICINE_INTERMEDIATE)
+				possible_reagent_classes |= list(REAGENTS_EDIBLE, REAGENTS_ALCOHOL, REAGENTS_ROACH)
 				output_pool = pick(possible_reagent_classes)
 			if(!output_info?.len)
 				for(var/i in 1 to req_num_outputs)
@@ -301,7 +301,7 @@
 	description_info = "A teratoma that houses an enzymal organoid. Use a laser cutting tool to remove the organoid. 35 BIO and 15 COG recommended.\n\n\
 						Organoid information:\n\
 						Maps inputs to outputs. Increases output magnitude."
-	process_mod_path = /obj/item/modification/organ/internal/process/boost
+	process_mod_path = /obj/item/modification/organ/internal/process/multiplier
 
 // output
 /obj/item/organ/internal/scaffold/aberrant/teratoma/output
@@ -332,14 +332,6 @@
 /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/drugs
 	name = "hepatic teratoma (drugs)"
 	output_pool = REAGENTS_DRUGS
-
-/obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/medicine_simple
-	name = "hepatic teratoma (medicine)"
-	output_pool = REAGENTS_MEDICINE_SIMPLE
-
-/obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/medicine_intermediate
-	name = "hepatic teratoma (medicine II)"
-	output_pool = REAGENTS_MEDICINE_INTERMEDIATE
 
 /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_ingest
 	name = "gastric teratoma"
@@ -394,14 +386,6 @@
 	name = "bulging hepatic teratoma (drugs)"
 	output_pool = REAGENTS_DRUGS
 
-/obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/uncommon/medicine_simple
-	name = "bulging hepatic teratoma (medicine)"
-	output_pool = REAGENTS_MEDICINE_SIMPLE
-
-/obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/uncommon/medicine_intermediate
-	name = "bulging hepatic teratoma (medicine II)"
-	output_pool = REAGENTS_MEDICINE_INTERMEDIATE
-
 /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_ingest/uncommon
 	name = "bulging gastric teratoma"
 	req_num_outputs = 2
@@ -442,14 +426,6 @@
 /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/rare/drugs
 	name = "throbbing hepatic teratoma (drugs)"
 	output_pool = REAGENTS_DRUGS
-
-/obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/rare/medicine_simple
-	name = "throbbing hepatic teratoma (medicine)"
-	output_pool = REAGENTS_MEDICINE_SIMPLE
-
-/obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/rare/medicine_intermediate
-	name = "throbbing hepatic teratoma (medicine II)"
-	output_pool = REAGENTS_MEDICINE_INTERMEDIATE
 
 /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_ingest/rare
 	name = "throbbing gastric teratoma"

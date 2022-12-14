@@ -267,14 +267,6 @@
 /datum/design/organ/teratoma/output/reagents_blood_drugs
 	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/drugs
 
-/datum/design/organ/teratoma/output/reagents_blood_medicine_simple
-	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/medicine_simple
-	starts_unlocked = FALSE
-
-/datum/design/organ/teratoma/output/reagents_blood_medicine_intermediate
-	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/medicine_intermediate
-	starts_unlocked = FALSE
-
 /datum/design/organ/teratoma/output/reagents_ingest_edible
 	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_ingest/edible
 
@@ -302,12 +294,6 @@
 /datum/design/organ/teratoma/output/uncommon/reagents_blood_drugs
 	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/uncommon/drugs
 
-/datum/design/organ/teratoma/output/uncommon/reagents_blood_medicine_simple
-	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/uncommon/medicine_simple
-
-/datum/design/organ/teratoma/output/uncommon/reagents_blood_medicine_intermediate
-	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/uncommon/medicine_intermediate
-
 /datum/design/organ/teratoma/output/uncommon/reagents_ingest_edible
 	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_ingest/uncommon/edible
 
@@ -333,12 +319,6 @@
 
 /datum/design/organ/teratoma/output/rare/reagents_blood_drugs
 	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/rare/drugs
-
-/datum/design/organ/teratoma/output/rare/reagents_blood_medicine_simple
-	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/rare/medicine_simple
-
-/datum/design/organ/teratoma/output/rare/reagents_blood_medicine_intermediate
-	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_blood/rare/medicine_intermediate
 
 /datum/design/organ/teratoma/output/rare/reagents_ingest_edible
 	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/reagents_ingest/rare/edible
