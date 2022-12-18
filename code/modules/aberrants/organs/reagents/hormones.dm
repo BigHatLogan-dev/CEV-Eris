@@ -4,10 +4,10 @@
 	id = "hormone"
 	reagent_state = LIQUID
 	metabolism = REM
-	scannable = FALSE					// Don't need these clogging up reagent lists on the health scanner
+	scannable = TRUE
 	constant_metabolism = TRUE			// We want these to get used up before the aberrant cooldown is over
 	nerve_system_accumulations = 0		// These are hormones
-	appear_in_default_catalog = FALSE
+	appear_in_default_catalog = TRUE
 	reagent_type = "Hormone"
 	var/hormone_type = 1	// Used for organ function info
 	var/list/effects = list()	// "effect" = magnitude

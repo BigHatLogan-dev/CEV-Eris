@@ -193,6 +193,8 @@
 	oxygen_req = initial(oxygen_req)
 
 	SEND_SIGNAL(src, COMSIG_APPVAL, src)
+	SEND_SIGNAL(src, COMSIG_APPVAL_MULT, src)
+	SEND_SIGNAL(src, COMSIG_APPVAL_FLAT, src)
 
 	for(var/prefix in prefixes)
 		name = "[prefix] [name]"

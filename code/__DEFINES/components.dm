@@ -114,7 +114,9 @@
 // /obj/item signals
 #define COMSIG_IATTACK "item_attack"									//from /mob/ClickOn(): (/atom, /src, /params) If any reply to this returns TRUE, overrides attackby and afterattack
 #define COMSIG_ATTACKBY "attack_by"										//from /mob/ClickOn():
-#define COMSIG_APPVAL "apply_values"									//from /atom/refresh_upgrades(): (/src) Called to upgrade specific values
+#define COMSIG_APPVAL "apply_values_add"						    	//from /atom/refresh_upgrades(): (/src) Called to upgrade specific values, additive
+#define COMSIG_APPVAL_MULT "apply_values_mult"							//from /atom/refresh_upgrades(): (/src) Called to upgrade specific values, multiplicative
+#define COMSIG_APPVAL_FLAT "apply_values_flat"						   	//from /atom/refresh_upgrades(): (/src) Called to upgrade specific values, for values not affected by multiplicative modifiers
 #define COMSIG_ADDVAL "add_values" 										//from /atom/refresh_upgrades(): (/src) Called to add specific things to the /src, called before COMSIG_APPVAL
 #define COMSIG_REMOVE "uninstall"
 #define COMSIG_ITEM_DROPPED	"item_dropped"					//from  /obj/item/tool/attackby(): Called to remove an upgrade

@@ -55,6 +55,19 @@
 	var/min_broken_damage_multiplier = null
 	var/max_damage_multiplier = null
 
+	// Flat value adjustments, these are added after multiplicative modifiers
+	var/list/organ_efficiency_flat_mod = list()
+	var/specific_organ_size_flat_mod = null
+	var/max_blood_storage_flat_mod = null
+	var/blood_req_flat_mod = null
+	var/nutriment_req_flat_mod = null
+	var/oxygen_req_flat_mod = null
+	var/min_bruised_damage_flat_mod = null
+	var/min_broken_damage_flat_mod = null
+	var/max_damage_flat_mod = null
+
+	// Other adjustments
+	var/aberrant_cooldown_time_mod = null	// Scaffolds only
 	var/max_upgrade_mod = null
 	var/scanner_hidden = FALSE
 
@@ -73,7 +86,7 @@
 
 	O.owner.mutation_index++
 
-/datum/component/modification/organ/apply_values(obj/item/organ/internal/holder)
+/datum/component/modification/organ/apply_mod_values(obj/item/organ/internal/holder)
 	ASSERT(holder)
 	
 	var/using_generated_name = FALSE
@@ -111,33 +124,12 @@
 				holder.organ_efficiency.Add(organ)
 				holder.organ_efficiency[organ] = round(added_efficiency, 1)
 
-		if(holder.owner && istype(holder.owner, /mob/living/carbon/human))
+		if(ishuman(holder.owner))
 			var/mob/living/carbon/human/H = holder.owner
 			for(var/process in organ_efficiency_mod)
 				if(!islist(H.internal_organs_by_efficiency[process]))
 					H.internal_organs_by_efficiency[process] = list()
 				H.internal_organs_by_efficiency[process] |= holder
-
-	if(organ_efficiency_multiplier)
-		for(var/organ in holder.organ_efficiency)
-			holder.organ_efficiency[organ] = round(holder.organ_efficiency[organ] * (1 + organ_efficiency_multiplier), 1)
-
-	if(specific_organ_size_multiplier)
-		holder.specific_organ_size *= 1 - round(specific_organ_size_multiplier, 0.01)
-	if(max_blood_storage_multiplier)
-		holder.max_blood_storage *= 1 + round(max_blood_storage_multiplier, 0.01)
-	if(blood_req_multiplier)
-		holder.blood_req *= 1 - round(blood_req_multiplier, 0.01)
-	if(nutriment_req_multiplier)
-		holder.nutriment_req *= 1 - round(nutriment_req_multiplier, 0.01)
-	if(oxygen_req_multiplier)
-		holder.oxygen_req *= 1 - round(oxygen_req_multiplier, 0.01)
-	if(min_bruised_damage_multiplier)
-		holder.min_bruised_damage *= 1 + round(min_bruised_damage_multiplier, 0.01)
-	if(min_broken_damage_multiplier)
-		holder.min_broken_damage *= 1 + round(min_broken_damage_multiplier, 0.01)
-	if(max_damage_multiplier)
-		holder.max_damage *= 1 + round(max_damage_multiplier, 0.01)
 
 	if(specific_organ_size_mod)
 		holder.specific_organ_size += round(specific_organ_size_mod, 0.01)
@@ -157,9 +149,74 @@
 		holder.min_broken_damage += min_broken_damage_mod
 	if(max_damage_mod)
 		holder.max_damage += max_damage_mod
+	if(S && aberrant_cooldown_time_mod)
+		S.aberrant_cooldown_time += aberrant_cooldown_time_mod
 
 	if(scanner_hidden)
 		holder.scanner_hidden = scanner_hidden
+
+/datum/component/modification/organ/apply_mult_values(obj/item/organ/internal/holder)
+	ASSERT(holder)
+
+	if(organ_efficiency_multiplier)
+		for(var/organ in holder.organ_efficiency)
+			holder.organ_efficiency[organ] = round(holder.organ_efficiency[organ] * (1 + organ_efficiency_multiplier), 1)
+
+	if(specific_organ_size_multiplier)
+		holder.specific_organ_size *= 1 + round(specific_organ_size_multiplier, 0.01)
+	if(max_blood_storage_multiplier)
+		holder.max_blood_storage *= 1 + round(max_blood_storage_multiplier, 0.01)
+	if(blood_req_multiplier)
+		holder.blood_req *= 1 + round(blood_req_multiplier, 0.01)
+	if(nutriment_req_multiplier)
+		holder.nutriment_req *= 1 + round(nutriment_req_multiplier, 0.01)
+	if(oxygen_req_multiplier)
+		holder.oxygen_req *= 1 + round(oxygen_req_multiplier, 0.01)
+	if(min_bruised_damage_multiplier)
+		holder.min_bruised_damage *= 1 + round(min_bruised_damage_multiplier, 0.01)
+	if(min_broken_damage_multiplier)
+		holder.min_broken_damage *= 1 + round(min_broken_damage_multiplier, 0.01)
+	if(max_damage_multiplier)
+		holder.max_damage *= 1 + round(max_damage_multiplier, 0.01)
+
+/datum/component/modification/organ/apply_flat_values(obj/item/organ/internal/holder)
+	ASSERT(holder)
+	
+	if(!islist(holder.organ_efficiency))
+		holder.organ_efficiency = list()
+
+	if(organ_efficiency_flat_mod.len)
+		for(var/organ in organ_efficiency_flat_mod)
+			var/added_efficiency = organ_efficiency_flat_mod[organ]
+			if(holder.organ_efficiency.Find(organ))
+				holder.organ_efficiency[organ] += round(added_efficiency, 1)
+			else
+				holder.organ_efficiency.Add(organ)
+				holder.organ_efficiency[organ] = round(added_efficiency, 1)
+
+		if(ishuman(holder.owner))
+			var/mob/living/carbon/human/H = holder.owner
+			for(var/process in organ_efficiency_flat_mod)
+				if(!islist(H.internal_organs_by_efficiency[process]))
+					H.internal_organs_by_efficiency[process] = list()
+				H.internal_organs_by_efficiency[process] |= holder
+
+	if(specific_organ_size_flat_mod)
+		holder.specific_organ_size += round(specific_organ_size_flat_mod, 0.01)
+	if(max_blood_storage_flat_mod)
+		holder.max_blood_storage += round(max_blood_storage_flat_mod, 0.01)
+	if(blood_req_flat_mod)
+		holder.blood_req += round(blood_req_flat_mod, 0.01)
+	if(nutriment_req_flat_mod)
+		holder.nutriment_req += round(nutriment_req_flat_mod, 0.01)
+	if(oxygen_req_flat_mod)
+		holder.oxygen_req += round(oxygen_req_flat_mod, 0.01)
+	if(min_bruised_damage_flat_mod)
+		holder.min_bruised_damage += min_bruised_damage_flat_mod
+	if(min_broken_damage_flat_mod)
+		holder.min_broken_damage += min_broken_damage_flat_mod
+	if(max_damage_flat_mod)
+		holder.max_damage += max_damage_flat_mod
 
 /datum/component/modification/organ/uninstall(obj/item/organ/O, mob/living/user)
 	..()
@@ -209,6 +266,8 @@
 			organs += organ + " ([organ_efficiency_mod[organ]]), "
 		organs = copytext(organs, 1, length(organs) - 1)
 		info += "\nOrgan tissues present: <span style='color:pink'>[organs ? organs : "none"]</span>"
+		if(aberrant_cooldown_time_mod)
+			info += "\nAverage organ process duration: [aberrant_cooldown_time_mod / (1 SECOND)] seconds"
 		
 		to_chat(user, SPAN_NOTICE(info))
 
@@ -216,4 +275,4 @@
 		if(function_info)
 			to_chat(user, SPAN_NOTICE(function_info))
 	else
-		to_chat(user, SPAN_WARNING("You lack the biological knowledge and/or mental ability  required to understand its functions."))
+		to_chat(user, SPAN_WARNING("You lack the biological knowledge and/or mental ability required to understand its functions."))

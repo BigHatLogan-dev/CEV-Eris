@@ -66,26 +66,26 @@
 
 	if(using_sci_goggles || details_unlocked)
 		var/function_info
-		var/input_info
-		var/process_info
-		var/output_info
+		var/input_info = SPAN_WARNING("Input organoid absent.")
+		var/process_info = SPAN_WARNING("Process organoid absent.")
+		var/output_info = SPAN_WARNING("Output organoid absent.")
 		var/secondary_info
 
 		for(var/mod in contents)
 			var/obj/item/modification/organ/internal/holder = mod
 			var/datum/component/modification/organ/organ_mod = holder.GetComponent(/datum/component/modification/organ)
 			if(istype(mod, /obj/item/modification/organ/internal/input))
-				input_info += organ_mod.get_function_info()
+				input_info = organ_mod.get_function_info()
 			if(istype(mod, /obj/item/modification/organ/internal/process))
-				process_info += organ_mod.get_function_info()
+				process_info = organ_mod.get_function_info()
 			if(istype(mod, /obj/item/modification/organ/internal/output))
-				output_info += organ_mod.get_function_info()
+				output_info = organ_mod.get_function_info()
 			if(istype(mod, /obj/item/modification/organ/internal/special))
 				secondary_info += organ_mod.get_function_info()
 
-		function_info = input_info + (input_info && process_info ? "\n" : null) +\
-						process_info + (process_info && output_info ? "\n" : null) +\
-						output_info + (output_info && secondary_info ? "\n" : null) +\
+		function_info = input_info + "\n" +\
+						process_info + "\n" +\
+						output_info + "\n" +\
 						secondary_info
 
 		if(aberrant_cooldown_time > 0)
@@ -114,10 +114,13 @@
 	blood_req = initial(blood_req)
 	nutriment_req = initial(nutriment_req)
 	oxygen_req = initial(oxygen_req)
+	aberrant_cooldown_time = initial(aberrant_cooldown_time)
 
 	update_color()
 
 	SEND_SIGNAL(src, COMSIG_APPVAL, src)
+	SEND_SIGNAL(src, COMSIG_APPVAL_MULT, src)
+	SEND_SIGNAL(src, COMSIG_APPVAL_FLAT, src)
 
 	update_name()
 	update_icon()
@@ -169,7 +172,6 @@
 	var/list/name_chunk
 	var/new_name
 	var/prefix
-	var/total_eff
 
 	for(var/organ in organ_efficiency)
 		switch(organ)
@@ -203,10 +205,8 @@
 		middle += name_chunk[2]
 		end = name_chunk[3]
 
-		total_eff += organ_efficiency[organ]
-
 	if(middle.len == 1)
-		prefix = pick("little", "small", "pygmy", "tiny") + " "
+		prefix = pick("little ", "small ", "pygmy ", "tiny ")
 
 	if(middle.len > 2)
 		middle.Cut(middle.len)
@@ -255,7 +255,7 @@
 	var/input_mode = null
 	var/input_threshold = 0
 	var/list/process_info = list()
-	var/should_process_have_organ_stats = TRUE
+	var/should_process_have_organ_stats = FALSE
 	var/list/output_pool = list()
 	var/list/output_info = list()
 	var/list/special_info = list()

@@ -30,7 +30,8 @@
 			special_mod_path = pick(subtypesof(/obj/item/modification/organ/internal/special/on_pickup) +\
 									subtypesof(/obj/item/modification/organ/internal/special/on_item_examine) +\
 									subtypesof(/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect) +\
-									subtypesof(/obj/item/modification/organ/internal/special/on_cooldown/stat_boost))
+									subtypesof(/obj/item/modification/organ/internal/special/on_cooldown/stat_boost) +\
+									list(/obj/item/modification/organ/internal/special/parasitic))
 		else
 			special_mod_path = pick(subtypesof(special_mod_path))	// Janky, but there aren't enough secondary effects to matter yet
 

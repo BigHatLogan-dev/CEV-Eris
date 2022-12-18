@@ -1,4 +1,5 @@
 /datum/component/modification/organ/on_item_examine
+	exclusive_type = /obj/item/modification/organ/internal/special/on_item_examine
 	trigger_signal = COMSIG_EXAMINE
 
 /datum/component/modification/organ/on_item_examine/brainloss
@@ -21,6 +22,7 @@
 
 
 /datum/component/modification/organ/on_pickup
+	exclusive_type = /obj/item/modification/organ/internal/special/on_pickup
 	trigger_signal = COMSIG_ITEM_PICKED
 
 /datum/component/modification/organ/on_pickup/shock
@@ -42,6 +44,7 @@
 		L.electrocute_act(damage, parent)
 
 /datum/component/modification/organ/on_cooldown
+	exclusive_type = /obj/item/modification/organ/internal/special/on_cooldown
 	trigger_signal = COMSIG_ABERRANT_SECONDARY
 
 /datum/component/modification/organ/on_cooldown/chemical_effect
@@ -112,6 +115,7 @@
 
 
 /datum/component/modification/organ/parasitic
+	exclusive_type = /obj/item/modification/organ/internal/special/parasitic
 	adjustable = TRUE
 	trigger_signal = COMSIG_ITEM_PICKED
 
@@ -126,20 +130,61 @@
 	return description
 
 /datum/component/modification/organ/parasitic/modify(obj/item/I, mob/living/user)
-	var/list/possibilities = list(
-		"on pick-up" = COMSIG_ITEM_PICKED,
-		"on insertion" = COMSIG_IATTACK
-		)
-	var/list/inverted_possibles = list(
-		COMSIG_ITEM_PICKED = "on pick-up",
-		COMSIG_IATTACK = "on insertion"
-	)
+	var/list/can_adjust = list("organ tissue", "implant behavior")
 
-	var/decision = input("Choose an implant method (current: [inverted_possibles[trigger_signal]])","Adjusting Organoid") as null|anything in possibilities
-	if(!decision)
+	var/decision_adjust = input("What do you want to adjust?","Adjusting Organoid") as null|anything in can_adjust
+	if(!decision_adjust)
 		return
-	
-	trigger_signal = possibilities[decision]
+
+	switch(decision_adjust)
+		if("organ tissue")
+			specific_organ_size_mod = 0
+			max_blood_storage_mod = 0
+			blood_req_mod = 0
+			nutriment_req_mod = 0
+			oxygen_req_mod = 0
+
+			var/list/possibilities = PARASITIC_ORGAN_EFFICIENCIES
+
+			for(var/organ in organ_efficiency_mod)
+				if(organ_efficiency_mod.len > 1)
+					for(var/organ_eff in possibilities)
+						if(organ != organ_eff && organ_efficiency_mod.Find(organ_eff))
+							possibilities.Remove(organ_eff)
+
+				var/decision = input("Choose an organ type (current: [organ])","Adjusting Organoid") as null|anything in possibilities
+				if(!decision)
+					decision = organ
+
+				var/list/organ_stats = ALL_ORGAN_STATS[decision]
+				var/modifier = round(organ_efficiency_mod[organ] / 100, 0.01)
+
+				if(!modifier)
+					return
+
+				organ_efficiency_mod.Remove(organ)
+				organ_efficiency_mod.Add(decision)
+				organ_efficiency_mod[decision] 	= round(organ_stats[1] * modifier, 1)
+				specific_organ_size_mod 		+= round(organ_stats[2] * modifier, 0.01)
+				max_blood_storage_mod			+= round(organ_stats[3] * modifier, 1)
+				blood_req_mod 					+= round(organ_stats[4] * modifier, 0.01)
+				nutriment_req_mod 				+= round(organ_stats[5] * modifier, 0.01)
+				oxygen_req_mod 					+= round(organ_stats[6] * modifier, 0.01)
+		if("implant behavior")
+			var/list/possibilities = list(
+				"on pick-up" = COMSIG_ITEM_PICKED,
+				"on insertion" = COMSIG_IATTACK
+				)
+			var/list/inverted_possibles = list(
+				COMSIG_ITEM_PICKED = "on pick-up",
+				COMSIG_IATTACK = "on insertion"
+			)
+
+			var/decision = input("Choose an implant method (current: [inverted_possibles[trigger_signal]])","Adjusting Organoid") as null|anything in possibilities
+			if(!decision)
+				return
+			
+			trigger_signal = possibilities[decision]
 
 /datum/component/modification/organ/parasitic/trigger(atom/A, mob/M)
 	if(!A || !M)

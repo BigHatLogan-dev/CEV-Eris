@@ -2,6 +2,7 @@
 	name = "membrane"
 	desc = "A graftable outer membrane for organ tissues."
 	icon_state = "membrane"
+	bad_type = /obj/item/modification/organ/internal/special
 
 /obj/item/modification/organ/internal/special/update_icon()
 	icon_state = initial(icon_state) + "-[rand(1,5)]"
@@ -165,7 +166,8 @@
 	icon_state = "parasitic_organoid"
 
 /obj/item/modification/organ/internal/special/parasitic/New(loc, generate_organ_stats = TRUE, predefined_modifier = -0.1)
-	AddComponent(/datum/component/modification/organ/parasitic)
+	var/datum/component/modification/organ/parasitic/P = AddComponent(/datum/component/modification/organ/parasitic)
+	P.specific_organ_size_mod = 0.10
 	..()
 
 /obj/item/modification/organ/internal/special/parasitic/update_icon()

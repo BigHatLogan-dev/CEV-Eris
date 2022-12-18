@@ -1,6 +1,7 @@
 /obj/item/modification/organ/internal/output
 	name = "organoid (output)"
 	icon_state = "output_organoid"
+	bad_type = /obj/item/modification/organ/internal/output
 
 /obj/item/modification/organ/internal/output/reagents_blood
 	name = "hepatic organoid"

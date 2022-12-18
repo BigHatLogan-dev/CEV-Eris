@@ -27,6 +27,7 @@
 
 // ORGAN GENERATION
 #define ALL_STANDARD_ORGAN_EFFICIENCIES list(OP_HEART, OP_LUNGS, OP_LIVER, OP_KIDNEYS, OP_APPENDIX, OP_STOMACH, OP_BONE, OP_MUSCLE, OP_NERVE, OP_BLOOD_VESSEL) // OP_EYES, causes runtimes and not particularly useful
+#define PARASITIC_ORGAN_EFFICIENCIES list(OP_LIVER, OP_STOMACH, OP_BONE, OP_MUSCLE, OP_NERVE, OP_BLOOD_VESSEL)
 
 #define ALL_ORGAN_STATS list(\
 		OP_HEART		= list(100,   2,   0,   0,   10,  10,  list("he", "ar", "t"), list()),\

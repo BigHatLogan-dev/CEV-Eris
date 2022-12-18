@@ -377,16 +377,10 @@
 	holder.refresh_upgrades()
 
 /datum/component/modification/organ/output/research
-	var/charges		// How many times this should trigger before being vomited out
+	var/charges				// How many times this should trigger before being vomited out
 
 /datum/component/modification/organ/output/research/get_function_info()
-	var/outputs
-	for(var/stat in possible_outputs)
-		outputs += stat + " ([possible_outputs[stat]]), "
-
-	outputs = copytext(outputs, 1, length(outputs) - 1)
-
-	var/description = "<span style='color:blue'>Functional information (output):</span> harvests visceral research data from implantee"
+	var/description = "<span style='color:blue'>Functional information (output):</span> harvests visceral research data from parent limb"
 	description += "\n<span style='color:blue'>Harvest cycles remaining:</span> [charges ? charges : "none"]"
 
 	return description

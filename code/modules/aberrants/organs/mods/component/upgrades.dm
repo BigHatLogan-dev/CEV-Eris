@@ -13,9 +13,6 @@
 /datum/component/modification/organ/stromal/get_function_info()
 	var/function_info = "<i>"
 
-	//for(var/owner_verb in owner_verb_adds)
-	//	holder.owner_verbs |= owner_verb
-
 	var/eff_details
 	if(organ_efficiency_mod.len)
 		eff_details += "Adds organ functions: "
@@ -27,23 +24,6 @@
 
 	if(organ_efficiency_multiplier)
 		function_info += "[organ_efficiency_multiplier >= 0 ? "Increases" : "Decreases"] overall efficiency by [abs(organ_efficiency_multiplier) * 100]%\n"
-
-	if(specific_organ_size_multiplier)
-		function_info += "[specific_organ_size_multiplier >= 0 ? "Decreases" : "Increases"] size by [abs(specific_organ_size_multiplier) * 100]%\n"
-	if(max_blood_storage_multiplier)
-		function_info += "[max_blood_storage_multiplier >= 0 ? "Increases" : "Decreases"] maximum blood storage by [abs(max_blood_storage_multiplier) * 100]%\n"
-	if(blood_req_multiplier)
-		function_info += "[blood_req_multiplier >= 0 ? "Decreases" : "Increases"] blood requirement by [abs(blood_req_multiplier) * 100]%\n"
-	if(nutriment_req_multiplier)
-		function_info += "[nutriment_req_multiplier >= 0 ? "Decreases" : "Increases"] nutriment requirement by [abs(nutriment_req_multiplier) * 100]%\n"
-	if(oxygen_req_multiplier)
-		function_info += "[oxygen_req_multiplier >= 0 ? "Decreases" : "Increases"] oxygen requirement by [abs(oxygen_req_multiplier) * 100]%\n"
-	if(min_bruised_damage_multiplier)
-		function_info += "[min_bruised_damage_multiplier >= 0 ? "Increases" : "Decreases"] bruised threshold by [abs(min_bruised_damage_multiplier) * 100]%\n"
-	if(min_broken_damage_multiplier)
-		function_info += "[min_broken_damage_multiplier >= 0 ? "Increases" : "Decreases"] broken threshold by [abs(min_broken_damage_multiplier) * 100]%\n"
-	if(max_damage_multiplier)
-		function_info += "[max_damage_multiplier >= 0 ? "Increases" : "Decreases"] maximum health by [abs(max_damage_multiplier) * 100]%\n"
 
 	if(specific_organ_size_mod)
 		function_info += "[specific_organ_size_mod >= 0 ? "Increases" : "Decreases"] size by [abs(specific_organ_size_mod)]\n"
@@ -63,6 +43,40 @@
 		function_info += "[min_broken_damage_mod >= 0 ? "Increases" : "Decreases"] broken threshold by [abs(min_broken_damage_mod)]\n"
 	if(max_damage_mod)
 		function_info += "[max_damage_mod >= 0 ? "Increases" : "Decreases"] maximum health by [abs(max_damage_mod)]\n"
+
+	if(specific_organ_size_multiplier)
+		function_info += "[specific_organ_size_multiplier >= 0 ? "Increases" : "Decreases"] size by [abs(specific_organ_size_multiplier) * 100]%\n"
+	if(max_blood_storage_multiplier)
+		function_info += "[max_blood_storage_multiplier >= 0 ? "Increases" : "Decreases"] maximum blood storage by [abs(max_blood_storage_multiplier) * 100]%\n"
+	if(blood_req_multiplier)
+		function_info += "[blood_req_multiplier >= 0 ? "Increases" : "Decreases"] blood requirement by [abs(blood_req_multiplier) * 100]%\n"
+	if(nutriment_req_multiplier)
+		function_info += "[nutriment_req_multiplier >= 0 ? "Increases" : "Decreases"] nutriment requirement by [abs(nutriment_req_multiplier) * 100]%\n"
+	if(oxygen_req_multiplier)
+		function_info += "[oxygen_req_multiplier >= 0 ? "Increases" : "Decreases"] oxygen requirement by [abs(oxygen_req_multiplier) * 100]%\n"
+	if(min_bruised_damage_multiplier)
+		function_info += "[min_bruised_damage_multiplier >= 0 ? "Increases" : "Decreases"] bruised threshold by [abs(min_bruised_damage_multiplier) * 100]%\n"
+	if(min_broken_damage_multiplier)
+		function_info += "[min_broken_damage_multiplier >= 0 ? "Increases" : "Decreases"] broken threshold by [abs(min_broken_damage_multiplier) * 100]%\n"
+	if(max_damage_multiplier)
+		function_info += "[max_damage_multiplier >= 0 ? "Increases" : "Decreases"] maximum health by [abs(max_damage_multiplier) * 100]%\n"
+
+	if(specific_organ_size_flat_mod)
+		function_info += "[specific_organ_size_flat_mod >= 0 ? "Increases" : "Decreases"] size by a flat value of [abs(specific_organ_size_flat_mod)]\n"
+	if(max_blood_storage_flat_mod)
+		function_info += "[max_blood_storage_flat_mod >= 0 ? "Increases" : "Decreases"] maximum blood storage by a flat value of [abs(max_blood_storage_flat_mod)]\n"
+	if(blood_req_flat_mod)
+		function_info += "[blood_req_flat_mod >= 0 ? "Increases" : "Decreases"] blood requirement by a flat value of [abs(blood_req_flat_mod)]\n"
+	if(nutriment_req_flat_mod)
+		function_info += "[nutriment_req_flat_mod >= 0 ? "Increases" : "Decreases"] nutriment requirement by a flat value of [abs(nutriment_req_flat_mod)]\n"
+	if(oxygen_req_flat_mod)
+		function_info += "[oxygen_req_flat_mod >= 0 ? "Increases" : "Decreases"] oxygen requirement by a flat value of [abs(oxygen_req_flat_mod)]\n"
+	if(min_bruised_damage_flat_mod)
+		function_info += "[min_bruised_damage_flat_mod >= 0 ? "Increases" : "Decreases"] bruised threshold by a flat value of [abs(min_bruised_damage_flat_mod)]\n"
+	if(min_broken_damage_flat_mod)
+		function_info += "[min_broken_damage_mod >= 0 ? "Increases" : "Decreases"] broken threshold by a flat value of [abs(min_broken_damage_flat_mod)]\n"
+	if(max_damage_flat_mod)
+		function_info += "[max_damage_mod >= 0 ? "Increases" : "Decreases"] maximum health by a flat value of [abs(max_damage_flat_mod)]\n"
 
 	if(scanner_hidden)
 		function_info += "Hides the organ from scanners\n"

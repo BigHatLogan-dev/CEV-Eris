@@ -130,7 +130,9 @@ COMSIG_ABERRANT_SECONDARY
 	I.forceMove(A)	// May want to change this to I.loc = A or something similar. forceMove() calls all Crossed() procs between the src and the target.
 	A.item_upgrades.Add(I)
 	RegisterSignal(A, trigger_signal, .proc/trigger)
-	RegisterSignal(A, COMSIG_APPVAL, .proc/apply_values)
+	RegisterSignal(A, COMSIG_APPVAL, .proc/apply_mod_values)
+	RegisterSignal(A, COMSIG_APPVAL_MULT, .proc/apply_mult_values)
+	RegisterSignal(A, COMSIG_APPVAL_FLAT, .proc/apply_flat_values)
 
 	var/datum/component/modification_removal/MR = A.AddComponent(/datum/component/modification_removal)
 	MR.removal_tool_quality = removal_tool_quality
@@ -150,7 +152,7 @@ COMSIG_ABERRANT_SECONDARY
 /datum/component/modification/proc/trigger(obj/item/I, mob/living/user)
 	return TRUE
 
-/datum/component/modification/proc/apply_values(atom/holder)
+/datum/component/modification/proc/apply_mod_values(atom/holder)
 	ASSERT(holder)
 	if(new_name)
 		holder.name = new_name
@@ -160,6 +162,14 @@ COMSIG_ABERRANT_SECONDARY
 		holder.desc = new_desc
 	if(new_color)
 		holder.color = new_color
+	return TRUE
+
+/datum/component/modification/proc/apply_mult_values(atom/holder)
+	ASSERT(holder)
+	return TRUE
+
+/datum/component/modification/proc/apply_flat_values(atom/holder)
+	ASSERT(holder)
 	return TRUE
 
 /datum/component/modification/proc/on_examine(mob/user)
@@ -184,11 +194,15 @@ COMSIG_ABERRANT_SECONDARY
 	if(destroy_on_removal)
 		UnregisterSignal(I, trigger_signal)
 		UnregisterSignal(I, COMSIG_APPVAL)
+		UnregisterSignal(I, COMSIG_APPVAL_MULT)
+		UnregisterSignal(I, COMSIG_APPVAL_FLAT)
 		qdel(P)
 		return
 	P.forceMove(get_turf(I))
 	UnregisterSignal(I, trigger_signal)
 	UnregisterSignal(I, COMSIG_APPVAL)
+	UnregisterSignal(I, COMSIG_APPVAL_MULT)
+	UnregisterSignal(I, COMSIG_APPVAL_FLAT)
 
 /datum/component/modification/UnregisterFromParent()
 	UnregisterSignal(parent, COMSIG_IATTACK)

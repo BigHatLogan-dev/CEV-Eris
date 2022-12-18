@@ -1,6 +1,7 @@
 /obj/item/modification/organ/internal/input
 	name = "organoid (input)"
 	icon_state = "input_organoid"
+	bad_type = /obj/item/modification/organ/internal/input
 
 /obj/item/modification/organ/internal/input/reagents
 	name = "metabolic organoid"

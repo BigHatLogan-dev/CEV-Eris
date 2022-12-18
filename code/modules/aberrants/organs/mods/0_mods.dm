@@ -36,7 +36,11 @@
 	if(predefined_modifier < 0)
 		is_parasitic = TRUE
 
-	var/list/organ_list = ALL_ORGAN_STATS
+	var/list/organ_list
+	if(is_parasitic)
+		organ_list = PARASITIC_ORGAN_EFFICIENCIES
+	else
+		organ_list = ALL_STANDARD_ORGAN_EFFICIENCIES
 
 	organ_list = shuffle(organ_list)
 
@@ -45,10 +49,10 @@
 
 	for(var/organ in organ_list)
 		if(prob(probability))
-			var/list/organ_stats = organ_list[organ]
+			var/list/organ_stats = ALL_ORGAN_STATS[organ]
 			var/modifier = abs(predefined_modifier)
 			if(!modifier)
-				modifier = pick(0.04, 0.08, 0.16)
+				modifier = 0.1
 			O.organ_efficiency_mod.Add(organ)
 			O.organ_efficiency_mod[organ] 	= round(organ_stats[1] * modifier * (1 - (2 * is_parasitic)), 1)
 			O.specific_organ_size_mod 		+= round(organ_stats[2] * modifier * (1 + (2 * is_parasitic)), 0.01)
