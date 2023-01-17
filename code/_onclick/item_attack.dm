@@ -31,27 +31,27 @@ avoid code duplication. This includes items that may sometimes act as a standard
 
 //I would prefer to rename this to attack(), but that would involve touching hundreds of files.
 /obj/item/proc/resolve_attackby(atom/A, mob/user, params)
-	if(item_flags & ABSTRACT)//Abstract items cannot be interacted with. They're not real.
-		return 1
-	if (pre_attack(A, user, params))
-		return 1 //Returning 1 passes an abort signal upstream
+	if(item_flags & ABSTRACT || abstract)		// Abstract items cannot be interacted with. They're not real.
+		return TRUE
+	if(pre_attack(A, user, params))
+		return TRUE 							// Returning TRUE passes an abort signal upstream
 	add_fingerprint(user)
-	if(ishuman(user))//monkeys can use items, unfortunately
+	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(H.blocking)
 			H.stop_blocking()
-	if(ishuman(user) && !(user == A) && !(user.loc == A) && (w_class >=  ITEM_SIZE_NORMAL) && wielded && user.a_intent == I_HURT && !istype(src, /obj/item/gun) && !istype(A, /obj/structure) && !istype(A, /turf/simulated/wall) && A.loc != user)
+	if(ishuman(user) && !(user == A) && !(user.loc == A) && (w_class >= ITEM_SIZE_NORMAL) && wielded && user.a_intent == I_HURT && !A.density && A.loc != user)
 		swing_attack(src, user, params)
-		if(istype(A, /turf/simulated/floor)) // shitty hack so you can attack floors while wielding a large weapon
+		if(istype(A, /turf/simulated/floor))	// Shitty hack so you can attack floors while wielding a large weapon
 			return A.attackby(src, user, params)
-		return 1 //Swinging calls its own attacks
+		return TRUE 							// Swinging calls its own attacks
 	return A.attackby(src, user, params)
 
 //Returns TRUE if attack is to be carried out, FALSE otherwise.
 /obj/item/proc/double_tact(mob/user, atom/atom_target, adjacent)
-	if(atom_target.loc == user)//putting stuff in your backpack, or something else on your person?
-		return TRUE //regular bags won't even be able to hold items this big, but who knows
-	if(w_class >= ITEM_SIZE_BULKY && !abstract && !istype(src, /obj/item/gun) && !no_double_tact)//grabs have colossal w_class. You can't raise something that does not exist.
+	if(atom_target.loc == user)	// putting stuff in your backpack, or something else on your person?
+		return TRUE 			// regular bags won't even be able to hold items this big, but who knows
+	if(w_class >= ITEM_SIZE_BULKY && attack_flags & ~NO_DOUBLE_TACT)
 		if(!adjacent || istype(atom_target, /turf) || istype(atom_target, /mob) || user.a_intent == I_HURT)//guns have the point blank privilege
 			if(!ready)
 				user.visible_message(SPAN_DANGER("[user] raises [src]!"))

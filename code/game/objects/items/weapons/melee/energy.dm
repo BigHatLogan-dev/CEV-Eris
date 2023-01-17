@@ -95,7 +95,7 @@
 	icon_state = "sword0"
 	active_force = WEAPON_FORCE_LETHAL // Go forth and slay, padawan
 	active_throwforce = WEAPON_FORCE_LETHAL
-	no_double_tact = TRUE
+	attack_flags = NO_DOUBLE_TACT
 	active_w_class = ITEM_SIZE_BULKY
 	force = WEAPON_FORCE_HARMLESS
 	throwforce = WEAPON_FORCE_HARMLESS

@@ -11,6 +11,14 @@
 #define WEAPON_FORCE_LETHAL			40
 #define WEAPON_FORCE_GODLIKE		88 // currently only used by the energy axe, which can only be obtained via admin verbs
 
+// Weapon attack characteristics: enables/disables melee behaviors (double tact, broad strike, etc.)
+#define NO_DOUBLE_TACT			0x1		// Disables double tact on a bulky item
+#define SCREEN_SHAKE			0x2		// If a weapon can shake the victim's camera on hit.
+#define PUSH_ATTACK				0x4		// Hammers and spears can push the victim away on hit when you aim groin.
+#define FORCED_BROAD_STRIKE		0x8		// If a weapon is forced to always perform broad strikes.
+#define EXTENDED_REACH			0x10	// Wielded spears can hit alive things one tile further.
+#define NO_SWING_ATTACK			0x20
+
 //Armor Penetration: Ignores a certain amount of armor for the purposes of inflicting damage.
 #define ARMOR_PEN_GRAZING			1.2
 #define ARMOR_PEN_SHALLOW			1.4
