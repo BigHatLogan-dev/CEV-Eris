@@ -26,8 +26,8 @@
 	var/ruined_description_info = "A functionless organ with three slots for organ mods or organoids. Best used with an input, process, and output organoid to create a modular organ."
 	var/ruined_color = null
 
-/obj/item/organ/internal/scaffold/New()
-	..()
+/obj/item/organ/internal/scaffold/Initialize()
+	. = ..()
 	RegisterSignal(src, COMSIG_ABERRANT_COOLDOWN, .proc/start_cooldown)
 	if(use_generated_icon)
 		organ_type = "-[rand(1,8)]"

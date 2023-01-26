@@ -68,6 +68,7 @@
 
 	// Other adjustments
 	var/aberrant_cooldown_time_mod = null	// Scaffolds only
+	var/nature_adjustment = null
 	var/max_upgrade_mod = null
 	var/scanner_hidden = FALSE
 

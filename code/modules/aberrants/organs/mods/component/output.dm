@@ -96,7 +96,7 @@
 		for(var/i in input)
 			var/index = input.Find(i)
 			var/is_input_valid = input[i] ? TRUE : FALSE
-			if(is_input_valid)
+			if(is_input_valid && index <= LAZYLEN(possible_outputs))
 				var/input_multiplier = input[i]
 				var/datum/reagent/output = possible_outputs[index]
 				var/amount_to_add = possible_outputs[output] * organ_multiplier * input_multiplier
@@ -181,7 +181,7 @@
 		for(var/i in input)
 			var/index = input.Find(i)
 			var/is_input_valid = input[i] ? TRUE : FALSE
-			if(is_input_valid)
+			if(is_input_valid && index <= LAZYLEN(possible_outputs))
 				var/input_multiplier = input[i]
 				var/datum/reagent/output = possible_outputs[index]
 				var/amount_to_add = initial(output.metabolism) * organ_multiplier * input_multiplier
@@ -273,7 +273,7 @@
 		for(var/i in input)
 			var/index = input.Find(i)
 			var/is_input_valid = input[i]
-			if(is_input_valid)
+			if(is_input_valid && index <= LAZYLEN(possible_outputs))
 				var/input_multiplier = input[i]
 				var/mob/living/carbon/human/H = owner
 				var/damage_type = possible_outputs[index]
@@ -341,7 +341,7 @@
 	if(LAZYLEN(input))
 		for(var/i in input)
 			var/is_input_valid = input[i]
-			if(is_input_valid)
+			if(is_input_valid && index <= LAZYLEN(possible_outputs))
 				var/input_multiplier = input[i]
 				organ_efficiency_mod = active_organ_efficiency_mod.Copy()
 				for(var/process in organ_efficiency_mod)
