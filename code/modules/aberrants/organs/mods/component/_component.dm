@@ -100,6 +100,8 @@
 	if(S)
 		using_generated_name = S.use_generated_name
 		using_generated_color = S.use_generated_color
+		if(aberrent_cooldown_time_mod)
+			S.aberrant_cooldown_time += aberrant_cooldown_time_mod
 
 	if(new_name && using_generated_name)
 		holder.name = new_name
@@ -150,8 +152,6 @@
 		holder.min_broken_damage += min_broken_damage_mod
 	if(max_damage_mod)
 		holder.max_damage += max_damage_mod
-	if(S && aberrant_cooldown_time_mod)
-		S.aberrant_cooldown_time += aberrant_cooldown_time_mod
 
 	if(scanner_hidden)
 		holder.scanner_hidden = scanner_hidden
