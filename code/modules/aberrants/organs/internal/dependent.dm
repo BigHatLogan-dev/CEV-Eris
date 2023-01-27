@@ -9,7 +9,6 @@
 	process_mod_path = /obj/item/modification/organ/internal/process/condense
 	output_mod_path = /obj/item/modification/organ/internal/output/activate_organ_functions
 	special_mod_path = /obj/item/modification/organ/internal/special/on_cooldown/stat_boost
-	should_process_have_organ_stats = FALSE
 	output_pool = ALL_STANDARD_ORGAN_EFFICIENCIES
 	output_info = list(1)
 	special_info = list(STAT_ROB, 10)

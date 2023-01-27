@@ -1321,6 +1321,7 @@
 #include "code\modules\aberrants\organs\design_disks\designs.dm"
 #include "code\modules\aberrants\organs\design_disks\disks.dm"
 #include "code\modules\aberrants\organs\internal\dependent.dm"
+#include "code\modules\aberrants\organs\internal\roach.dm"
 #include "code\modules\aberrants\organs\internal\simple.dm"
 #include "code\modules\aberrants\organs\internal\teratoma.dm"
 #include "code\modules\aberrants\organs\machinery\disgorger.dm"

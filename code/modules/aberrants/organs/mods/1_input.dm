@@ -56,12 +56,8 @@
 					dmg_name = "brute"
 				if(BURN)
 					dmg_name = "burn"
-				if(TOX)
-					dmg_name = "toxin"
 				if(OXY)
 					dmg_name = "suffocation"
-				if(CLONE)
-					dmg_name = "DNA degredation"
 				if(HALLOSS)
 					dmg_name = "pain"
 				else

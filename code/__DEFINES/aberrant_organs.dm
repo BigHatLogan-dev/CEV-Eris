@@ -6,8 +6,8 @@
 
 // Toxin
 #define ABERRANT_RESEARCH_REAGENTS_TOXIN list()
-//#define ABERRANT_RESEARCH_ROACH list()
-//#define ABERRANT_RESEARCH_SPIDER list()
+#define ABERRANT_RESEARCH_ROACH list()
+#define ABERRANT_RESEARCH_SPIDER list()
 
 // Organic
 #define ABERRANT_RESEARCH_REAGENTS_EDIBLE list()
@@ -49,9 +49,9 @@
 #define MID_OUTPUT 5
 #define HIGH_OUTPUT 10
 
-#define DAMAGE_TYPES_BASIC list(BRUTE, BURN, TOX, OXY)
+#define DAMAGE_TYPES_BASIC list(BRUTE, BURN, OXY)
 
-#define ALL_DAMAGE_TYPES list(BRUTE, BURN, TOX, OXY, CLONE, HALLOSS, "brain", PSY)
+#define ALL_DAMAGE_TYPES list(BRUTE, BURN, OXY, HALLOSS, "brain", PSY)
 
 #define ALL_USABLE_POWER_SOURCES list(/obj/item/cell/small, /obj/item/cell/medium, /obj/item/cell/large, /obj/item/stack/material/plasma, /obj/item/stack/material/uranium, /obj/item/stack/material/tritium)
 
@@ -67,13 +67,30 @@
 								/datum/reagent/stim, /datum/reagent/adminordrazine, /datum/reagent/other/matter_deconstructor,\
 								/datum/reagent/other/xenomicrobes)
 
-#define REAGENTS_DISPENSER list(/datum/reagent/acetone, /datum/reagent/metal/aluminum, /datum/reagent/toxin/ammonia, /datum/reagent/carbon, /datum/reagent/metal/copper,\
+#define REAGENTS_INDUSTRIAL list(/datum/reagent/acetone, /datum/reagent/metal/aluminum, /datum/reagent/toxin/ammonia,\
+								/datum/reagent/metal/copper, /datum/reagent/ethanol, /datum/reagent/toxin/hydrazine,\
+								/datum/reagent/metal/iron, /datum/reagent/acid, /datum/reagent/acid/hydrochloric,\
+								/datum/reagent/silicon, /datum/reagent/metal/tungsten)
+
+#define REAGENTS_DISPENSER_1 list(/datum/reagent/acetone, /datum/reagent/metal/aluminum, /datum/reagent/toxin/ammonia, /datum/reagent/carbon, /datum/reagent/metal/copper,\
 								/datum/reagent/ethanol, /datum/reagent/toxin/hydrazine, /datum/reagent/metal/iron, /datum/reagent/metal/lithium, /datum/reagent/metal/mercury,\
 								/datum/reagent/phosphorus, /datum/reagent/metal/potassium, /datum/reagent/metal/radium, /datum/reagent/acid, /datum/reagent/acid/hydrochloric,\
 								/datum/reagent/silicon, /datum/reagent/metal/sodium, /datum/reagent/organic/sugar, /datum/reagent/sulfur, /datum/reagent/metal/tungsten)
 
-#define REAGENTS_DRUGS list(/datum/reagent/drug/space_drugs, /datum/reagent/drug/cryptobiolin, /datum/reagent/drug/mindbreaker,\
-							/datum/reagent/drug/psilocybin, /datum/reagent/drug/nicotine)
+#define REAGENTS_DISPENSER_2 list(/datum/reagent/acetone, /datum/reagent/metal/aluminum, /datum/reagent/toxin/ammonia, /datum/reagent/carbon, /datum/reagent/metal/copper,\
+								/datum/reagent/ethanol, /datum/reagent/toxin/hydrazine, /datum/reagent/metal/iron, /datum/reagent/metal/lithium, /datum/reagent/metal/mercury,\
+								/datum/reagent/phosphorus, /datum/reagent/metal/potassium, /datum/reagent/metal/radium, /datum/reagent/acid, /datum/reagent/acid/hydrochloric,\
+								/datum/reagent/silicon, /datum/reagent/metal/sodium, /datum/reagent/organic/sugar, /datum/reagent/sulfur, /datum/reagent/metal/tungsten,\
+								/datum/reagent/medicine/inaprovaline, /datum/reagent/medicine/dylovene, /datum/reagent/medicine/kelotane)
+
+#define REAGENTS_DISPENSER_3 list(/datum/reagent/acetone, /datum/reagent/metal/aluminum, /datum/reagent/toxin/ammonia, /datum/reagent/carbon, /datum/reagent/metal/copper,\
+								/datum/reagent/ethanol, /datum/reagent/toxin/hydrazine, /datum/reagent/metal/iron, /datum/reagent/metal/lithium, /datum/reagent/metal/mercury,\
+								/datum/reagent/phosphorus, /datum/reagent/metal/potassium, /datum/reagent/metal/radium, /datum/reagent/acid, /datum/reagent/acid/hydrochloric,\
+								/datum/reagent/silicon, /datum/reagent/metal/sodium, /datum/reagent/organic/sugar, /datum/reagent/sulfur, /datum/reagent/metal/tungsten,\
+								/datum/reagent/medicine/inaprovaline, /datum/reagent/medicine/dylovene, /datum/reagent/medicine/kelotane, /datum/reagent/medicine/tricordrazine,\
+								/datum/reagent/medicine/spaceacillin, /datum/reagent/medicine/dermaline)
+
+#define REAGENTS_DRUGS list(/datum/reagent/drug/space_drugs, /datum/reagent/drug/cryptobiolin, /datum/reagent/drug/mindbreaker, /datum/reagent/drug/nicotine)
 
 #define REAGENTS_TOXIN list(/datum/reagent/toxin/amatoxin, /datum/reagent/toxin/plasma, /datum/reagent/toxin/fertilizer,\
 							/datum/reagent/toxin/plantbgone, /datum/reagent/acid/polyacid, /datum/reagent/toxin/lexorin,\
@@ -83,6 +100,8 @@
 							/datum/reagent/toxin/gewaltine, /datum/reagent/toxin/blattedin)
 
 #define REAGENTS_SPIDER list(/datum/reagent/toxin/pararein, /datum/reagent/toxin/aranecolmin)
+
+#define REAGENTS_FUNGAL list(/datum/reagent/toxin/amatoxin, /datum/reagent/toxin/mold, /datum/reagent/drug/psilocybin)
 
 #define REAGENTS_METAL list(/datum/reagent/metal/aluminum, /datum/reagent/metal/copper, /datum/reagent/metal/iron, /datum/reagent/metal/lithium,\
 							/datum/reagent/metal/mercury, /datum/reagent/metal/potassium, /datum/reagent/metal/radium, /datum/reagent/metal/sodium,\

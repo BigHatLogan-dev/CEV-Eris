@@ -6,7 +6,7 @@
 	description_info = "A functionless organ with three slots for organ mods or organoids. Best used with an input, process, and output organoid to create a modular organ."
 	price_tag = 100
 	organ_efficiency = list()
-	specific_organ_size = 0.4
+	specific_organ_size = 0.3
 	origin_tech = list(TECH_BIO = 3)	// One level higher than regular organs
 	rarity_value = 60
 	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN
