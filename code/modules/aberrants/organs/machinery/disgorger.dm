@@ -148,7 +148,7 @@
 				var/reagent_research = round(R.volume / research_denominator)
 				biomatter_counter += reagent_amount
 				progress(R.reagent_type, reagent_research)
-a
+
 	// Check biomatter content and contained objects (depth of 2, include self)
 	for(var/path in accepted_objects)
 		if(!istype(I, path))
@@ -161,12 +161,12 @@ a
 		for(var/obj/item/O in I.GetAllContents(2, TRUE))
 			amount_to_take += max(0, O.matter[MATERIAL_BIOMATTER] / 2)
 			qdel(O)
-		if(amount_to_take)
-			var/biomatter_amount = round(amount_to_take / production_denominator, 0.01)
-			var/biomatter_research = round(amount_to_take / research_denominator)
-			biomatter_counter += biomatter_amount
-			progress("Viscera", biomatter_research)
-		break
+			if(amount_to_take)
+				var/biomatter_amount = round(amount_to_take / production_denominator, 0.01)
+				var/biomatter_research = round(amount_to_take / research_denominator)
+				biomatter_counter += biomatter_amount
+				progress("Viscera", biomatter_research)
+				break
 
 	// Make sure the object is qdel'd
 	if(!QDELETED(I))
