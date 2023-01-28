@@ -229,17 +229,45 @@
 
 /obj/item/organ/internal/scaffold/rare
 	name = "large organ scaffold"
+	ruined_name = null
 	desc = "A collagen-based biostructure. This one has room for an extra organoid."
-	ruined_desc = "A collagen-based biostructure. This one has room for an extra organoid."
+	ruined_desc = null
 	description_info = "A functionless organ with four slots for organ mods or organoids. Generally, you'll want to save the fourth upgrade slot for a membrane."
-	ruined_description_info = "A functionless organ with four slots for organ mods or organoids. Generally, you'll want to save the fourth upgrade slot for a membrane."
+	ruined_description_info = null
 	rarity_value = 80
 	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN_RARE
 	max_upgrades = 4
+	specific_organ_size = 0.4
+
+/obj/item/organ/internal/scaffold/roach
+	name = "roach organ scaffold"
+	ruined_name = null
+	desc = "An adaptable organ scaffold harvested from a roach."
+	ruined_desc = null
+	description_info = "A functionless organ with four slots for organ mods or organoids. Generally, you'll want to save the fourth upgrade slot for a membrane."
+	ruined_description_info = null
+	rarity_value = 20
+	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN_ROACH
+	spawn_blacklisted = TRUE	// Go butcher roaches
+	max_upgrades = 4
+	aberrant_cooldown_time = ROACH_ABERRANT_COOLDOWN
+
+/obj/item/organ/internal/scaffold/roach/fuhrer
+	name = "Fuhrer organ scaffold"
+	desc = "An adaptable organ scaffold harvested from a Fuhrer roach."
+	description_info = "A functionless organ with five slots for organ mods or organoids."
+	rarity_value = 60
+	max_upgrades = 5
+
+/obj/item/organ/internal/scaffold/roach/kaiser
+	name = "Kaiser organ scaffold"
+	desc = "An adaptable organ scaffold harvested from a Kaiser roach."
+	description_info = "A functionless organ with seven slots for organ mods or organoids."
+	rarity_value = 120
+	max_upgrades = 7
 
 /obj/item/organ/internal/scaffold/aberrant
 	name = "aberrant organ"
-	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN_NORMAL
 	bad_type = /obj/item/organ/internal/scaffold/aberrant
 
 	var/input_mod_path
@@ -260,8 +288,8 @@
 	var/list/output_info = list()
 	var/list/special_info = list()
 
-/obj/item/organ/internal/scaffold/aberrant/New()
-	..()
+/obj/item/organ/internal/scaffold/aberrant/Initialize()
+	. = ..()
 	if(!input_mod_path && !process_mod_path && !output_mod_path && !special_mod_path)
 		return
 	if(input_mod_path)

@@ -148,6 +148,7 @@
 				var/reagent_research = round(R.volume / research_denominator)
 				biomatter_counter += reagent_amount
 				progress(R.reagent_type, reagent_research)
+a
 	// Check biomatter content and contained objects (depth of 2, include self)
 	for(var/path in accepted_objects)
 		if(!istype(I, path))

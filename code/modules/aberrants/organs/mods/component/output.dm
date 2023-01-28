@@ -4,6 +4,8 @@
 
 	var/list/possible_outputs = list()
 	var/list/output_qualities = list()
+	var/charge_level_max = 0
+	var/current_charge_level = 0
 
 /datum/component/modification/organ/output/reagents
 	adjustable = TRUE
