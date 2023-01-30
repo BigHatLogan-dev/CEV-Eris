@@ -13,7 +13,7 @@
 	name = "eldritch membrane"
 	desc = "A graftable outer membrane for organ tissues. The alien textures are painful to look at."
 
-/obj/item/modification/organ/internal/special/on_item_examine/brainloss/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_item_examine/brainloss/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	AddComponent(/datum/component/modification/organ/on_item_examine/brainloss)
 	..()
 
@@ -25,7 +25,7 @@
 	desc = "A graftable outer membrane for organ tissues. There is bioelectric phenomena present and it hurts to touch."
 	icon_state = "membrane-hive"
 
-/obj/item/modification/organ/internal/special/on_pickup/shock/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_pickup/shock/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	AddComponent(/datum/component/modification/organ/on_pickup/shock)
 	..()
 
@@ -36,7 +36,7 @@
 	name = "powerful shocking membrane"
 	desc = "A graftable outer membrane for organ tissues. There is significant bioelectric phenomena present and it hurts to touch."
 	
-/obj/item/modification/organ/internal/special/on_pickup/shock/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_pickup/shock/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	AddComponent(/datum/component/modification/organ/on_pickup/shock/powerful)
 	..()
 
@@ -48,7 +48,7 @@
 	desc = "A graftable membrane for organ tissues. Secretes hormones when the primary organ function triggers."
 	description_info = "Produces a hormone when the primary function triggers."
 
-/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_special_info)
+/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_special_info)
 	var/datum/component/modification/organ/on_cooldown/chemical_effect/S = AddComponent(/datum/component/modification/organ/on_cooldown/chemical_effect)
 
 	if(chosen_special_info?.len >= 2)
@@ -56,42 +56,42 @@
 	..()
 
 /obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/bloodrestore
-/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/bloodrestore/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/bloodrestore/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	var/datum/component/modification/organ/on_cooldown/chemical_effect/S = AddComponent(/datum/component/modification/organ/on_cooldown/chemical_effect)
 
 	S.effect = pick(/datum/reagent/hormone/bloodrestore, /datum/reagent/hormone/bloodrestore/alt)
 	..()
 
 /obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/bloodclot
-/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/bloodclot/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/bloodclot/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	var/datum/component/modification/organ/on_cooldown/chemical_effect/S = AddComponent(/datum/component/modification/organ/on_cooldown/chemical_effect)
 
 	S.effect = pick(/datum/reagent/hormone/bloodclot, /datum/reagent/hormone/bloodclot/alt)
 	..()
 
 /obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/painkiller
-/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/painkiller/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/painkiller/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	var/datum/component/modification/organ/on_cooldown/chemical_effect/S = AddComponent(/datum/component/modification/organ/on_cooldown/chemical_effect)
 
 	S.effect = pick(/datum/reagent/hormone/painkiller, /datum/reagent/hormone/painkiller/alt)
 	..()
 
 /obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/antitox
-/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/antitox/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/antitox/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	var/datum/component/modification/organ/on_cooldown/chemical_effect/S = AddComponent(/datum/component/modification/organ/on_cooldown/chemical_effect)
 
 	S.effect = pick(/datum/reagent/hormone/antitox, /datum/reagent/hormone/antitox/alt)
 	..()
 
 /obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/oxygenation
-/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/oxygenation/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/oxygenation/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	var/datum/component/modification/organ/on_cooldown/chemical_effect/S = AddComponent(/datum/component/modification/organ/on_cooldown/chemical_effect)
 
 	S.effect = pick(/datum/reagent/hormone/oxygenation, /datum/reagent/hormone/oxygenation/alt)
 	..()
 
 /obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/speedboost
-/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/speedboost/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_cooldown/chemical_effect/speedboost/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	var/datum/component/modification/organ/on_cooldown/chemical_effect/S = AddComponent(/datum/component/modification/organ/on_cooldown/chemical_effect)
 
 	S.effect = pick(/datum/reagent/hormone/speedboost, /datum/reagent/hormone/speedboost/alt)
@@ -103,7 +103,7 @@
 	desc = "A graftable membrane for organ tissues. Secretes stimulating hormones when the primary organ function triggers."
 	description_info = "Slightly increases a stat when the primary function triggers."
 
-/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_special_info)
+/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_special_info)
 	var/datum/component/modification/organ/on_cooldown/stat_boost/S = AddComponent(/datum/component/modification/organ/on_cooldown/stat_boost)
 
 	if(chosen_special_info?.len >= 2)
@@ -112,7 +112,7 @@
 	..()
 
 /obj/item/modification/organ/internal/special/on_cooldown/stat_boost/mechanical
-/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/mechanical/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/mechanical/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	var/datum/component/modification/organ/on_cooldown/stat_boost/S = AddComponent(/datum/component/modification/organ/on_cooldown/stat_boost)
 
 	S.stat = STAT_MEC
@@ -120,7 +120,7 @@
 	..()
 
 /obj/item/modification/organ/internal/special/on_cooldown/stat_boost/cognition
-/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/cognition/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/cognition/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	var/datum/component/modification/organ/on_cooldown/stat_boost/S = AddComponent(/datum/component/modification/organ/on_cooldown/stat_boost)
 
 	S.stat = STAT_COG
@@ -128,7 +128,7 @@
 	..()
 
 /obj/item/modification/organ/internal/special/on_cooldown/stat_boost/biology
-/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/biology/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/biology/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	var/datum/component/modification/organ/on_cooldown/stat_boost/S = AddComponent(/datum/component/modification/organ/on_cooldown/stat_boost)
 
 	S.stat = STAT_BIO
@@ -136,7 +136,7 @@
 	..()
 
 /obj/item/modification/organ/internal/special/on_cooldown/stat_boost/robustness
-/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/robustness/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/robustness/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	var/datum/component/modification/organ/on_cooldown/stat_boost/S = AddComponent(/datum/component/modification/organ/on_cooldown/stat_boost)
 
 	S.stat = STAT_ROB
@@ -144,7 +144,7 @@
 	..()
 
 /obj/item/modification/organ/internal/special/on_cooldown/stat_boost/toughness
-/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/toughness/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/toughness/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	var/datum/component/modification/organ/on_cooldown/stat_boost/S = AddComponent(/datum/component/modification/organ/on_cooldown/stat_boost)
 
 	S.stat = STAT_TGH
@@ -152,7 +152,7 @@
 	..()
 
 /obj/item/modification/organ/internal/special/on_cooldown/stat_boost/vigilance_5
-/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/vigilance_5/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/special/on_cooldown/stat_boost/vigilance_5/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	var/datum/component/modification/organ/on_cooldown/stat_boost/S = AddComponent(/datum/component/modification/organ/on_cooldown/stat_boost)
 
 	S.stat = STAT_VIG
@@ -165,7 +165,7 @@
 	desc = "Functional tissue of one or more organs in graftable form. Hinders bodily functions, but allows for painful implantation of organs."
 	icon_state = "parasitic_organoid"
 
-/obj/item/modification/organ/internal/special/parasitic/New(loc, generate_organ_stats = TRUE, predefined_modifier = -0.1)
+/obj/item/modification/organ/internal/special/parasitic/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = -0.1)
 	var/datum/component/modification/organ/parasitic/P = AddComponent(/datum/component/modification/organ/parasitic)
 	P.specific_organ_size_mod = 0.10
 	..()

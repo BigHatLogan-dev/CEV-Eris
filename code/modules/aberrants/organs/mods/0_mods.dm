@@ -13,8 +13,8 @@
 	spawn_blacklisted = TRUE	// These should never spawn without a parent organ/teratoma.
 	bad_type = /obj/item/modification/organ/internal
 
-/obj/item/modification/organ/internal/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
-	..()
+/obj/item/modification/organ/internal/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+	. = ..()
 	update_icon()
 	if(generate_organ_stats)
 		var/datum/component/modification/organ/M = GetComponent(/datum/component/modification/organ)

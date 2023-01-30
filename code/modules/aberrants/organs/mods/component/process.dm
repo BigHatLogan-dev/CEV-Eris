@@ -34,6 +34,7 @@
 
 	return description
 
+/*
 /datum/component/modification/organ/process/map/modify()
 	var/list/adjustable_qualities = list("normal", "random")
 
@@ -42,6 +43,7 @@
 		return
 
 	mode = decision
+*/
 
 /datum/component/modification/organ/process/map/trigger(atom/movable/holder, mob/living/carbon/owner, list/input)
 	if(!holder || !owner || !input || !input.len)

@@ -256,6 +256,76 @@
 		SEND_SIGNAL(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
 
 
+/datum/component/modification/organ/output/produce
+	adjustable = TRUE
+	aberrant_cooldown_time_mod = 5 MINUTES	// Don't want these popping out too often
+
+/datum/component/modification/organ/output/produce/get_function_info()
+	var/outputs
+	for(var/atom/movable/AM in possible_outputs)
+		outputs += initial(AM.name) + " ([possible_outputs[AM]]), "
+
+	outputs = copytext(outputs, 1, length(outputs) - 1)
+
+	var/description = "<span style='color:blue'>Functional information (output):</span> produces objects"
+	description += "\n<span style='color:blue'>Products (quantity):</span> [outputs]"
+
+	return description
+
+/datum/component/modification/organ/output/produce/modify(obj/item/I, mob/living/user)
+	if(!LAZYLEN(output_qualities))
+		return
+
+	var/list/possibilities_by_name = list()
+
+	for(var/atom/movable/possible in possible_outputs)
+		possibilities_by_name.Insert(initial(possible.name), possible)
+
+	for(var/output in possible_outputs)
+		var/atom/movable/AM = output
+		name = initial(AM.name)
+		var/list/possibilities = output_qualities.Copy()
+		var/output_amount = possible_outputs[output]
+		if(LAZYLEN(possible_outputs) > 1)
+			for(var/object_path in possibilities)
+				if(output != object_path && possible_outputs.Find(object_path))
+					possibilities.Remove(object_path)
+
+		var/decision = input("Choose a product (current: [name])","Adjusting Organoid") as null|anything in possibilities_by_name
+		if(!decision)
+			continue
+
+		var/decision_path = possibilities_by_name[decision]
+		possible_outputs[possible_outputs.Find(output)] = decision_path
+		possible_outputs[decision_path] = output_amount
+
+/datum/component/modification/organ/output/produce/trigger(atom/movable/holder, mob/living/carbon/owner, list/input)
+	if(!holder || !owner || !input)
+		return
+	if(!istype(holder, /obj/item/organ/internal/scaffold))
+		return
+
+	var/obj/item/organ/internal/scaffold/S = holder
+	var/organ_multiplier = (S.max_damage - S.damage) / S.max_damage
+	var/triggered = FALSE
+
+	if(LAZYLEN(input) && iscarbon(owner))
+		for(var/i in input)
+			var/index = input.Find(i)
+			var/is_input_valid = input[i] ? TRUE : FALSE
+			if(is_input_valid && index <= LAZYLEN(possible_outputs))
+				var/input_multiplier = input[i]
+				var/object_count = input_multiplier * organ_multiplier
+				var/object_path = possible_outputs[index]
+				for(var/count in object_count)
+					new object_path(get_turf(owner))
+				playsound(owner, 'sound/effects/squelch1.ogg', 50, 1)
+				triggered = TRUE
+
+	if(triggered)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN, TRUE)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
+
 /datum/component/modification/organ/output/damaging_insight_gain
 /datum/component/modification/organ/output/damaging_insight_gain/get_function_info()
 	var/description = "<span style='color:blue'>Functional information (output):</span> unknown"

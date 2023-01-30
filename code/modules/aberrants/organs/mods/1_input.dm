@@ -12,7 +12,7 @@
 						Use a laser cutting tool to change the metabolism source or reagent type.\n\
 						Reagents can only be swapped for like reagents."
 
-/obj/item/modification/organ/internal/input/reagents/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
+/obj/item/modification/organ/internal/input/reagents/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
 	var/datum/component/modification/organ/input/reagents/I = AddComponent(/datum/component/modification/organ/input/reagents)
 
 	for(var/input in chosen_input_info)
@@ -39,7 +39,7 @@
 						(can be inflicted before attaching the organ), but no damage is healed.\n\n\
 						Use a laser cutting tool to change the damage type."
 
-/obj/item/modification/organ/internal/input/damage/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
+/obj/item/modification/organ/internal/input/damage/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
 	var/datum/component/modification/organ/input/damage/I = AddComponent(/datum/component/modification/organ/input/damage)
 
 	for(var/input in chosen_input_info)
@@ -77,7 +77,7 @@
 						Use a laser cutting tool to change the power source type."
 	icon_state = "input_organoid-hive"
 
-/obj/item/modification/organ/internal/input/power_source/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
+/obj/item/modification/organ/internal/input/power_source/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
 	var/datum/component/modification/organ/input/power_source/I = AddComponent(/datum/component/modification/organ/input/power_source)
 
 	for(var/input in chosen_input_info)

@@ -147,6 +147,7 @@ COMSIG_ABERRANT_SECONDARY
 		modify(I, user)
 
 /datum/component/modification/proc/modify(obj/item/I, mob/living/user)
+	to_chat(user, SPAN_NOTICE("There is nothing to adjust in \the [parent]."))
 	return TRUE
 
 /datum/component/modification/proc/trigger(obj/item/I, mob/living/user)

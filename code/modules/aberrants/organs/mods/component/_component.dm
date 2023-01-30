@@ -31,6 +31,7 @@
 	examine_difficulty_secondary = STAT_LEVEL_BASIC - 5
 
 	// Internal organ stuff
+	var/somatic = FALSE		// If TRUE, will add a verb that allows for at-will use. Still subject to cooldowns.
 	var/list/owner_verb_adds = list()
 
 	// Additive adjustments
@@ -71,6 +72,12 @@
 	var/nature_adjustment = null
 	var/max_upgrade_mod = null
 	var/scanner_hidden = FALSE
+
+/datum/component/modification/organ/Initialize()
+	if(somatic)
+		trigger_signal = null
+		owner_verb_adds += /datum/component/modification/organ/verb/somatic_trigger
+	. = ..()
 
 /datum/component/modification/organ/apply(obj/item/organ/O, mob/living/user)
 	. = ..()
@@ -277,3 +284,14 @@
 			to_chat(user, SPAN_NOTICE(function_info))
 	else
 		to_chat(user, SPAN_WARNING("You lack the biological knowledge and/or mental ability required to understand its functions."))
+
+/datum/component/modification/organ/verb/somatic_trigger()
+	set category = "Organs and Implants"
+	set name = "Activate Organ"
+	set desc = "Starts the process of an organ."
+
+	var/atom/movable/AM = parent
+	var/obj/item/organ/internal/scaffold/S = AM.loc
+
+	if(S && S.owner)
+		trigger(S, owner)

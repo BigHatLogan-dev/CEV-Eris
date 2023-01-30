@@ -189,6 +189,103 @@
 
 	SEND_SIGNAL(holder, COMSIG_ABERRANT_PROCESS, holder, owner, input)
 
+/datum/component/modification/organ/input/consume
+	adjustable = TRUE
+	somatic = TRUE
+
+/datum/component/modification/organ/input/consume/get_function_info()
+	var/inputs
+	for(var/input in accepted_inputs)
+		var/atom/movable/AM = input
+		inputs += initial(AM.name) + ", "
+
+	inputs = copytext(inputs, 1, length(inputs) - 1)
+
+	var/description = "<span style='color:green'>Functional information (input):</span> consumes held object"
+	description += "\n<span style='color:green'>Digestable materials:</span> [inputs]"
+
+	return description
+
+/datum/component/modification/organ/input/consume/modify(obj/item/I, mob/living/user)
+	if(!LAZYLEN(input_qualities))
+		return
+
+	for(var/input in accepted_inputs)
+		var/list/possibilities = input_qualities.Copy()
+		
+		if(LAZYLEN(accepted_inputs) > 1)
+			for(var/source in possibilities)
+				var/source_type = possibilities[source]
+				if(input != source_type && accepted_inputs.Find(source_type))
+					possibilities.Remove(source)
+
+		var/atom/movable/AM = input_qualities[input]
+
+		var/decision = input("Choose a digestable material (current: [AM ? initial(AM.name) : "unknown"])","Adjusting Organoid") as null|anything in possibilities
+		if(!decision)
+			continue
+
+		accepted_inputs[accepted_inputs.Find(input)] = input_qualities[decision]
+
+/datum/component/modification/organ/input/consume/trigger(atom/movable/holder, mob/living/carbon/human/owner)
+	if(!holder || !owner)
+		return
+	if(!owner.get_siemens_coefficient_organ(owner.get_organ(check_zone(BP_L_ARM))) && !owner.get_siemens_coefficient_organ(owner.get_organ(check_zone(BP_R_ARM))))
+		return
+	if(!istype(holder, /obj/item/organ/internal/scaffold))
+		return
+
+	var/obj/item/organ/internal/scaffold/S = holder
+	var/organ_multiplier = ((S.max_damage - S.damage) / S.max_damage)
+
+	var/list/input = list()
+	var/active_hand_held = owner.get_active_hand()
+	var/inactive_hand_held = owner.get_inactive_hand()
+
+	for(var/digestable in accepted_inputs)
+		var/obj/O
+		if(istype(active_hand_held, digestable) && isobj(active_hand_held))
+			O = active_hand_held
+		if(istype(inactive_hand_held, digestable) && isobj(active_hand_held))
+			O = inactive_hand_held
+
+		if(!O)
+			return
+
+		to_chat(owner, SPAN_NOTICE("You swallow \the [O] whole."))
+
+		var/nutrition_supplied = 0
+
+		if(LAZYLEN(O.matter))
+			for(var/material in matter)
+				nutrition_supplied += matter[material]
+				owner.adjustNutrition(nutrition_supplied * organ_multiplier)
+
+			qdel(O)
+		
+		if(nutrition_supplied > threshold)
+			var/magnitude = 0
+
+			if(nutrition_supplied > 40)
+				magnitude = 2 * organ_multiplier
+			else if(nutrition_supplied > 20)
+				magnitude = 1.5 * organ_multiplier
+			else if(nutrition_supplied > 10)
+				magnitude = organ_multiplier
+				
+			if(magnitude)
+				if(prob(2))
+					to_chat(owner, SPAN_NOTICE("A warm sensation fills your belly. You feel satiated."))
+				owner.stats.addTempStat(STAT_VIG, magnitude * 4, S.aberrant_cooldown_time + 2 SECONDS, "[parent]")
+				owner.sanity.changeLevel(magnitude)
+
+		input += digestable
+		input[digestable] = nutrition_supplied ? TRUE : FALSE
+
+	SEND_SIGNAL(holder, COMSIG_ABERRANT_PROCESS, holder, owner, input)
+
+
+// Hivemind
 
 /datum/component/modification/organ/input/power_source
 	adjustable = TRUE
@@ -288,17 +385,16 @@
 
 			if(energy_supplied > 4999999)
 				magnitude = 5 * organ_multiplier
-			if(energy_supplied > 999999)
+			else if(energy_supplied > 999999)
 				magnitude = 3 * organ_multiplier
-			if(energy_supplied > 99999)
+			else if(energy_supplied > 99999)
 				magnitude = 2 * organ_multiplier
 				
-			if(magnitude && ishuman(owner))
+			if(magnitude)
 				if(prob(2))
 					to_chat(owner, SPAN_NOTICE("A pleasant chill runs down your spine. You feel more focused."))
-				var/mob/living/carbon/human/H = owner
-				H.stats.addTempStat(STAT_COG, magnitude * 2, S.aberrant_cooldown_time + 2 SECONDS, "[parent]")
-				H.sanity.changeLevel(magnitude - 2)
+				owner.stats.addTempStat(STAT_COG, magnitude * 2, S.aberrant_cooldown_time + 2 SECONDS, "[parent]")
+				owner.sanity.changeLevel(magnitude - 2)
 
 		input += power_source
 		input[power_source] = energy_supplied ? TRUE : FALSE

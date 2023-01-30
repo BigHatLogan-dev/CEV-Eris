@@ -6,10 +6,10 @@
 /obj/item/modification/organ/internal/process/map
 	name = "tubular organoid"
 	desc = "Functional tissue of one or more organs in graftable form. Connects inputs to outputs."
-	description_info = "Maps inputs to outputs. Works for any number of inputs and outputs.\n\n\
-						Use a laser cutting tool to change the mapping type."
+	description_info = "Maps inputs to outputs. Works for any number of inputs and outputs."
+						//Use a laser cutting tool to change the mapping type."
 
-/obj/item/modification/organ/internal/process/map/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/process/map/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	AddComponent(/datum/component/modification/organ/process/map)
 	..()
 
@@ -19,7 +19,7 @@
 	description_info = "Maps inputs to outputs. Works for any number of inputs and outputs.\n\n\
 						Use a laser cutting tool to change the mapping type."
 
-/obj/item/modification/organ/internal/process/cooldown/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/process_info)
+/obj/item/modification/organ/internal/process/cooldown/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/process_info)
 	var/datum/component/modification/organ/process/map/P = AddComponent(/datum/component/modification/organ/process/map)
 	P.aberrant_cooldown_time_mod = LAZYLEN(process_info) ? process_info[1] : STANDARD_ABERRANT_COOLDOWN
 	..()
@@ -29,7 +29,7 @@
 	desc = "Functional tissue of one or more organs in graftable form. Accelerates biochemical processes, increasing output magnitude."
 	description_info = "Maps inputs to outputs. Increases output magnitude."
 
-/obj/item/modification/organ/internal/process/multiplier/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/process_info)
+/obj/item/modification/organ/internal/process/multiplier/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/process_info)
 	var/datum/component/modification/organ/process/multiplier/P = AddComponent(/datum/component/modification/organ/process/multiplier)
 
 	var/multiplier = LAZYLEN(process_info) ? process_info[1] : 0.20
@@ -49,6 +49,6 @@
 	desc = "Functional tissue of one or more organs in graftable form. Connects multiple inputs to a single output."
 	description_info = "Maps inputs to a single output. If there are multiple outputs, it only uses the first."
 
-/obj/item/modification/organ/internal/process/condense/New(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/process/condense/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
 	AddComponent(/datum/component/modification/organ/process/condense)
 	..()

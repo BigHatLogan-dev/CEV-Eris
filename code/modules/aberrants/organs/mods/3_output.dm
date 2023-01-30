@@ -10,7 +10,7 @@
 						Use a laser cutting tool to change the metabolism target or reagent type.\n\
 						Reagents can only be swapped for like reagents."
 
-/obj/item/modification/organ/internal/output/reagents_blood/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
+/obj/item/modification/organ/internal/output/reagents_blood/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
 	var/datum/component/modification/organ/output/reagents/O = AddComponent(/datum/component/modification/organ/output/reagents)
 
 	for(var/output in output_types)
@@ -37,7 +37,7 @@
 						Use a laser cutting tool to change the metabolism target or reagent type.\n\
 						Reagents can only be swapped for like reagents."
 
-/obj/item/modification/organ/internal/output/reagents_ingest/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
+/obj/item/modification/organ/internal/output/reagents_ingest/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
 	var/datum/component/modification/organ/output/reagents/O = AddComponent(/datum/component/modification/organ/output/reagents)
 
 	for(var/output in output_types)
@@ -64,7 +64,7 @@
 						Use a laser cutting tool to change the hormone type.\n\
 						Hormone effects of the same type do not stack."
 
-/obj/item/modification/organ/internal/output/chemical_effects/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
+/obj/item/modification/organ/internal/output/chemical_effects/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
 	var/datum/component/modification/organ/output/chemical_effects/O = AddComponent(/datum/component/modification/organ/output/chemical_effects)
 
 	for(var/output in output_types)
@@ -101,7 +101,7 @@
 	description_info = "Slightly increases stats when triggered.\n\n\
 						Use a laser cutting tool to change the target stat."
 
-/obj/item/modification/organ/internal/output/stat_boost/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
+/obj/item/modification/organ/internal/output/stat_boost/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
 	var/datum/component/modification/organ/output/stat_boost/O = AddComponent(/datum/component/modification/organ/output/stat_boost)
 
 	for(var/output in output_types)
@@ -115,7 +115,7 @@
 	name = "enigmatic organoid"
 	desc = "Functional tissue of one or more organs in graftable form. It's function is unknown."
 
-/obj/item/modification/organ/internal/output/damaging_insight_gain/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types)
+/obj/item/modification/organ/internal/output/damaging_insight_gain/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types)
 	var/datum/component/modification/organ/output/damaging_insight_gain/O = AddComponent(/datum/component/modification/organ/output/damaging_insight_gain)
 
 	for(var/output in output_types)
@@ -127,7 +127,7 @@
 	name = "dependent organoid"
 	desc = "Functional tissue of one or more organs in graftable form. Only performs organ functions when triggered."
 
-/obj/item/modification/organ/internal/output/activate_organ_functions/New(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types)
+/obj/item/modification/organ/internal/output/activate_organ_functions/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types)
 	var/datum/component/modification/organ/output/activate_organ_functions/O = AddComponent(/datum/component/modification/organ/output/activate_organ_functions)
 
 	for(var/output in output_types)

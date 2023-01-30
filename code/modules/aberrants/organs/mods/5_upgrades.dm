@@ -7,6 +7,8 @@
 /obj/item/modification/organ/internal/stromal/update_icon()
 	return
 
+// Printable mods
+
 // Improvement mods add a beneficial multiplier or additive modifier to organ stats.
 /obj/item/modification/organ/internal/stromal/improvement
 	name = "improvement organoid"
@@ -17,7 +19,7 @@
 	desc = "A set of modified capillaries that improve substance transfer within an organ."
 	icon_state = "capillary"
 
-/obj/item/modification/organ/internal/stromal/improvement/requirements/New()
+/obj/item/modification/organ/internal/stromal/improvement/requirements/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
 	M.blood_req_multiplier = -0.50
@@ -31,7 +33,7 @@
 	desc = "A stronger membrane that allows an organ to sustain greater injury before its functions are diminished."
 	icon_state = "thick_membrane"
 
-/obj/item/modification/organ/internal/stromal/improvement/durability/New()
+/obj/item/modification/organ/internal/stromal/improvement/durability/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
 	M.specific_organ_size_multiplier = 0.20
@@ -46,7 +48,7 @@
 	desc = "A clump of stem cells that permanently increases the functional efficiency of an organ."
 	icon_state = "stem_cells"
 
-/obj/item/modification/organ/internal/stromal/improvement/efficiency/New()
+/obj/item/modification/organ/internal/stromal/improvement/efficiency/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
 	M.organ_efficiency_mod = 0.10
@@ -64,7 +66,7 @@
 	desc = "A leech-like creature that attaches itself to the viscera of an orgnanism. It mimics the function of the parent organ in exchange for blood, oxygen, and nutrients."
 	icon_state = "symbiont"
 
-/obj/item/modification/organ/internal/stromal/augment/overclock/New()
+/obj/item/modification/organ/internal/stromal/augment/overclock/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
 	M.organ_efficiency_multiplier = 0.20
@@ -80,7 +82,7 @@
 	desc = "A series of tubules that siphon blood away from an organ, reducing its effectiveness, to be used elsewhere in the body."
 	icon_state = "tubules"
 
-/obj/item/modification/organ/internal/stromal/augment/underclock/New()
+/obj/item/modification/organ/internal/stromal/augment/underclock/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
 	M.organ_efficiency_multiplier = -0.20		// Brings a standard organ just above the efficiency where the body is negatively impacted
@@ -96,10 +98,10 @@
 	desc = "A gel that will permanently solidify as structural tissue of the organ it is applied to."
 	icon_state = "advanced_collagen"
 
-/obj/item/modification/organ/internal/stromal/augment/expander/New()
+/obj/item/modification/organ/internal/stromal/augment/expander/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
-	M.specific_organ_size_mod = 0.20
+	M.specific_organ_size_mod = 0.10
 	M.max_upgrade_mod = 2
 	M.removable = FALSE		// Not feasible to remove
 	M.prefix = "expanded"
@@ -110,7 +112,7 @@
 	desc = "An outer membrane that absorbs typical medical scanning wavelengths. Slightly impedes organ functions and reduces organ size."
 	icon_state = "stealth_composites"
 
-/obj/item/modification/organ/internal/stromal/augment/silencer/New()
+/obj/item/modification/organ/internal/stromal/augment/silencer/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
 	M.organ_efficiency_multiplier = -0.10
@@ -126,7 +128,7 @@
 	icon_state = "membrane"
 	var/organ_eff_mod = 0.20
 
-/obj/item/modification/organ/internal/parenchymal/New(loc, generate_organ_stats = TRUE, predefined_modifier = organ_eff_mod)
+/obj/item/modification/organ/internal/parenchymal/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = organ_eff_mod)
 	var/datum/component/modification/organ/parenchymal/M = AddComponent(/datum/component/modification/organ/parenchymal)
 
 	M.prefix = "multi-functional"
@@ -135,3 +137,20 @@
 /obj/item/modification/organ/internal/parenchymal/large
 	name = "parenchymal membrane"
 	organ_eff_mod = 0.40
+
+
+// Roach loot
+
+/obj/item/modification/organ/internal/stromal/improvement/efficiency_roach
+	name = "blattodean stem cells"
+	desc = "A clump of stem cells that permanently increases the functional efficiency of an organ. These were extracted from roach viscera."
+	icon_state = "roach_stem_cells"
+	spawn_blacklisted = TRUE
+
+/obj/item/modification/organ/internal/stromal/improvement/efficiency_roach/Initialize()
+	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
+
+	M.organ_efficiency_mod = 0.20
+	M.removable = FALSE		// Stem cells don't go back to being undifferentiated
+	M.prefix = "blattodean"
+	..()

@@ -138,6 +138,7 @@
 
 // ABERRANT signals
 #define COMSIG_ABERRANT_INPUT "aberrant_input"
+#define COMSIG_ABERRANT_INPUT_VERB "aberrant_input_verb"
 #define COMSIG_ABERRANT_PROCESS "aberrant_process"
 #define COMSIG_ABERRANT_OUTPUT "aberrant_output"
 #define COMSIG_ABERRANT_SECONDARY "aberrant_secondary"
