@@ -1,6 +1,6 @@
 /obj/machinery/reagentgrinder/industrial/disgorger
 	name = "disgorger"
-	desc = "An abomination of meat and metal. Consumes organs and various reagents."
+	desc = "An abomination of meat and metal. Consumes organs and various reagent-filled objects."
 	description_info = "Requires a retracting tool to open the panel and a clamping tool to disassemble.\n\n\
 						Can be upgraded by re-assembling with organs of higher efficiency and using different organ types. Try using organs related to chewing, digestion, and filtration."
 	density = TRUE
@@ -15,8 +15,6 @@
 	var/biomatter_counter = 0				// We don't want this to actually produce biomatter
 	var/list/accepted_reagents = list(
 		/datum/reagent/organic/nutriment = 1
-	)
-	var/list/blacklisted_reagents = list(
 	)
 	var/list/accepted_objects = list(
 		/obj/item/organ,
@@ -34,7 +32,7 @@
 	// Research
 	var/research_denominator = 2	// Affects the multiplier for researching new designs
 	var/datum/research/knowledge
-	var/list/tech_progress = list(0,0,0,0)
+	var/list/tech_progress = list(0,0,0)
 
 	var/list/designs_to_unlock = list(
 		/datum/design/organ/teratoma/special/chemical_effect,
@@ -73,7 +71,6 @@
 /obj/machinery/reagentgrinder/industrial/disgorger/examine(mob/user)
 	..()
 	var/accepted
-	var/blacklisted
 
 	if(accepted_objects?.len)
 		for(var/object in accepted_objects)
@@ -88,18 +85,9 @@
 			var/datum/reagent/R = reagent
 			accepted += initial(R.name) + ", "
 
-	if(blacklisted_reagents?.len)
-		for(var/reagent in blacklisted_reagents)
-			var/datum/reagent/R = reagent
-			blacklisted += initial(R.name) + ", "
-
 	if(accepted)
 		accepted = copytext(accepted, 1, length(accepted) - 1)
 		to_chat(user, SPAN_NOTICE("<i>Accepts [accepted].</i>"))
-
-	if(blacklisted)
-		blacklisted = copytext(blacklisted, 1, length(blacklisted) - 1)
-		to_chat(user, SPAN_WARNING("Rejects objects with the following reagents: [blacklisted]."))
 
 /obj/machinery/reagentgrinder/industrial/disgorger/proc/check_reagents(obj/item/I, mob/user)
 	if(!I.reagents || !I.reagents.total_volume)
@@ -160,10 +148,12 @@
 
 		for(var/obj/item/O in I.GetAllContents(2, TRUE))
 			amount_to_take += max(0, O.matter[MATERIAL_BIOMATTER] / 2)
+			var/obj/item/organ/organ = O
+			var/is_valid_organ = (organ && organ.b_type)
 			qdel(O)
 			if(amount_to_take)
 				var/biomatter_amount = round(amount_to_take / production_denominator, 0.01)
-				var/biomatter_research = round(amount_to_take / research_denominator)
+				var/biomatter_research = is_valid_organ ? round(amount_to_take / research_denominator) : 0
 				biomatter_counter += biomatter_amount
 				progress("Viscera", biomatter_research)
 				break
@@ -207,16 +197,13 @@
 /obj/machinery/reagentgrinder/industrial/disgorger/proc/progress(tech_type, amount)
 	switch(tech_type)
 		if("Toxin")
-			tech_progress[BIOTECH_TOXIN] += amount
-		if("Organic")
-			tech_progress[BIOTECH_ORGANIC] += amount
+			tech_progress[ORGANTECH_ROACH] += amount / 8
 		if("Stimulator")
-			tech_progress[BIOTECH_STIM] += amount
+			tech_progress[ORGANTECH_VISCERA] += amount / 2
 		if("Viscera")
-			tech_progress[BIOTECH_VISCERA] += amount
+			tech_progress[ORGANTECH_VISCERA] += amount
 		if("Toxin/Stimulator")
-			tech_progress[BIOTECH_TOXIN] += amount / 2
-			tech_progress[BIOTECH_STIM] += amount / 2
+			tech_progress[ORGANTECH_ROACH] += amount
 
 	// Check if any unlock
 
@@ -336,10 +323,7 @@
 
 	if(kidney_eff > 49)
 		LAZYADD(accepted_reagents, list(
-			/datum/reagent/organic/blood = 0.1,		// Internet says blood plasma is 10% solids, 90% water
-			/datum/reagent/drink/milk = 0.13,		// Internet says milk is 13% solids, 87% water
-			/datum/reagent/stim = 0.25,
-			/datum/reagent/metal = 0.25
+			/datum/reagent/stim = 0.25
 		))
 
 	if(carrion_chem_eff > 99)
@@ -401,19 +385,6 @@
 	name = "flesh cube"
 	desc = "A three-dimensional solid object bounded by six square faces, with three meeting at each vertex. This one is covered in several layers of ectodermal tissue."
 	description_info = "Recycle this in the organ fabricator to add 60 biotic substrate, which is used in lieu of biomatter to print organs."
-	// Source: https://en.wikipedia.org/wiki/Cube and https://en.wikipedia.org/wiki/Ectoderm
-	description_fluff = "Its shape is that of a regular hexahedron and is one of the five Platonic solids. It has 6 faces, 12 edges, and 8 vertices. \
-						It is also a square parallelepiped, an equilateral cuboid and a right rhombohedron a 3-zonohedron. \
-						It is a regular square prism in three orientations, and a trigonal trapezohedron in four orientations. \
-						It is dual to the octahedron. It has cubical or octahedral symmetry. \
-						It is the only convex polyhedron whose faces are all squares.\n\n\
-						The ectoderm is one of the three primary germ layers formed in early embryonic development. \
-						It is the outermost layer, and is superficial to the mesoderm (the middle layer) and endoderm (the innermost layer). \
-						It emerges and originates from the outer layer of germ cells. \
-						The word ectoderm comes from the Greek ektos meaning \"outside\", and derma meaning \"skin\". \
-						Generally speaking, the ectoderm differentiates to form epithelial and neural tissues (spinal cord, peripheral nerves and brain). \
-						This includes the skin, linings of the mouth, anus, nostrils, sweat glands, hair and nails, and tooth enamel. \
-						Other types of epithelium are derived from the endoderm."
 	icon = 'icons/obj/machines/disgorger.dmi'
 	icon_state = "carne_cansada"
 	w_class = ITEM_SIZE_SMALL

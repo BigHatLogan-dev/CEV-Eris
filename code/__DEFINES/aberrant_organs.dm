@@ -1,32 +1,26 @@
 // RESEARCH
-#define BIOTECH_TOXIN 1
-#define BIOTECH_ORGANIC 2
-#define BIOTECH_STIM 3
-#define BIOTECH_VISCERA 4
+#define ORGANTECH_VISCERA 1
+#define ORGANTECH_ROACH 2
+#define ORGANTECH_HIVEMIND 3
 
-// Toxin
-#define ABERRANT_RESEARCH_REAGENTS_TOXIN list()
-#define ABERRANT_RESEARCH_ROACH list()
-#define ABERRANT_RESEARCH_SPIDER list()
+// Standard
+#define ABERRANT_RESEARCH_VISCERA_T1 list()		// Dispenser 1, type 2 hormones, spider toxins
+#define ABERRANT_RESEARCH_VISCERA_T2 list()		// Dispenser 2,	type 3 hormones, basic stims
+#define ABERRANT_RESEARCH_VISCERA_T3 list()		// Dispenser 3,	type 4 hormones, 
 
-// Organic
-#define ABERRANT_RESEARCH_REAGENTS_EDIBLE list()
-#define ABERRANT_RESEARCH_HORMONES_T2 list()
-#define ABERRANT_RESEARCH_HORMONES_T3 list()
+// Roach
+#define ABERRANT_RESEARCH_ROACH_T1 list()		// Regular roaches
+#define ABERRANT_RESEARCH_ROACH_T2 list()		// Fuhrer
+#define ABERRANT_RESEARCH_ROACH_T3 list()		// Kaiser
 
-// Stim
-#define ABERRANT_RESEARCH_STATS_1 list()
-#define ABERRANT_RESEARCH_STATS_2 list()
-#define ABERRANT_RESEARCH_STATS_3 list()
-
-// Organs
-#define ABERRANT_RESEARCH_VISCERA_1 list()
-#define ABERRANT_RESEARCH_VISCERA_2 list()
-#define ABERRANT_RESEARCH_VISCERA_3 list()
+// Hivemind
+#define ABERRANT_RESEARCH_HIVEMIND_T1 list()	// Organ mods
+#define ABERRANT_RESEARCH_HIVEMIND_T2 list()	// Hivemind organs
+#define ABERRANT_RESEARCH_HIVEMIND_T3 list()	// Hivemind organoids
 
 
 // ORGAN GENERATION
-#define ALL_STANDARD_ORGAN_EFFICIENCIES list(OP_HEART, OP_LUNGS, OP_LIVER, OP_KIDNEYS, OP_APPENDIX, OP_STOMACH, OP_BONE, OP_MUSCLE, OP_NERVE, OP_BLOOD_VESSEL) // OP_EYES, causes runtimes and not particularly useful
+#define ALL_STANDARD_ORGAN_EFFICIENCIES list(OP_HEART, OP_LUNGS, OP_LIVER, OP_KIDNEYS, OP_STOMACH, OP_BONE, OP_MUSCLE, OP_NERVE, OP_BLOOD_VESSEL)
 #define PARASITIC_ORGAN_EFFICIENCIES list(OP_LIVER, OP_STOMACH, OP_BONE, OP_MUSCLE, OP_NERVE, OP_BLOOD_VESSEL)
 
 #define ALL_ORGAN_STATS list(\
@@ -34,7 +28,6 @@
 		OP_LUNGS		= list(100,   2,   50,	10,  10,  0,   list("l", "un", "gs"), list()),\
 		OP_LIVER		= list(100,   1,   25,	5,   5,   7,   list("l", "iv", "er"), list()),\
 		OP_KIDNEYS		= list(100,   2,   15,  3,   4,   5,   list("k", "idn", "ey"), list()),\
-		OP_APPENDIX		= list(100,   0,   0,	0,   0,   0,   list("app", "end", "ix"), list()),\
 		OP_STOMACH		= list(100,   1,   25,	5,   0,   5,   list("st", "om", "ach"), list()),\
 		OP_BONE			= list(100,   1,   0,	0,   0,   0,   list("b", "on", "e"), list()),\
 		OP_MUSCLE		= list(100,   0.5, 2.5, 0.5, 0.5, 0,   list("m", "us", "cle"), list()),\
@@ -77,24 +70,15 @@
 								/datum/reagent/phosphorus, /datum/reagent/metal/potassium, /datum/reagent/metal/radium, /datum/reagent/acid, /datum/reagent/acid/hydrochloric,\
 								/datum/reagent/silicon, /datum/reagent/metal/sodium, /datum/reagent/organic/sugar, /datum/reagent/sulfur, /datum/reagent/metal/tungsten)
 
-#define REAGENTS_DISPENSER_2 list(/datum/reagent/acetone, /datum/reagent/metal/aluminum, /datum/reagent/toxin/ammonia, /datum/reagent/carbon, /datum/reagent/metal/copper,\
-								/datum/reagent/ethanol, /datum/reagent/toxin/hydrazine, /datum/reagent/metal/iron, /datum/reagent/metal/lithium, /datum/reagent/metal/mercury,\
-								/datum/reagent/phosphorus, /datum/reagent/metal/potassium, /datum/reagent/metal/radium, /datum/reagent/acid, /datum/reagent/acid/hydrochloric,\
-								/datum/reagent/silicon, /datum/reagent/metal/sodium, /datum/reagent/organic/sugar, /datum/reagent/sulfur, /datum/reagent/metal/tungsten,\
-								/datum/reagent/medicine/inaprovaline, /datum/reagent/medicine/dylovene, /datum/reagent/medicine/kelotane)
+#define REAGENTS_DISPENSER_2 list(/datum/reagent/medicine/inaprovaline, /datum/reagent/medicine/dylovene, /datum/reagent/medicine/kelotane)
 
-#define REAGENTS_DISPENSER_3 list(/datum/reagent/acetone, /datum/reagent/metal/aluminum, /datum/reagent/toxin/ammonia, /datum/reagent/carbon, /datum/reagent/metal/copper,\
-								/datum/reagent/ethanol, /datum/reagent/toxin/hydrazine, /datum/reagent/metal/iron, /datum/reagent/metal/lithium, /datum/reagent/metal/mercury,\
-								/datum/reagent/phosphorus, /datum/reagent/metal/potassium, /datum/reagent/metal/radium, /datum/reagent/acid, /datum/reagent/acid/hydrochloric,\
-								/datum/reagent/silicon, /datum/reagent/metal/sodium, /datum/reagent/organic/sugar, /datum/reagent/sulfur, /datum/reagent/metal/tungsten,\
-								/datum/reagent/medicine/inaprovaline, /datum/reagent/medicine/dylovene, /datum/reagent/medicine/kelotane, /datum/reagent/medicine/tricordrazine,\
-								/datum/reagent/medicine/spaceacillin, /datum/reagent/medicine/dermaline)
+#define REAGENTS_DISPENSER_3 list(/datum/reagent/medicine/tricordrazine, /datum/reagent/medicine/spaceacillin, /datum/reagent/medicine/dermaline)
 
 #define REAGENTS_DRUGS list(/datum/reagent/drug/space_drugs, /datum/reagent/drug/cryptobiolin, /datum/reagent/drug/mindbreaker, /datum/reagent/drug/nicotine)
 
 #define REAGENTS_TOXIN list(/datum/reagent/toxin/amatoxin, /datum/reagent/toxin/plasma, /datum/reagent/toxin/fertilizer,\
-							/datum/reagent/toxin/plantbgone, /datum/reagent/acid/polyacid, /datum/reagent/toxin/lexorin,\
-							/datum/reagent/medicine/soporific, /datum/reagent/toxin/biomatter)
+							/datum/reagent/toxin/plantbgone, /datum/reagent/toxin/biomatter, /datum/reagent/toxin/lexorin,\
+							/datum/reagent/medicine/soporific)
 
 #define REAGENTS_ROACH list(/datum/reagent/toxin/diplopterum, /datum/reagent/toxin/seligitillin, /datum/reagent/toxin/starkellin,\
 							/datum/reagent/toxin/gewaltine, /datum/reagent/toxin/blattedin)
@@ -112,8 +96,8 @@
 							/datum/reagent/drink/tea, /datum/reagent/drink/tea/icetea)
 
 #define REAGENTS_ALCOHOL list(/datum/reagent/alcohol/ale, /datum/reagent/alcohol/beer, /datum/reagent/alcohol/mead,\
-								/datum/reagent/alcohol/gin, /datum/reagent/alcohol/rum, /datum/reagent/alcohol/tequilla, /datum/reagent/alcohol/vermouth,\
-								/datum/reagent/alcohol/vodka, /datum/reagent/alcohol/whiskey, /datum/reagent/alcohol/wine, /datum/reagent/alcohol/cognac)
+							/datum/reagent/alcohol/gin, /datum/reagent/alcohol/rum, /datum/reagent/alcohol/tequilla, /datum/reagent/alcohol/vermouth,\
+							/datum/reagent/alcohol/vodka, /datum/reagent/alcohol/whiskey, /datum/reagent/alcohol/wine, /datum/reagent/alcohol/cognac)
 
 #define REAGENTS_NANITES list(/datum/reagent/nanites/arad, /datum/reagent/nanites/implant_medics, /datum/reagent/nanites/nantidotes, /datum/reagent/nanites/nanosymbiotes,\
 							/datum/reagent/nanites/oxyrush, /datum/reagent/nanites/trauma_control_system, /datum/reagent/nanites/purgers,\
