@@ -188,8 +188,8 @@
 /datum/design/organ/teratoma/process/condense
 	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/process/condense
 
-/datum/design/organ/teratoma/process/boost
-	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/process/boost
+/datum/design/organ/teratoma/process/multiplier
+	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/process/multiplier
 	starts_unlocked = FALSE
 
 

@@ -1,6 +1,6 @@
 /obj/item/modification/organ/internal/stromal
 	name = "stromal organoid"
-	icon = 'icons/obj/organ_mods.dmi'
+	icon = 'icons/obj/aberrant_organs/organ_mods.dmi'
 	spawn_blacklisted = FALSE	// No RNG stats, no teratoma needed. Helps illustrate the gradual increase of weirdness from regular organs to the more bizarre aberrant organs.
 	bad_type = /obj/item/modification/organ/internal/stromal
 
@@ -132,6 +132,7 @@
 	var/datum/component/modification/organ/parenchymal/M = AddComponent(/datum/component/modification/organ/parenchymal)
 
 	M.prefix = "multi-functional"
+	M.multiples_allowed = TRUE
 	..()
 
 /obj/item/modification/organ/internal/parenchymal/large

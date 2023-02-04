@@ -257,8 +257,8 @@
 		var/nutrition_supplied = 0
 
 		if(LAZYLEN(O.matter))
-			for(var/material in matter)
-				nutrition_supplied += matter[material]
+			for(var/material in O.matter)
+				nutrition_supplied += O.matter[material]
 				owner.adjustNutrition(nutrition_supplied * organ_multiplier)
 
 			qdel(O)

@@ -6,7 +6,7 @@
 	price_tag = 25		// Biomatter is 5 credits per unit
 
 /obj/item/modification/organ/internal
-	icon = 'icons/obj/organ_mods.dmi'
+	icon = 'icons/obj/aberrant_organs/organ_mods.dmi'
 	icon_state = "organoid"
 	desc = "Functional tissue of one or more organs in graftable form."
 	spawn_tags = SPAWN_TAG_ORGAN_MOD

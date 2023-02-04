@@ -1,6 +1,6 @@
 /obj/item/organ/internal/scaffold
 	name = "organ scaffold"
-	icon = 'icons/obj/aberrant_organs.dmi'
+	icon = 'icons/obj/aberrant_organs/aberrant_organs.dmi'
 	icon_state = "organ_scaffold"
 	desc = "A collagen-based biostructure."
 	description_info = "A functionless organ with three slots for organ mods or organoids. Best used with an input, process, and output organoid to create a modular organ."

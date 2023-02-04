@@ -48,6 +48,7 @@ COMSIG_ABERRANT_SECONDARY
 	var/list/apply_to_types = list()  		// The mod can be applied to an item of these types
 	var/list/blacklisted_types = list()		// The mod can not be applied to an item of these types
 	var/exclusive_type						// Use if children of a mod path should be checked
+	var/multiples_allowed = FALSE
 
 	var/examine_msg = null	// Examine message for the mod, not the item it is attached to
 
@@ -77,15 +78,15 @@ COMSIG_ABERRANT_SECONDARY
 
 /datum/component/modification/proc/can_apply(atom/A, mob/living/user)
 	if(isitem(A))
-		var/obj/item/I = A
-		//No using multiples of the same upgrade
-		for (var/obj/item/item in I.item_upgrades)
-			if(item.type == parent.type || (exclusive_type && istype(item, exclusive_type)))
-				if(user)
-					to_chat(user, SPAN_WARNING("A modification of this type is already attached!"))
-				return FALSE
+		if(!multiples_allowed)
+			var/obj/item/I = A
+			//No using multiples of the same upgrade
+			for (var/obj/item/item in I.item_upgrades)
+				if(item.type == parent.type || (exclusive_type && istype(item, exclusive_type)))
+					if(user)
+						to_chat(user, SPAN_WARNING("A modification of this type is already attached!"))
+					return FALSE
 
-	if(istype(A, /obj/item))
 		return check_item(A, user)
 
 	return FALSE

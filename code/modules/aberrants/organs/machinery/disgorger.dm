@@ -34,15 +34,6 @@
 	var/datum/research/knowledge
 	var/list/tech_progress = list(0,0,0)
 
-	var/list/designs_to_unlock = list(
-		/datum/design/organ/teratoma/special/chemical_effect,
-		/datum/design/organ/teratoma/special/stat_boost,
-		/datum/design/organ/teratoma/output/chemical_effects_type_2,
-		/datum/design/organ/organ_mod/parenchymal_large,
-		/datum/design/organ/teratoma/process/boost,
-		/datum/design/organ/scaffold/rare
-	)
-
 /obj/machinery/reagentgrinder/industrial/disgorger/Initialize()
 	. = ..()
 	spit_target = get_ranged_target_turf(src, dir, spit_range)
@@ -96,8 +87,6 @@
 		var/datum/reagent/R = reagent
 		if(is_type_in_list(R, accepted_reagents))
 			. = TRUE		// If the container has any amount of an accepted reagent, the proc will return true
-		if(is_type_in_list(R, blacklisted_reagents))
-			return FALSE	// If the container has any amount of a blacklisted reagent, the proc will immediately return false
 
 /obj/machinery/reagentgrinder/industrial/disgorger/insert(obj/item/I, mob/user)
 	if(!istype(I))
@@ -127,8 +116,6 @@
 	if(I.reagents)
 		holdingitems -= I
 		for(var/datum/reagent/R in I.reagents.reagent_list)
-			if(is_type_in_list(R, blacklisted_reagents))
-				continue
 			for(var/reagent_path in accepted_reagents)
 				if(!istype(R, reagent_path))
 					continue
@@ -275,10 +262,6 @@
 	has_brain = FALSE
 
 	for(var/component in component_parts)
-		if(istype(component, /obj/item/electronics/circuitboard/disgorger))
-			var/obj/item/electronics/circuitboard/disgorger/C = component
-			if(C.designs_to_unlock.len)
-				designs_to_unlock = C.designs_to_unlock.Copy()
 		if(!istype(component, /obj/item/organ/internal))
 			continue
 		var/obj/item/organ/internal/O = component
@@ -343,12 +326,6 @@
 	grind_rate = initial(grind_rate) - tick_reduction
 	production_denominator = max(initial(production_denominator) - production_mod, 0.5)
 	research_denominator = max(initial(research_denominator) - research_mod, 0.5)
-
-/obj/machinery/reagentgrinder/industrial/disgorger/on_deconstruction()
-	..()
-	var/obj/item/electronics/circuitboard/disgorger/C = locate(/obj/item/electronics/circuitboard/disgorger) in component_parts
-	if(C)
-		C.designs_to_unlock = designs_to_unlock.Copy()
 
 /obj/machinery/reagentgrinder/industrial/disgorger/nano_ui_data()
 	. = ..()

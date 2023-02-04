@@ -22,8 +22,8 @@
 	input_mode = CHEM_INGEST
 	special_info = list(STAT_ROB, 10)
 
-/obj/item/organ/internal/scaffold/aberrant/dependent/wifebeater/New()
-	..()
+/obj/item/organ/internal/scaffold/aberrant/dependent/wifebeater/Initialize()
+	. = ..()
 	var/obj/item/modification/organ/internal/input/I
 	for(var/mod in item_upgrades)
 		if(istype(mod, /obj/item/modification/organ/internal/input))
@@ -61,8 +61,8 @@
 	input_mode = CHEM_INGEST
 	special_info = list(STAT_MEC, 10)
 
-/obj/item/organ/internal/scaffold/aberrant/dependent/functional_alcoholic/New()
-	..()
+/obj/item/organ/internal/scaffold/aberrant/dependent/functional_alcoholic/Initialize()
+	. = ..()
 	var/obj/item/modification/organ/internal/input/I
 	for(var/mod in item_upgrades)
 		if(istype(mod, /obj/item/modification/organ/internal/input))
@@ -99,8 +99,8 @@
 	input_mode = CHEM_INGEST
 	special_info = list(STAT_COG, 10)
 
-/obj/item/organ/internal/scaffold/aberrant/dependent/classy/New()
-	..()
+/obj/item/organ/internal/scaffold/aberrant/dependent/classy/Initialize()
+	. = ..()
 	var/obj/item/modification/organ/internal/input/I
 	for(var/mod in item_upgrades)
 		if(istype(mod, /obj/item/modification/organ/internal/input))
@@ -137,8 +137,8 @@
 	input_mode = CHEM_BLOOD
 	special_info = list(STAT_VIG, 10)
 
-/obj/item/organ/internal/scaffold/aberrant/dependent/exmercenary/New()
-	..()
+/obj/item/organ/internal/scaffold/aberrant/dependent/exmercenary/Initialize()
+	. = ..()
 	var/obj/item/modification/organ/internal/input/I
 	for(var/mod in item_upgrades)
 		if(istype(mod, /obj/item/modification/organ/internal/input))
@@ -175,8 +175,8 @@
 	input_mode = CHEM_BLOOD
 	special_info = list(STAT_TGH, 10)
 
-/obj/item/organ/internal/scaffold/aberrant/dependent/mobster/New()
-	..()
+/obj/item/organ/internal/scaffold/aberrant/dependent/mobster/Initialize()
+	. = ..()
 	var/obj/item/modification/organ/internal/input/I
 	for(var/mod in item_upgrades)
 		if(istype(mod, /obj/item/modification/organ/internal/input))
@@ -213,8 +213,8 @@
 	input_mode = CHEM_BLOOD
 	special_info = list(STAT_BIO, 10)
 
-/obj/item/organ/internal/scaffold/aberrant/dependent/chemist/New()
-	..()
+/obj/item/organ/internal/scaffold/aberrant/dependent/chemist/Initialize()
+	. = ..()
 	var/obj/item/modification/organ/internal/input/I
 	for(var/mod in item_upgrades)
 		if(istype(mod, /obj/item/modification/organ/internal/input))

@@ -283,7 +283,7 @@
 
 	for(var/output in possible_outputs)
 		var/atom/movable/AM = output
-		name = initial(AM.name)
+		var/name = initial(AM.name)
 		var/list/possibilities = output_qualities.Copy()
 		var/output_amount = possible_outputs[output]
 		if(LAZYLEN(possible_outputs) > 1)
@@ -412,6 +412,7 @@
 
 	if(LAZYLEN(input))
 		for(var/i in input)
+			var/index = input.Find(i)
 			var/is_input_valid = input[i]
 			if(is_input_valid && index <= LAZYLEN(possible_outputs))
 				var/input_multiplier = input[i]
