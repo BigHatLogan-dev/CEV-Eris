@@ -139,6 +139,9 @@
 #define COMSIG_GENERATE_DUNGEON "generate_dungeon"
 #define COMSIG_DUNGEON_GENERATED "dungeon_generated"
 
+// Food processing signals
+#define COMSIG_FOOD_PROCESS_DO "food_processing_do"
+
 /*******Component Specific Signals*******/
 //Janitor
 
