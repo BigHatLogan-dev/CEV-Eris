@@ -331,6 +331,7 @@
 #include "code\datums\craft\recipes\tools.dm"
 #include "code\datums\craft\recipes\weapon.dm"
 #include "code\datums\elements\_element.dm"
+#include "code\datums\elements\use_tool.dm"
 #include "code\datums\extensions\extensions.dm"
 #include "code\datums\extensions\fake_data.dm"
 #include "code\datums\extensions\label.dm"
