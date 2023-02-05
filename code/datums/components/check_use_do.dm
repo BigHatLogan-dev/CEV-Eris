@@ -1,5 +1,5 @@
 // Modular interaction behavior
-// A replacement for item_attack()-like procs that follow a format of check -> use action with progress bar -> do.
+// A replacement for item_attack()-like procs that follow a format of check -> charge consumption/progress bar -> do.
 // Allows behaviors to be separated from objects, which reduces code duplication and gets around the quirks of object-oriented design.
 // Example uses: food processing (tenderizing, mincing, etc.)
 
@@ -10,9 +10,11 @@
 	var/check_path						// Path of the component/element used to check if the interaction can be carried out
 	var/check_proc_name					// Name of the check proc
 	var/check_signal					// Signal to be registered with the check proc
+	// === OPTIONAL ===
 	var/use_path						// Path of the component/element used for optional actions to be done between the check and the do_after
 	var/use_proc_name					// Name of the use proc
 	var/use_signal						// Signal to be registered with the use proc
+	// ================
 	var/list/do_after = list()			// Map of checked qualities to component/element paths of interactions. Format: list(tool_quality = behavior element path)
 	var/list/do_after_procs = list()	// Map of component/element paths to their desired signal procs
 	var/list/do_after_signals = list()	// Signals to be registered with do_after procs, uses the order of do_after_procs at init
@@ -26,12 +28,18 @@
 
 /datum/component/check_use_do/Initialize(list/check_args, list/use_args, list/do_after_args, ...)
 	. = ..()
+	if(LAZYLEN(check_args) < 3 || LAZYLEN(do_after_args) < 3)
+		return COMPONENT_INCOMPATIBLE
+
 	check_path = check_args[1]
 	check_proc_name = check_args[2]
 	check_signal = check_args[3]
-	use_path = use_args[1]
-	use_proc_name = use_args[2]
-	use_signal = use_args[3]
+
+	if(LAZYLEN(use_args) > 2)
+		use_path = use_args[1]
+		use_proc_name = use_args[2]
+		use_signal = use_args[3]
+
 	do_after = do_after_args[1]
 	do_after_procs = do_after_args[2]
 	do_after_signals = do_after_args[3]
@@ -40,9 +48,11 @@
 	RegisterSignal(parent, action_signal, PROC_REF(do_action))
 
 	var/datum/element/check = AddElement(check_path)
-	var/datum/element/use = AddElement(use_path)
 	RegisterSignal(src, check_signal, TYPE_PROC_REF(check, check_proc_name))
+
+	var/datum/element/use = AddElement(use_path)
 	RegisterSignal(src, use_signal, TYPE_PROC_REF(use, use_proc_name))
+
 	for(var/i in 1 to LAZYLEN(do_after_procs))
 		var/element_path = do_after_procs[i]
 		var/datum/element/interaction = AddElement(element_path)
