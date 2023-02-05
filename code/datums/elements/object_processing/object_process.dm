@@ -4,6 +4,10 @@
 	element_flags = ELEMENT_BESPOKE
 	argument_hash_start_idx = 2
 
+/datum/element/object_process/Attach(datum/target, sigtype)
+	..()
+	RegisterSignal(target, sigtype, PROC_REF(do_object_process))
+
 /datum/element/object_process/proc/do_object_process(datum/source_ref, atom/target, list/arguments)
 	SIGNAL_HANDLER
 	var/process_verb = arguments[1]
