@@ -1,7 +1,6 @@
 // Modular interaction behavior
 // A replacement for item_attack()-like procs that follow a format of check -> charge consumption/progress bar -> do.
 // Allows behaviors to be separated from objects, which reduces code duplication and gets around the quirks of object-oriented design.
-// Example uses: food processing (tenderizing, mincing, etc.)
 
 /datum/component/check_use_do
 	// Do not modify after init
@@ -15,7 +14,7 @@
 	var/use_proc_name					// Name of the use proc
 	var/use_signal						// Signal to be registered with the use proc
 	// ================
-	var/list/do_after = list()			// Map of checked qualities to component/element paths of interactions. Format: list(tool_quality = behavior element path)
+	var/list/do_after = list()			// Map of checked qualities to arguments to pass to the proc. Format: list(tool_quality = list(args))
 	var/list/do_after_procs = list()	// Map of component/element paths to their desired signal procs
 	var/list/do_after_signals = list()	// Signals to be registered with do_after procs, uses the order of do_after_procs at init
 
@@ -48,15 +47,15 @@
 	RegisterSignal(parent, action_signal, PROC_REF(do_action))
 
 	var/datum/element/check = AddElement(check_path)
-	RegisterSignal(src, check_signal, TYPE_PROC_REF(check, check_proc_name))
+	RegisterSignal(src, check_signal, TYPE_PROC_REF(check_path, check_proc_name))
 
 	var/datum/element/use = AddElement(use_path)
-	RegisterSignal(src, use_signal, TYPE_PROC_REF(use, use_proc_name))
+	RegisterSignal(src, use_signal, TYPE_PROC_REF(use_path, use_proc_name))
 
 	for(var/i in 1 to LAZYLEN(do_after_procs))
 		var/element_path = do_after_procs[i]
 		var/datum/element/interaction = AddElement(element_path)
-		RegisterSignal(src, do_after_signals[i], TYPE_PROC_REF(interaction, do_after_procs[element_path]))
+		RegisterSignal(src, do_after_signals[i], TYPE_PROC_REF(element_path, do_after_procs[element_path]))
 
 /datum/component/check_use_do/ClearFromParent()
 	UnregisterSignal(parent, action_signal)
@@ -73,8 +72,23 @@
 	// Use (if applicable), then do
 	if(quality_used)
 		if(!use_path || SEND_SIGNAL(src, use_signal, I, user, parent, worktime, quality_used, difficulty, required_stat, work_sound))
-			var/result = do_after_signal[do_after.Find(quality_used)]
-			SEND_SIGNAL(src, result)
+			var/index
+			if(LAZYLEN(do_after_procs) == 1 && LAZYLEN(do_after_signals) == 1)
+				index = 1
+			else
+				index = do_after.Find(quality_used)
+			var/result_signal = do_after_signals[index]
+			var/cleanup = SEND_SIGNAL(src, result_signal, parent, do_after[quality_used])
+			switch(cleanup)
+				if(CUD_DETACH_ELEMENT)
+					UnregisterSignal(src, do_after_signals[index])
+					LAZYREMOVE(do_after, index)
+					LAZYREMOVE(do_after_procs, index)
+					LAZYREMOVE(do_after_signals, index)
+					if(!LAZYLEN(do_after))
+						qdel(src)
+				if(CUD_QDEL_COMPONENT)
+					qdel(src)
 			return TRUE
 	else
 		to_chat(user, SPAN_NOTICE(failure_message))
