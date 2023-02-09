@@ -50,27 +50,28 @@
 
 /datum/component/check_use_do/proc/do_action(obj/item/I, mob/user)
 	SIGNAL_HANDLER
-	// Check
-	var/quality_used = SEND_SIGNAL(src, check_signal, I, user, do_after)
 
-	// Use (if applicable), then do
+	var/quality_used
+	var/list/return_data = list()
+	SEND_SIGNAL(src, check_signal, I, user, do_after, return_data)	// Check
+	if(LAZYLEN(return_data))
+		quality_used = return_data[1]
+
 	if(quality_used)
-		if(!use_signal || SEND_SIGNAL(src, use_signal, I, user, parent, worktime, quality_used, difficulty, required_stat, work_sound))
+		if(!use_signal || SEND_SIGNAL(src, use_signal, I, user, parent, worktime, quality_used, difficulty, required_stat, work_sound))	// Use
 			var/index
 			if(LAZYLEN(do_after_signals) == 1)
 				index = 1
 			else
 				index = do_after.Find(quality_used)
 			var/result_signal = do_after_signals[index]
-			var/cleanup = SEND_SIGNAL(src, result_signal, parent, do_after[quality_used])
-			switch(cleanup)
-				if(CUD_DETACH_ELEMENT)
-					UnregisterSignal(src, do_after_signals[index])
-					LAZYREMOVE(do_after, index)
-					LAZYREMOVE(do_after_signals, index)
-					if(!LAZYLEN(do_after_signals))
-						qdel(src)
-				if(CUD_QDEL_COMPONENT)
+			if(SEND_SIGNAL(src, result_signal, parent, do_after[quality_used]))	// Do
+				qdel(src)
+			else
+				UnregisterSignal(src, do_after_signals[index])
+				LAZYREMOVE(do_after, index)
+				LAZYREMOVE(do_after_signals, index)
+				if(!LAZYLEN(do_after_signals))
 					qdel(src)
 			return TRUE
 	else

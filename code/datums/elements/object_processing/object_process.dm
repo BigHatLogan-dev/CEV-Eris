@@ -12,7 +12,7 @@
 	SIGNAL_HANDLER
 	var/process_verb = arguments[1]
 	var/list/reagent_ids_to_add = arguments[2]
-	var/list/new_matter = arguments[3]
+	var/list/new_matter = arguments[3].Copy()
 
 	if(process_verb)
 		target.name = "[arguments[1]] " + initial(target.name)
@@ -34,4 +34,4 @@
 		LAZYCLEARLIST(target_matter)
 		LAZYADD(target_matter, new_matter)
 
-	return CUD_QDEL_COMPONENT
+	return TRUE

@@ -6,6 +6,8 @@
 	..()
 	RegisterSignal(target, sigtype, PROC_REF(do_check_tool))
 
-/datum/element/check_tool/proc/do_check_tool(datum/source_ref, obj/item/tool, mob/user, list/desired_qualities)
+/datum/element/check_tool/proc/do_check_tool(datum/source_ref, obj/item/tool, mob/user, list/desired_qualities, list/quality_used)
 	SIGNAL_HANDLER
-	return tool.get_tool_type(user, desired_qualities)
+	var/quality = tool.get_tool_type(user, desired_qualities)
+	LAZYADD(quality_used, quality)
+	return quality ? TRUE : FALSE
