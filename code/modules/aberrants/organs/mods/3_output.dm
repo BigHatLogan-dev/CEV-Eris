@@ -111,35 +111,18 @@
 	O.output_qualities = additional_output_info.Copy()
 	..()
 
-/obj/item/modification/organ/internal/output/damaging_insight_gain
-	name = "enigmatic organoid"
-	desc = "Functional tissue of one or more organs in graftable form. It's function is unknown."
+/obj/item/modification/organ/internal/output/produce
+	name = "ovarian organoid"
+	desc = "Functional tissue of one or more organs in graftable form. The cradle of life."
+	description_info = "Causes the user to vomit an object.\n\n\
+						Use a laser cutting tool to change the target stat."
 
-/obj/item/modification/organ/internal/output/damaging_insight_gain/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types)
-	var/datum/component/modification/organ/output/damaging_insight_gain/O = AddComponent(/datum/component/modification/organ/output/damaging_insight_gain)
+/obj/item/modification/organ/internal/output/produce/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
+	var/datum/component/modification/organ/output/produce/O = AddComponent(/datum/component/modification/organ/output/produce)
 
 	for(var/output in output_types)
 		O.possible_outputs += output
 		O.possible_outputs[output] = output_types[output]
-	..()
-
-/obj/item/modification/organ/internal/output/activate_organ_functions
-	name = "dependent organoid"
-	desc = "Functional tissue of one or more organs in graftable form. Only performs organ functions when triggered."
-
-/obj/item/modification/organ/internal/output/activate_organ_functions/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types)
-	var/datum/component/modification/organ/output/activate_organ_functions/O = AddComponent(/datum/component/modification/organ/output/activate_organ_functions)
-
-	for(var/output in output_types)
-		var/modifier = output_types[output]
-		var/list/organ_stats = ALL_ORGAN_STATS[output]
-		O.active_organ_efficiency_mod.Add(output)
-		O.active_organ_efficiency_mod[output] = organ_stats[1] * modifier
-		O.specific_organ_size_mod = organ_stats[2] * modifier
-		O.max_blood_storage_mod = organ_stats[3] * modifier
-		O.active_blood_req_mod = organ_stats[4] * modifier
-		O.active_nutriment_req_mod = organ_stats[5] * modifier
-		O.active_oxygen_req_mod = organ_stats[6] * modifier
-		O.active_owner_verb_adds = organ_stats[8]
-		O.new_name = output
+	
+	O.output_qualities = additional_output_info.Copy()
 	..()

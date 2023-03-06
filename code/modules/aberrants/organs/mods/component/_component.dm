@@ -16,22 +16,25 @@
 	removal_difficulty = FAILCHANCE_HARD - 5
 	removal_stat = STAT_BIO
 
-	adjustable = FALSE
-	destroy_on_removal = FALSE 
-	removable = TRUE
-	breakable = FALSE
-
-	apply_to_types = list(/obj/item/organ/internal/scaffold)
-	//blacklisted_types = list(/obj/item/organ/internal/scaffold/hive)
-
 	examine_msg = "Can be attached to organ scaffolds and aberrant organs."
 	examine_stat = STAT_BIO
 	examine_difficulty = STAT_LEVEL_EXPERT - 5
 	examine_stat_secondary = STAT_COG
 	examine_difficulty_secondary = STAT_LEVEL_BASIC - 5
 
+	adjustable = FALSE
+	destroy_on_removal = FALSE 
+	removable = TRUE
+	breakable = FALSE
+
+	apply_to_types = list(/obj/item/organ/internal/scaffold)
+	apply_to_natures = list(MODIFICATION_ORGANIC, MODIFICATION_ASSISTED)	// So organic mods don't get applied to robotic organs and vice versa
+
 	// Internal organ stuff
-	var/somatic = FALSE		// If TRUE, will add a verb that allows for at-will use. Still subject to cooldowns.
+	var/somatic = FALSE							// If TRUE, will add a verb that allows for at-will use. Still subject to cooldowns.
+	var/somatic_verb = "somatic_trigger"		// TODO: Add this as a var mod that gets applied (See items.dm for more details on actions)
+	var/somatic_action_name = "Activate Organ"	// TODO: Add this as a var mod that gets applied
+	var/somatic_hands_free = FALSE
 	var/list/owner_verb_adds = list()
 
 	// Additive adjustments
@@ -75,9 +78,23 @@
 
 /datum/component/modification/organ/Initialize()
 	if(somatic)
-		trigger_signal = null
+		trigger_signal = COMSIG_ABERRANT_INPUT_VERB
 		owner_verb_adds += /datum/component/modification/organ/verb/somatic_trigger
+		somatic_verb = /datum/component/modification/organ/verb/somatic_trigger
 	. = ..()
+
+/datum/component/modification/organ/check_item(obj/item/I, mob/living/user)
+	. = ..()
+
+	if(istype(I, /obj/item/organ))
+		var/obj/item/organ/O = I
+
+		var/organ_nature = nature_adjustment ? nature_adjustment : O.nature
+		
+		if(LAZYFIND(apply_to_natures, organ_nature))
+			return TRUE
+
+	return FALSE
 
 /datum/component/modification/organ/apply(obj/item/organ/O, mob/living/user)
 	. = ..()
@@ -121,6 +138,11 @@
 
 	for(var/owner_verb in owner_verb_adds)
 		holder.owner_verbs |= owner_verb
+	
+	if(somatic)
+		holder.action_button_name = somatic_action_name
+		holder.action_button_proc = somatic_verb
+		holder.action_button_is_hands_free = somatic_hands_free
 
 	if(!islist(holder.organ_efficiency))
 		holder.organ_efficiency = list()
@@ -162,6 +184,8 @@
 
 	if(scanner_hidden)
 		holder.scanner_hidden = scanner_hidden
+	if(nature_adjustment)
+		holder.nature = nature_adjustment
 
 /datum/component/modification/organ/apply_mult_values(obj/item/organ/internal/holder)
 	ASSERT(holder)
@@ -272,6 +296,8 @@
 		var/organs
 		for(var/organ in organ_efficiency_mod)
 			organs += organ + " ([organ_efficiency_mod[organ]]), "
+		for(var/organ in organ_efficiency_flat_mod)
+			organs += organ + " ([organ_efficiency_flat_mod[organ]]), "
 		organs = copytext(organs, 1, length(organs) - 1)
 		info += "\nOrgan tissues present: <span style='color:pink'>[organs ? organs : "none"]</span>"
 		if(aberrant_cooldown_time_mod)
@@ -288,10 +314,18 @@
 /datum/component/modification/organ/verb/somatic_trigger()
 	set category = "Organs and Implants"
 	set name = "Activate Organ"
-	set desc = "Starts the process of an organ."
+	set desc = "Starts the process of an aberrant organ."
 
-	var/atom/movable/AM = parent
-	var/obj/item/organ/internal/scaffold/S = AM.loc
+	var/obj/item/organ/O
 
-	if(S && S.owner)
-		trigger(S, S.owner)
+	if(istype(src, /obj/item/organ))
+		O = src
+
+	if(istype(src, /obj/item/organ/internal/scaffold))
+		var/obj/item/organ/internal/scaffold/S = src
+		if(S.on_cooldown)
+			to_chat(usr, SPAN_NOTICE("\The [src] is not ready to be activated."))
+			return
+
+	if(O && O.owner)
+		SEND_SIGNAL(src, COMSIG_ABERRANT_INPUT_VERB, src, O.owner)

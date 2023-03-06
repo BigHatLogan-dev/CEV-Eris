@@ -6,10 +6,11 @@
 	description_info = "A functionless organ with three slots for organ mods or organoids. Best used with an input, process, and output organoid to create a modular organ."
 	price_tag = 100
 	organ_efficiency = list()
-	specific_organ_size = 0.3
+	specific_organ_size = 0.01
 	origin_tech = list(TECH_BIO = 3)	// One level higher than regular organs
 	rarity_value = 60
 	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN
+	spawn_blacklisted = TRUE	// No point in having these spawn in junk
 
 	var/use_generated_name = TRUE
 	var/use_generated_icon = TRUE
@@ -42,7 +43,10 @@
 	return ..()
 
 /obj/item/organ/internal/scaffold/Process()
-	..()
+	. = ..()
+	if(!. && !BP_IS_ROBOTIC(src))
+		return FALSE
+
 	if(owner && !on_cooldown && damage < min_broken_damage)
 		SEND_SIGNAL(src, COMSIG_ABERRANT_INPUT, src, owner)
 
@@ -115,6 +119,9 @@
 	nutriment_req = initial(nutriment_req)
 	oxygen_req = initial(oxygen_req)
 	aberrant_cooldown_time = initial(aberrant_cooldown_time)
+	action_button_name = initial(action_button_name)
+	action_button_proc = initial(action_button_proc)
+	action_button_is_hands_free = initial(action_button_is_hands_free)
 
 	update_color()
 
@@ -227,7 +234,7 @@
 /obj/item/organ/internal/scaffold/proc/end_cooldown()
 	on_cooldown = FALSE
 
-/obj/item/organ/internal/scaffold/rare
+/obj/item/organ/internal/scaffold/large
 	name = "large organ scaffold"
 	ruined_name = null
 	desc = "A collagen-based biostructure. This one has room for an extra organoid."
@@ -237,7 +244,7 @@
 	rarity_value = 80
 	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN_RARE
 	max_upgrades = 4
-	specific_organ_size = 0.4
+	specific_organ_size = 0.02
 
 /obj/item/organ/internal/scaffold/aberrant
 	name = "aberrant organ"

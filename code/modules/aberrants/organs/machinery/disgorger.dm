@@ -13,6 +13,7 @@
 	nano_template = "disgorger.tmpl"
 	sheet_reagents = list()
 	var/biomatter_counter = 0				// We don't want this to actually produce biomatter
+	var/research_counter = 0				// How many points towards the next unlock
 	var/list/accepted_reagents = list(
 		/datum/reagent/organic/nutriment = 1
 	)
@@ -29,10 +30,10 @@
 	var/current_tick = 0
 	var/production_denominator = 2	// Affects the multiplier for converting reagents/biomatter into substrate
 
-	// Research
+	// Placeholder research
 	var/research_denominator = 2	// Affects the multiplier for researching new designs
 	var/datum/research/knowledge
-	var/list/tech_progress = list(0,0,0)
+	var/list/designs_to_unlock = DISGORGER_RESEARCH_LIST
 
 /obj/machinery/reagentgrinder/industrial/disgorger/Initialize()
 	. = ..()
@@ -56,6 +57,8 @@
 	component_parts += new /obj/item/organ/internal/bone/head		// Doesn't do anything
 	component_parts += new /obj/item/organ/internal/bone/chest		// Doesn't do anything
 	component_parts += new /obj/item/organ/internal/bone/groin		// Doesn't do anything
+	component_parts += new /obj/item/organ/internal/nerve			// Doesn't do anything
+	component_parts += new /obj/item/organ/internal/nerve			// Doesn't do anything
 
 	RefreshParts()
 
@@ -119,10 +122,8 @@
 			for(var/reagent_path in accepted_reagents)
 				if(!istype(R, reagent_path))
 					continue
-				var/reagent_amount = round(R.volume * (accepted_reagents[reagent_path] / production_denominator), 0.01)
-				var/reagent_research = round(R.volume / research_denominator)
-				biomatter_counter += reagent_amount
-				progress(R.reagent_type, reagent_research)
+				biomatter_counter += round(R.volume * (accepted_reagents[reagent_path] / production_denominator), 0.01)
+				research_counter += round(R.volume / research_denominator)
 
 	// Check biomatter content and contained objects (depth of 2, include self)
 	for(var/path in accepted_objects)
@@ -139,10 +140,8 @@
 			var/is_valid_organ = (organ && organ.b_type)
 			qdel(O)
 			if(amount_to_take)
-				var/biomatter_amount = round(amount_to_take / production_denominator, 0.01)
-				var/biomatter_research = is_valid_organ ? round(amount_to_take / research_denominator) : 0
-				biomatter_counter += biomatter_amount
-				progress("Viscera", biomatter_research)
+				biomatter_counter += round(amount_to_take / production_denominator, 0.01)
+				research_counter += is_valid_organ ? round(amount_to_take / research_denominator) : 0
 				break
 
 	// Make sure the object is qdel'd
@@ -166,9 +165,11 @@
 
 	current_tick += 1
 
-	while(biomatter_counter > 59.99)
+	while(biomatter_counter > 59)
 		bottle()
 
+	while(research_counter > 59)
+		try_unlock_tech()
 
 	SSnano.update_uis(src)
 
@@ -181,21 +182,16 @@
 	var/obj/item/fleshcube/new_cube = new(get_turf(src))
 	new_cube.throw_at(spit_target, 3, 1)
 
-/obj/machinery/reagentgrinder/industrial/disgorger/proc/progress(tech_type, amount)
-	switch(tech_type)
-		if("Toxin")
-			tech_progress[ORGANTECH_ROACH] += amount / 8
-		if("Stimulator")
-			tech_progress[ORGANTECH_VISCERA] += amount / 2
-		if("Viscera")
-			tech_progress[ORGANTECH_VISCERA] += amount
-		if("Toxin/Stimulator")
-			tech_progress[ORGANTECH_ROACH] += amount
-
-	// Check if any unlock
-
 /obj/machinery/reagentgrinder/industrial/disgorger/proc/try_unlock_tech()
-	// Attempt to unlock tech, say message, transmit to organ fabs
+	research_counter = max(research_counter - 60, 0)
+
+	if(!LAZYLEN(designs_to_unlock))
+		return
+
+	var/datum/design/D = SSresearch.get_design(designs_to_unlock[1])
+	designs_to_unlock.Remove(D.type)
+	knowledge.AddDesign2Known(D)
+
 	var/message = pickweight(list(
 		"When you study and object from a distance, only its principle may be seen." = 1,									// Children of Dune
 		"Knowledge is an unending adventure at the edge of uncertainty." = 1,												// 
@@ -211,8 +207,8 @@
 	for(var/mob/O as anything in hearers(src, null))
 		O.show_message("\icon[src] <b>\The [src]</b> says, \"[message]\"", 2)
 
-	//for(var/obj/machinery/autolathe/organ_fabricator/OF in get_area_all_atoms(get_area(src)))
-	//	OF.files.AddDesign2Known(D)
+	for(var/obj/machinery/autolathe/organ_fabricator/OF in get_area_all_atoms(get_area(src)))
+		OF.files.AddDesign2Known(D)
 
 /obj/machinery/reagentgrinder/industrial/disgorger/default_deconstruction(obj/item/I, mob/user)
 	var/qualities = list(QUALITY_RETRACTING)
@@ -262,6 +258,10 @@
 	has_brain = FALSE
 
 	for(var/component in component_parts)
+		if(istype(component, /obj/item/electronics/circuitboard/disgorger))
+			var/obj/item/electronics/circuitboard/disgorger/C = component
+			if(LAZYLEN(C.designs_to_unlock))
+				designs_to_unlock = C.designs_to_unlock.Copy()
 		if(!istype(component, /obj/item/organ/internal))
 			continue
 		var/obj/item/organ/internal/O = component
@@ -289,50 +289,81 @@
 
 	if(liver_eff > 99)
 		LAZYADD(accepted_reagents, list(
-			/datum/reagent/toxin/diplopterum = 0.25
-		))
-	if(liver_eff > 124)
-		LAZYADD(accepted_reagents, list(
-			/datum/reagent/toxin/seligitillin = 0.75,
-			/datum/reagent/toxin/starkellin = 0.75,
-			/datum/reagent/toxin/gewaltine = 0.75,
-			/datum/reagent/toxin/blattedin = 0.5
+			/datum/reagent/toxin/diplopterum = 1.25,
+			/datum/reagent/alcohol = 0.5
 		))
 	if(liver_eff > 149)
 		LAZYADD(accepted_reagents, list(
-			/datum/reagent/toxin/fuhrerole = 1,
+			/datum/reagent/toxin/seligitillin = 2,
+			/datum/reagent/toxin/starkellin = 2,
+			/datum/reagent/toxin/gewaltine = 2,
+			/datum/reagent/toxin/blattedin = 1.5
+		))
+	if(liver_eff > 199)
+		LAZYADD(accepted_reagents, list(
+			/datum/reagent/toxin/fuhrerole = 5,
 			/datum/reagent/toxin/kaiseraurum = 10
 		))
 
 	if(kidney_eff > 49)
 		LAZYADD(accepted_reagents, list(
-			/datum/reagent/stim = 0.25
+			/datum/reagent/drug/nicotine = 0.5,
+			/datum/reagent/drug/space_drugs = 0.75,
+			/datum/reagent/drug/cryptobiolin = 0.75,
+			/datum/reagent/drug/mindbreaker = 1
+		))
+	if(kidney_eff > 79)
+		LAZYADD(accepted_reagents, list(
+			/datum/reagent/stim = 2,
+			/datum/reagent/drug/psilocybin = 2
+		))
+	if(kidney_eff > 199)
+		LAZYADD(accepted_reagents, list(
+			// Add Njoy
+			/datum/reagent/medicine/methylphenidate = 4,
+			/datum/reagent/medicine/citalopram = 4,
+			/datum/reagent/medicine/paroxetine = 4
 		))
 
 	if(carrion_chem_eff > 99)
 		LAZYADD(accepted_reagents, list(
-			/datum/reagent/toxin/pararein = 1,
-			/datum/reagent/toxin/aranecolmin = 2
+			/datum/reagent/toxin/pararein = 5,
+			/datum/reagent/toxin/aranecolmin = 10
 		))
 
-	throughput_mult = (heart_eff > 79) ? round(blood_vessel_eff / 650, 0.05) : 0.05
+	throughput_mult = (heart_eff > 79) ? round((heart_eff + blood_vessel_eff) / 650, 0.05) : 0.05
 
-	capacity_mod = round(stomach_eff / 15) 
-	tick_reduction = round(muscle_eff / 20) 
-	production_mod = round(throughput_mult * ((stomach_eff / 4) + (liver_eff / 4) + (kidney_eff / 4) + (carrion_maw_eff)) / 100, 0.01)
-	research_mod = round(throughput_mult * brain_eff / 65, 0.01)
+	capacity_mod = round((stomach_eff / 15) + carrion_chem_eff) 
+	tick_reduction = round((muscle_eff / 20) + carrion_maw_eff) 
+	production_mod = round(throughput_mult * ((stomach_eff / 2) + (liver_eff / 4) + (kidney_eff / 4) + (carrion_maw_eff)) / 100, 0.01)
+	research_mod = round(throughput_mult * (brain_eff / 65), 0.01)
 
 	limit = initial(limit) + capacity_mod
 	grind_rate = initial(grind_rate) - tick_reduction
 	production_denominator = max(initial(production_denominator) - production_mod, 0.5)
 	research_denominator = max(initial(research_denominator) - research_mod, 0.5)
 
+/obj/machinery/reagentgrinder/industrial/disgorger/on_deconstruction()
+	..()
+	var/obj/item/electronics/circuitboard/disgorger/C = locate(/obj/item/electronics/circuitboard/disgorger) in component_parts
+	if(C)
+		C.designs_to_unlock = designs_to_unlock.Copy()
+
 /obj/machinery/reagentgrinder/industrial/disgorger/nano_ui_data()
 	. = ..()
 
 	.["biomatter_counter"] = biomatter_counter
-	.["research_rate"] = round(1 / research_denominator, 0.01)
-	.["production_rate"] = round(1 / production_denominator, 0.01)
+	.["research_counter"] = research_counter
+	.["research_rate"] = round(100 / research_denominator, 1)
+	.["production_rate"] = round(100 / production_denominator, 1)
+
+	var/current_thought = "none"
+	if(has_brain && LAZYLEN(designs_to_unlock))
+		var/datum/design/next_design = designs_to_unlock[1]
+		var/atom/movable/next_path = initial(next_design.build_path)
+		current_thought = initial(next_path.name)
+
+	.["current_thought"] = current_thought
 
 /obj/machinery/reagentgrinder/industrial/disgorger/nano_ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = NANOUI_FOCUS)
 	if(!nano_template)
@@ -342,7 +373,7 @@
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, nano_template, name, 400, 250)
+		ui = new(user, src, ui_key, nano_template, name, 400, 300)
 		ui.set_initial_data(data)
 		ui.open()
 
@@ -353,7 +384,7 @@
 	build_path = /obj/machinery/reagentgrinder/industrial/disgorger
 	origin_tech = list(TECH_BIO = 3)
 	req_components = list(
-		/obj/item/organ/internal = 4			// Build with any organ, but certain efficiencies will have different effects.
+		/obj/item/organ/internal = 6			// Build with any organ, but certain efficiencies will have different effects.
 	)
 	var/list/designs_to_unlock = list()
 

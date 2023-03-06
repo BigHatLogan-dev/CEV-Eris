@@ -10,7 +10,7 @@
 	icon_state = "organoid"
 	desc = "Functional tissue of one or more organs in graftable form."
 	spawn_tags = SPAWN_TAG_ORGAN_MOD
-	spawn_blacklisted = TRUE	// These should never spawn without a parent organ/teratoma.
+	spawn_blacklisted = TRUE	// Organoids should only spawn in teratomas and mods will just add more clutter to junk loot
 	bad_type = /obj/item/modification/organ/internal
 
 /obj/item/modification/organ/internal/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
@@ -38,7 +38,7 @@
 
 	var/list/organ_list
 	if(is_parasitic)
-		organ_list = PARASITIC_ORGAN_EFFICIENCIES
+		organ_list = SYMBIOTIC_ORGAN_EFFICIENCIES
 	else
 		organ_list = ALL_STANDARD_ORGAN_EFFICIENCIES
 
@@ -52,14 +52,14 @@
 			var/list/organ_stats = ALL_ORGAN_STATS[organ]
 			var/modifier = abs(predefined_modifier)
 			if(!modifier)
-				modifier = 0.1
-			O.organ_efficiency_mod.Add(organ)
-			O.organ_efficiency_mod[organ] 	= round(organ_stats[1] * modifier * (1 - (2 * is_parasitic)), 1)
-			O.specific_organ_size_mod 		+= round(organ_stats[2] * modifier * (1 + (2 * is_parasitic)), 0.01)
-			O.max_blood_storage_mod			+= round(organ_stats[3] * modifier, 1)
-			O.blood_req_mod 				+= round(organ_stats[4] * modifier * (1 + (1 * is_parasitic)), 0.01)
-			O.nutriment_req_mod 			+= round(organ_stats[5] * modifier * (1 + (1 * is_parasitic)), 0.01)
-			O.oxygen_req_mod 				+= round(organ_stats[6] * modifier * (1 + (1 * is_parasitic)), 0.01)
+				modifier = 0.10
+			O.organ_efficiency_flat_mod.Add(organ)
+			O.organ_efficiency_flat_mod[organ] 	= round(organ_stats[1] * modifier * (1 - (2 * is_parasitic)), 1)
+			O.specific_organ_size_flat_mod 		+= round(organ_stats[2] * modifier * (1 + (2 * is_parasitic)), 0.01)
+			O.max_blood_storage_flat_mod		+= round(organ_stats[3] * modifier, 1)
+			O.blood_req_flat_mod 				+= round(organ_stats[4] * modifier * (1 + (1 * is_parasitic)), 0.01)
+			O.nutriment_req_flat_mod 			+= round(organ_stats[5] * modifier * (1 + (1 * is_parasitic)), 0.01)
+			O.oxygen_req_flat_mod 				+= round(organ_stats[6] * modifier * (1 + (1 * is_parasitic)), 0.01)
 
 			if(predefined_modifier)
 				break

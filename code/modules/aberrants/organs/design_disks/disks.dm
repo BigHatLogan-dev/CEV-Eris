@@ -28,10 +28,8 @@
 		/datum/design/organ/teratoma/input/reagents_alcohol,
 		/datum/design/organ/teratoma/input/reagents_drugs,
 		/datum/design/organ/teratoma/input/reagents_dispenser,
-		/datum/design/organ/teratoma/input/damage,
 		/datum/design/organ/teratoma/input/power_source,
 		/datum/design/organ/teratoma/process/map,
-		/datum/design/organ/teratoma/process/condense,
 		/datum/design/organ/teratoma/output/reagents_blood_roach,
 		/datum/design/organ/teratoma/output/reagents_blood_drugs,
 		/datum/design/organ/teratoma/output/reagents_ingest_edible,
@@ -55,7 +53,7 @@
 	disk_name = "Oh My Guts! Artisanal Teratomas"
 	license = 10
 	designs = list(
-		/datum/design/organ/scaffold/rare
+		/datum/design/organ/scaffold/large
 	)
 
 /obj/item/computer_hardware/hard_drive/portable/design/omg/simple
@@ -67,40 +65,4 @@
 		/datum/design/organ/aberrant_organ/scrub_toxin_touch,
 		/datum/design/organ/aberrant_organ/gastric,
 		/datum/design/organ/aberrant_organ/damage_response
-	)
-
-/obj/item/computer_hardware/hard_drive/portable/design/omg/alcoholic
-	disk_name = "Oh My Guts! Discount Organs"
-	license = 10
-	designs = list(
-		/datum/design/organ/aberrant_organ/wifebeater,
-		/datum/design/organ/aberrant_organ/wifebeater/liver = 2,
-		/datum/design/organ/aberrant_organ/wifebeater/stomach = 2,
-		/datum/design/organ/aberrant_organ/wifebeater/kidney = 2,
-		/datum/design/organ/aberrant_organ/functional_alcoholic,
-		/datum/design/organ/aberrant_organ/functional_alcoholic/liver = 2,
-		/datum/design/organ/aberrant_organ/functional_alcoholic/stomach = 2,
-		/datum/design/organ/aberrant_organ/functional_alcoholic/kidney = 2,
-		/datum/design/organ/aberrant_organ/classy,
-		/datum/design/organ/aberrant_organ/classy/liver = 2,
-		/datum/design/organ/aberrant_organ/classy/stomach = 2,
-		/datum/design/organ/aberrant_organ/classy/kidney = 2
-	)
-
-/obj/item/computer_hardware/hard_drive/portable/design/omg/addict
-	disk_name = "Oh My Guts! Refurbished Organs"
-	license = 10
-	designs = list(
-		/datum/design/organ/aberrant_organ/mobster,
-		/datum/design/organ/aberrant_organ/mobster/blood_vessel = 2,
-		/datum/design/organ/aberrant_organ/mobster/liver = 2,
-		/datum/design/organ/aberrant_organ/mobster/muscle = 2,
-		/datum/design/organ/aberrant_organ/chemist,
-		/datum/design/organ/aberrant_organ/chemist/blood_vessel = 2,
-		/datum/design/organ/aberrant_organ/chemist/liver = 2,
-		/datum/design/organ/aberrant_organ/chemist/kidney = 2,
-		/datum/design/organ/aberrant_organ/exmercenary,
-		/datum/design/organ/aberrant_organ/exmercenary/blood_vessel = 2,
-		/datum/design/organ/aberrant_organ/exmercenary/liver = 2,
-		/datum/design/organ/aberrant_organ/exmercenary/muscle = 2
 	)

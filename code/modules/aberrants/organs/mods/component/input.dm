@@ -7,6 +7,9 @@
 	var/list/accepted_inputs = list()
 	var/list/input_qualities = list()
 
+// =================================================
+// ================     ORGANIC     ================
+// =================================================
 /datum/component/modification/organ/input/reagents
 	adjustable = TRUE
 
@@ -244,48 +247,54 @@
 
 	for(var/digestable in accepted_inputs)
 		var/obj/O
+		if(istype(inactive_hand_held, digestable) && isobj(inactive_hand_held))
+			O = inactive_hand_held
 		if(istype(active_hand_held, digestable) && isobj(active_hand_held))
 			O = active_hand_held
-		if(istype(inactive_hand_held, digestable) && isobj(active_hand_held))
-			O = inactive_hand_held
 
 		if(!O)
 			return
 
-		to_chat(owner, SPAN_NOTICE("You swallow \the [O] whole."))
-
 		var/nutrition_supplied = 0
 
 		if(LAZYLEN(O.matter))
+			var/datum/reagents/contained_reagents = O.reagents
+			if(contained_reagents)
+				contained_reagents.trans_to_holder(owner.ingested, contained_reagents.total_volume)
+
 			for(var/material in O.matter)
 				nutrition_supplied += O.matter[material]
 				owner.adjustNutrition(nutrition_supplied * organ_multiplier)
 
+			// Same message as carrion sans taste description
+			owner.visible_message(SPAN_DANGER("[owner] devours \the [O]!"), SPAN_NOTICE("You consume \the [O]."))
 			qdel(O)
 		
 		if(nutrition_supplied > threshold)
 			var/magnitude = 0
 
 			if(nutrition_supplied > 40)
-				magnitude = 2 * organ_multiplier
+				magnitude = 8 * organ_multiplier
 			else if(nutrition_supplied > 20)
-				magnitude = 1.5 * organ_multiplier
+				magnitude = 6 * organ_multiplier
 			else if(nutrition_supplied > 10)
-				magnitude = organ_multiplier
+				magnitude = 4 * organ_multiplier
 				
 			if(magnitude)
 				if(prob(2))
 					to_chat(owner, SPAN_NOTICE("A warm sensation fills your belly. You feel satiated."))
-				owner.stats.addTempStat(STAT_VIG, magnitude * 4, S.aberrant_cooldown_time + 2 SECONDS, "[parent]")
+				owner.stats.addTempStat(STAT_VIG, magnitude, S.aberrant_cooldown_time + 2 SECONDS, "[parent]")
 				owner.sanity.changeLevel(magnitude)
 
 		input += digestable
-		input[digestable] = nutrition_supplied ? TRUE : FALSE
+		input[digestable] = (nutrition_supplied > 0) ? TRUE : FALSE
 
 	SEND_SIGNAL(holder, COMSIG_ABERRANT_PROCESS, holder, owner, input)
 
 
-// Hivemind
+// =================================================
+// ================     ASSISTED     ===============
+// =================================================
 
 /datum/component/modification/organ/input/power_source
 	adjustable = TRUE
@@ -400,3 +409,7 @@
 		input[power_source] = energy_supplied ? TRUE : FALSE
 
 	SEND_SIGNAL(holder, COMSIG_ABERRANT_PROCESS, holder, owner, input)
+
+// =================================================
+// ================     ROBOTIC     ================
+// =================================================

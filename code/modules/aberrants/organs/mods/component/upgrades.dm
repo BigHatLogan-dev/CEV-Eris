@@ -14,10 +14,13 @@
 	var/function_info = "<i>"
 
 	var/eff_details
-	if(organ_efficiency_mod.len)
+	if(LAZYLEN(organ_efficiency_mod) || LAZYLEN(organ_efficiency_flat_mod))
 		eff_details += "Adds organ functions: "
 		for(var/organ in organ_efficiency_mod)
 			var/added_efficiency = organ_efficiency_mod[organ]
+			eff_details += organ + " ([added_efficiency]), "
+		for(var/organ in organ_efficiency_flat_mod)
+			var/added_efficiency = organ_efficiency_flat_mod[organ]
 			eff_details += organ + " ([added_efficiency]), "
 		eff_details = copytext(eff_details, 1, length(eff_details) - 1) + "\n"
 	function_info += eff_details
@@ -93,35 +96,35 @@
 	adjustable = TRUE
 
 /datum/component/modification/organ/parenchymal/modify(obj/item/I, mob/living/user)
-	specific_organ_size_mod = 0
-	max_blood_storage_mod = 0
-	blood_req_mod = 0
-	nutriment_req_mod = 0
-	oxygen_req_mod = 0
+	specific_organ_size_flat_mod = 0
+	max_blood_storage_flat_mod = 0
+	blood_req_flat_mod = 0
+	nutriment_req_flat_mod = 0
+	oxygen_req_flat_mod = 0
 
 	var/list/possibilities = ALL_STANDARD_ORGAN_EFFICIENCIES
 
-	for(var/organ in organ_efficiency_mod)
-		if(organ_efficiency_mod.len > 1)
+	for(var/organ in organ_efficiency_flat_mod)
+		if(LAZYLEN(organ_efficiency_flat_mod) > 1)
 			for(var/organ_eff in possibilities)
-				if(organ != organ_eff && organ_efficiency_mod.Find(organ_eff))
-					possibilities.Remove(organ_eff)
+				if(organ != organ_eff && LAZYFIND(organ_efficiency_flat_mod, organ_eff))
+					LAZYREMOVE(possibilities, organ_eff)
 
 		var/decision = input("Choose an organ type (current: [organ])","Adjusting Organoid") as null|anything in possibilities
 		if(!decision)
 			decision = organ
 
 		var/list/organ_stats = ALL_ORGAN_STATS[decision]
-		var/modifier = round(organ_efficiency_mod[organ] / 100, 0.01)
+		var/modifier = round(organ_efficiency_flat_mod[organ] / 100, 0.01)
 
 		if(!modifier)
 			return
 
-		organ_efficiency_mod.Remove(organ)
-		organ_efficiency_mod.Add(decision)
-		organ_efficiency_mod[decision] 	= round(organ_stats[1] * modifier, 1)
-		specific_organ_size_mod 		+= round(organ_stats[2] * modifier, 0.01)
-		max_blood_storage_mod			+= round(organ_stats[3] * modifier, 1)
-		blood_req_mod 					+= round(organ_stats[4] * modifier, 0.01)
-		nutriment_req_mod 				+= round(organ_stats[5] * modifier, 0.01)
-		oxygen_req_mod 					+= round(organ_stats[6] * modifier, 0.01)
+		LAZYREMOVE(organ_efficiency_flat_mod, organ)
+		LAZYADD(organ_efficiency_flat_mod, decision)
+		organ_efficiency_flat_mod[decision] = round(organ_stats[1] * modifier, 1)
+		specific_organ_size_flat_mod 		+= round(organ_stats[2] * modifier, 0.01)
+		max_blood_storage_flat_mod			+= round(organ_stats[3] * modifier, 1)
+		blood_req_flat_mod 					+= round(organ_stats[4] * modifier, 0.01)
+		nutriment_req_flat_mod 				+= round(organ_stats[5] * modifier, 0.01)
+		oxygen_req_flat_mod 				+= round(organ_stats[6] * modifier, 0.01)

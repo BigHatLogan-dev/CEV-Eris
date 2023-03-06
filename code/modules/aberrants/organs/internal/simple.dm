@@ -5,7 +5,7 @@
 	input_mod_path = /obj/item/modification/organ/internal/input/reagents
 	process_mod_path = /obj/item/modification/organ/internal/process/multiplier
 	output_mod_path = /obj/item/modification/organ/internal/output/chemical_effects
-	specific_input_type_pool = list(/datum/reagent/toxin)	// This should let it scrub ANY toxin
+	specific_input_type_pool = list(/datum/reagent/toxin)
 	output_pool = TYPE_2_HORMONES
 	output_info = list(NOT_USED)
 

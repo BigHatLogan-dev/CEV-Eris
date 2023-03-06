@@ -1,27 +1,6 @@
-// RESEARCH
-#define ORGANTECH_VISCERA 1
-#define ORGANTECH_ROACH 2
-#define ORGANTECH_HIVEMIND 3
-
-// Standard
-#define ABERRANT_RESEARCH_VISCERA_T1 list()		// Dispenser 1, type 2 hormones, spider toxins
-#define ABERRANT_RESEARCH_VISCERA_T2 list()		// Dispenser 2,	type 3 hormones, basic stims
-#define ABERRANT_RESEARCH_VISCERA_T3 list()		// Dispenser 3,	type 4 hormones, 
-
-// Roach
-#define ABERRANT_RESEARCH_ROACH_T1 list()		// Regular roaches
-#define ABERRANT_RESEARCH_ROACH_T2 list()		// Fuhrer
-#define ABERRANT_RESEARCH_ROACH_T3 list()		// Kaiser
-
-// Hivemind
-#define ABERRANT_RESEARCH_HIVEMIND_T1 list()	// Organ mods
-#define ABERRANT_RESEARCH_HIVEMIND_T2 list()	// Hivemind organs
-#define ABERRANT_RESEARCH_HIVEMIND_T3 list()	// Hivemind organoids
-
-
 // ORGAN GENERATION
 #define ALL_STANDARD_ORGAN_EFFICIENCIES list(OP_HEART, OP_LUNGS, OP_LIVER, OP_KIDNEYS, OP_STOMACH, OP_BONE, OP_MUSCLE, OP_NERVE, OP_BLOOD_VESSEL)
-#define PARASITIC_ORGAN_EFFICIENCIES list(OP_LIVER, OP_STOMACH, OP_BONE, OP_MUSCLE, OP_NERVE, OP_BLOOD_VESSEL)
+#define SYMBIOTIC_ORGAN_EFFICIENCIES list(OP_LIVER, OP_STOMACH, OP_BONE, OP_MUSCLE, OP_NERVE, OP_BLOOD_VESSEL)
 
 #define ALL_ORGAN_STATS list(\
 		OP_HEART		= list(100,   2,   0,   0,   10,  10,  list("he", "ar", "t"), list()),\
@@ -48,6 +27,16 @@
 
 #define ALL_USABLE_POWER_SOURCES list(/obj/item/cell/small, /obj/item/cell/medium, /obj/item/cell/large, /obj/item/stack/material/plasma, /obj/item/stack/material/uranium, /obj/item/stack/material/tritium)
 
+#define STANDARD_ORGANIC_CONSUMABLES list(/obj/item/organ/internal, /obj/item/roach_egg, /obj/item/reagent_containers/food/snacks/roachcube, /obj/item/reagent_containers/food/snacks/grown,\
+										/obj/item/reagent_containers/food/snacks/meat, /obj/item/reagent_containers/food/snacks/monkeycube)
+
+#define STANDARD_ORGANIC_PRODUCEABLES list(/obj/item/reagent_containers/food/snacks/egg, /obj/item/reagent_containers/food/snacks/meat, /obj/item/fleshcube)
+
+#define ROACH_PRODUCEABLES list(/obj/item/roach_egg, /obj/item/reagent_containers/food/snacks/roachcube/kampfer, /obj/item/reagent_containers/food/snacks/roachcube/jager)
+
+#define LIGHT_ANTAG_ORGANIC_PRODUCEABLES list(/obj/effect/decal/cleanable/carrion_puddle, /mob/living/carbon/superior_animal/roach/roachling, /obj/effect/decal/cleanable/solid_biomass,\
+											/obj/item/reagent_containers/food/snacks/monkeycube)
+
 #define TYPE_1_HORMONES list(/datum/reagent/hormone/bloodclot, /datum/reagent/hormone/bloodrestore, /datum/reagent/hormone/painkiller,\
 						/datum/reagent/hormone/speedboost, /datum/reagent/hormone/antitox, /datum/reagent/hormone/oxygenation)
 
@@ -65,14 +54,14 @@
 								/datum/reagent/metal/iron, /datum/reagent/acid, /datum/reagent/acid/hydrochloric,\
 								/datum/reagent/silicon, /datum/reagent/metal/tungsten)
 
-#define REAGENTS_DISPENSER_1 list(/datum/reagent/acetone, /datum/reagent/metal/aluminum, /datum/reagent/toxin/ammonia, /datum/reagent/carbon, /datum/reagent/metal/copper,\
+#define REAGENTS_DISPENSER_BASE list(/datum/reagent/acetone, /datum/reagent/metal/aluminum, /datum/reagent/toxin/ammonia, /datum/reagent/carbon, /datum/reagent/metal/copper,\
 								/datum/reagent/ethanol, /datum/reagent/toxin/hydrazine, /datum/reagent/metal/iron, /datum/reagent/metal/lithium, /datum/reagent/metal/mercury,\
 								/datum/reagent/phosphorus, /datum/reagent/metal/potassium, /datum/reagent/metal/radium, /datum/reagent/acid, /datum/reagent/acid/hydrochloric,\
 								/datum/reagent/silicon, /datum/reagent/metal/sodium, /datum/reagent/organic/sugar, /datum/reagent/sulfur, /datum/reagent/metal/tungsten)
 
-#define REAGENTS_DISPENSER_2 list(/datum/reagent/medicine/inaprovaline, /datum/reagent/medicine/dylovene, /datum/reagent/medicine/kelotane)
+#define REAGENTS_DISPENSER_1 list(/datum/reagent/medicine/inaprovaline, /datum/reagent/medicine/dylovene, /datum/reagent/medicine/kelotane)
 
-#define REAGENTS_DISPENSER_3 list(/datum/reagent/medicine/tricordrazine, /datum/reagent/medicine/spaceacillin, /datum/reagent/medicine/dermaline)
+#define REAGENTS_DISPENSER_2 list(/datum/reagent/medicine/tricordrazine, /datum/reagent/medicine/spaceacillin, /datum/reagent/medicine/dermaline)
 
 #define REAGENTS_DRUGS list(/datum/reagent/drug/space_drugs, /datum/reagent/drug/cryptobiolin, /datum/reagent/drug/mindbreaker, /datum/reagent/drug/nicotine)
 
@@ -111,3 +100,33 @@
 #define EXTENDED_ABERRANT_COOLDOWN 1 MINUTE
 
 #define NOT_USED 1
+
+#define DISGORGER_RESEARCH_LIST list(\
+		/datum/design/organ/teratoma/output/reagents_blood_roach,\
+		/datum/design/organ/teratoma/input/damage_basic,\
+		/datum/design/organ/scaffold/large,\
+		/datum/design/organ/teratoma/special/chemical_effect,\
+		/datum/design/organ/teratoma/special/stat_boost,\
+		/datum/design/organ/teratoma/special/symbiotic_parasite,\
+		/datum/design/organ/teratoma/process/cooldown/long,\
+		/datum/design/organ/teratoma/process/multiplier/low,\
+		/datum/design/organ/teratoma/output/reagents_blood_dispenser_base,\
+		/datum/design/organ/teratoma/output/reagents_blood_fungal,\
+		/datum/design/organ/teratoma/output/reagents_blood_spider,\
+		/datum/design/organ/teratoma/output/chemical_effects_type_2,\
+		/datum/design/organ/teratoma/output/produce,\
+		/datum/design/organ/teratoma/input/damage_all,\
+		/datum/design/organ/organ_mod/parenchymal_large,\
+		/datum/design/organ/teratoma/special/symbiotic_commensal,\
+		/datum/design/organ/teratoma/process/cooldown,\
+		/datum/design/organ/teratoma/process/multiplier,\
+		/datum/design/organ/teratoma/output/reagents_blood_dispenser_one,\
+		/datum/design/organ/teratoma/output/stat_boost,\
+		/datum/design/organ/teratoma/output/produce_light_antag,\
+		/datum/design/organ/teratoma/special/symbiotic_mutual,\
+		/datum/design/organ/teratoma/process/cooldown/negative,\
+		/datum/design/organ/teratoma/process/multiplier/negative_low,\
+		/datum/design/organ/teratoma/process/multiplier/negative,\
+		/datum/design/organ/teratoma/process/multiplier/high,\
+		/datum/design/organ/teratoma/output/reagents_blood_dispenser_two\
+		)

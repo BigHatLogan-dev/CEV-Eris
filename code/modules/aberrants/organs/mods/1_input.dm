@@ -69,6 +69,32 @@
 	I.input_qualities = new_input_qualities
 	..()
 
+/obj/item/modification/organ/internal/input/consume
+	name = "mandibular organoid"
+	desc = "Functional tissue of one or more organs in graftable form. Consumes objects."
+	description_info = "On use, consumes a held object and ingests any contained reagents.\n\n\
+						Use a laser cutting tool to change the consumable object type."
+
+/obj/item/modification/organ/internal/input/consume/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
+	var/datum/component/modification/organ/input/consume/I = AddComponent(/datum/component/modification/organ/input/consume)
+
+	for(var/input in chosen_input_info)
+		if(!ispath(input))
+			continue
+		I.accepted_inputs += input
+
+	var/list/new_input_qualities = list()
+
+	for(var/quality in additional_input_info)
+		if(ispath(quality))
+			var/atom/movable/AM = quality
+			var/object_name = initial(AM.name)
+			new_input_qualities |= object_name
+			new_input_qualities[object_name] = quality
+	
+	I.input_qualities = new_input_qualities
+	..()
+
 /obj/item/modification/organ/internal/input/power_source
 	name = "bioelectric organoid"
 	desc = "Functional tissue of one or more organs in graftable form. Converts power sources into bioavailable nutrients."

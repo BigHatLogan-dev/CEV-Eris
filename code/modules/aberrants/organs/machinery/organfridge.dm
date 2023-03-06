@@ -172,39 +172,15 @@
 	rarity_value = 80
 	products = list(
 		/obj/item/storage/freezer/medical = 10,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/wifebeater/liver = 3,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/wifebeater/stomach = 3,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/wifebeater/kidney = 3,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/functional_alcoholic/liver = 3,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/functional_alcoholic/stomach = 3,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/functional_alcoholic/kidney = 3,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/classy/liver = 3,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/classy/stomach = 3,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/classy/kidney = 3
 	)
 	contraband = list(
-		/obj/item/computer_hardware/hard_drive/portable/design/omg/alcoholic = 1
+		///obj/item/computer_hardware/hard_drive/portable/design/omg/alcoholic = 1
 	)
 	premium = list(
-		/obj/item/organ/internal/scaffold/aberrant/dependent/wifebeater = 5,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/functional_alcoholic = 5,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/classy = 5
 	)
 	prices = list(
 		/obj/item/storage/freezer/medical = 34,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/wifebeater/liver = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/wifebeater/stomach = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/wifebeater/kidney = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/functional_alcoholic/liver = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/functional_alcoholic/stomach = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/functional_alcoholic/kidney = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/classy/liver = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/classy/stomach = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/classy/kidney = 1500,
-		/obj/item/computer_hardware/hard_drive/portable/design/omg/alcoholic = 0,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/wifebeater = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/functional_alcoholic = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/classy = 1500
+		///obj/item/computer_hardware/hard_drive/portable/design/omg/alcoholic = 0,
 	)
 
 /obj/machinery/vending/organfridge_aberrant/addict
@@ -215,39 +191,15 @@
 	rarity_value = 80
 	products = list(
 		/obj/item/storage/freezer/medical = 10,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/mobster/blood_vessel = 6,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/mobster/liver = 3,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/mobster/muscle = 6,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/chemist/blood_vessel = 6,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/chemist/liver = 3,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/chemist/kidney = 3,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/exmercenary/blood_vessel = 6,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/exmercenary/liver = 3,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/exmercenary/muscle = 6
 	)
 	contraband = list(
-		/obj/item/computer_hardware/hard_drive/portable/design/omg/addict = 1
+		///obj/item/computer_hardware/hard_drive/portable/design/omg/addict = 1
 	)
 	premium = list(
-		/obj/item/organ/internal/scaffold/aberrant/dependent/mobster = 5,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/chemist = 5,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/exmercenary = 5
 	)
 	prices = list(
 		/obj/item/storage/freezer/medical = 34,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/mobster/blood_vessel = 750,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/mobster/liver = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/mobster/muscle = 750,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/chemist/blood_vessel = 750,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/chemist/liver = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/chemist/kidney = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/exmercenary/blood_vessel = 750,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/exmercenary/liver = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/exmercenary/muscle = 750,
-		/obj/item/computer_hardware/hard_drive/portable/design/omg/addict = 0,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/mobster = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/chemist = 1500,
-		/obj/item/organ/internal/scaffold/aberrant/dependent/exmercenary = 1500
+		///obj/item/computer_hardware/hard_drive/portable/design/omg/addict = 0,
 	)
 
 // Unused organ slogans: "Come back if you have a change of heart!;Broken heart? We've got you covered!;;I've got you deep in the heart of me!;Owner of a lonely heart?; Owner of a broken heart?"

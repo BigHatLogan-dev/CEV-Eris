@@ -48,7 +48,33 @@
 	trigger_signal = COMSIG_ABERRANT_SECONDARY
 
 /datum/component/modification/organ/on_cooldown/chemical_effect
+	adjustable = TRUE
 	var/effect
+
+/datum/component/modification/organ/on_cooldown/chemical_effect/modify(obj/item/I, mob/living/user)
+	if(!effect)
+		return
+
+	var/list/possibilities = list(
+		"blood restoration, type 1" = /datum/reagent/hormone/bloodrestore,
+		"blood clotting, type 1" = /datum/reagent/hormone/bloodclot,
+		"painkiller, type 1" = /datum/reagent/hormone/painkiller,
+		"anti-toxin, type 1" = /datum/reagent/hormone/antitox,
+		"oxygenation, type 1" = /datum/reagent/hormone/oxygenation,
+		"augmented agility, type 1" = /datum/reagent/hormone/speedboost,
+		"blood restoration, type 2" = /datum/reagent/hormone/bloodrestore/alt,
+		"blood clotting, type 2" = /datum/reagent/hormone/bloodclot/alt,
+		"painkiller, type 2" = /datum/reagent/hormone/painkiller/alt,
+		"anti-toxin, type 2" = /datum/reagent/hormone/antitox/alt,
+		"oxygenation, type 2" = /datum/reagent/hormone/oxygenation/alt,
+		"augmented agility, type 2" = /datum/reagent/hormone/speedboost/alt
+	)
+
+	var/decision = input("Choose a hormone effect (current: [effect])","Adjusting Organoid") as null|anything in possibilities
+	if(!decision)
+		return
+
+	effect = possibilities[decision]
 
 /datum/component/modification/organ/on_cooldown/chemical_effect/get_function_info()
 	var/datum/reagent/hormone/H
@@ -90,8 +116,21 @@
 	RM.add_reagent(initial(output.id), amount_to_add)
 
 /datum/component/modification/organ/on_cooldown/stat_boost
+	adjustable = TRUE
 	var/stat
 	var/boost
+
+/datum/component/modification/organ/on_cooldown/stat_boost/modify(obj/item/I, mob/living/user)
+	if(!stat)
+		return
+
+	var/list/possibilities = ALL_STATS
+
+	var/decision = input("Choose an affinity (current: [stat])","Adjusting Organoid") as null|anything in possibilities
+	if(!decision)
+		return
+
+	stat = decision
 
 /datum/component/modification/organ/on_cooldown/stat_boost/get_function_info()
 	var/description = "<span style='color:purple'>Functional information (secondary):</span> augments physical/mental affinity"
@@ -114,12 +153,12 @@
 		H.stats.addTempStat(stat, boost * effect_multiplier, delay, "\ref[parent]")
 
 
-/datum/component/modification/organ/parasitic
-	exclusive_type = /obj/item/modification/organ/internal/special/parasitic
+/datum/component/modification/organ/symbiotic
+	exclusive_type = /obj/item/modification/organ/internal/special/symbiotic
 	adjustable = TRUE
 	trigger_signal = COMSIG_ITEM_PICKED
 
-/datum/component/modification/organ/parasitic/get_function_info()
+/datum/component/modification/organ/symbiotic/get_function_info()
 	var/description
 
 	if(trigger_signal == COMSIG_IATTACK)
@@ -129,7 +168,7 @@
 
 	return description
 
-/datum/component/modification/organ/parasitic/modify(obj/item/I, mob/living/user)
+/datum/component/modification/organ/symbiotic/modify(obj/item/I, mob/living/user)
 	var/list/can_adjust = list("organ tissue", "implant behavior")
 
 	var/decision_adjust = input("What do you want to adjust?","Adjusting Organoid") as null|anything in can_adjust
@@ -138,38 +177,38 @@
 
 	switch(decision_adjust)
 		if("organ tissue")
-			specific_organ_size_mod = 0
-			max_blood_storage_mod = 0
-			blood_req_mod = 0
-			nutriment_req_mod = 0
-			oxygen_req_mod = 0
+			specific_organ_size_flat_mod = 0
+			max_blood_storage_flat_mod = 0
+			blood_req_flat_mod = 0
+			nutriment_req_flat_mod = 0
+			oxygen_req_flat_mod = 0
 
-			var/list/possibilities = PARASITIC_ORGAN_EFFICIENCIES
+			var/list/possibilities = SYMBIOTIC_ORGAN_EFFICIENCIES
 
-			for(var/organ in organ_efficiency_mod)
-				if(organ_efficiency_mod.len > 1)
+			for(var/organ in organ_efficiency_flat_mod)
+				if(LAZYLEN(organ_efficiency_flat_mod) > 1)
 					for(var/organ_eff in possibilities)
-						if(organ != organ_eff && organ_efficiency_mod.Find(organ_eff))
-							possibilities.Remove(organ_eff)
+						if(organ != organ_eff && LAZYFIND(organ_efficiency_flat_mod, organ_eff))
+							LAZYREMOVE(possibilities, organ_eff)
 
 				var/decision = input("Choose an organ type (current: [organ])","Adjusting Organoid") as null|anything in possibilities
 				if(!decision)
 					decision = organ
 
 				var/list/organ_stats = ALL_ORGAN_STATS[decision]
-				var/modifier = round(organ_efficiency_mod[organ] / 100, 0.01)
+				var/modifier = round(organ_efficiency_flat_mod[organ] / 100, 0.01)
 
 				if(!modifier)
 					return
 
-				organ_efficiency_mod.Remove(organ)
-				organ_efficiency_mod.Add(decision)
-				organ_efficiency_mod[decision] 	= round(organ_stats[1] * modifier, 1)
-				specific_organ_size_mod 		+= round(organ_stats[2] * modifier, 0.01)
-				max_blood_storage_mod			+= round(organ_stats[3] * modifier, 1)
-				blood_req_mod 					+= round(organ_stats[4] * modifier, 0.01)
-				nutriment_req_mod 				+= round(organ_stats[5] * modifier, 0.01)
-				oxygen_req_mod 					+= round(organ_stats[6] * modifier, 0.01)
+				LAZYREMOVE(organ_efficiency_flat_mod, organ)
+				LAZYADD(organ_efficiency_flat_mod, decision)
+				organ_efficiency_flat_mod[decision] = round(organ_stats[1] * modifier, 1)
+				specific_organ_size_flat_mod 		+= round(organ_stats[2] * modifier, 0.01)
+				max_blood_storage_flat_mod			+= round(organ_stats[3] * modifier, 1)
+				blood_req_flat_mod 					+= round(organ_stats[4] * modifier, 0.01)
+				nutriment_req_flat_mod 				+= round(organ_stats[5] * modifier, 0.01)
+				oxygen_req_flat_mod 				+= round(organ_stats[6] * modifier, 0.01)
 		if("implant behavior")
 			var/list/possibilities = list(
 				"on pick-up" = COMSIG_ITEM_PICKED,
@@ -186,7 +225,7 @@
 			
 			trigger_signal = possibilities[decision]
 
-/datum/component/modification/organ/parasitic/trigger(atom/A, mob/M)
+/datum/component/modification/organ/symbiotic/trigger(atom/A, mob/M)
 	if(!A || !M)
 		return
 
@@ -195,13 +234,15 @@
 	else if(trigger_signal == COMSIG_ITEM_PICKED)
 		trigger_pickup(A, M)
 
-/datum/component/modification/organ/parasitic/proc/trigger_pickup(obj/item/holder, mob/owner)
+/datum/component/modification/organ/symbiotic/proc/trigger_pickup(obj/item/holder, mob/owner)
 	if(!holder || !owner)
 		return
 
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
 		var/obj/item/organ/external/active_hand = H.get_active_hand_organ()
+		if(BP_IS_ROBOTIC(active_hand))
+			return
 		if(H.getarmor_organ(active_hand, ARMOR_BIO) < 75 && active_hand.get_total_occupied_volume() < active_hand.max_volume)
 			if(istype(holder, /obj/item/organ/internal))
 				var/obj/item/organ/internal/I = holder
@@ -211,7 +252,7 @@
 				H.apply_damage(5, BRUTE, active_hand)
 				to_chat(owner, SPAN_WARNING("\The [holder] forces its way into your [active_hand.name]!"))
 
-/datum/component/modification/organ/parasitic/proc/trigger_iattack(atom/A, mob/living/user)
+/datum/component/modification/organ/symbiotic/proc/trigger_iattack(atom/A, mob/living/user)
 	if(!A || !user)
 		return
 
@@ -221,15 +262,23 @@
 		var/obj/item/organ/external/affected = target.organs_by_name[attacker.targeted_organ]
 		if(!affected)
 			user.visible_message(SPAN_NOTICE("[user.name] attempts to implant [target.name], but misses!"), SPAN_WARNING("The target limb is missing."))
-		var/duration = max(3 SECONDS - round(attacker.stats.getStat(STAT_BIO) / 10), 0)		// Every 10 points of BIO reduces the duration by a tick (tenth of a second)
+		if(BP_IS_ROBOTIC(affected))
+			to_chat(user, SPAN_NOTICE("The target limb is robotic. This organ can only be implanted in organic limbs."))
+			return
+		var/duration = max(5 SECONDS - attacker.stats.getStat(STAT_BIO), 0)		// Every point of BIO reduces the duration by a decisecond
 		if(!do_after(attacker, duration, target))
 			return
-		if(target.getarmor_organ(affected, ARMOR_BIO) < 75 && affected.get_total_occupied_volume() < affected.max_volume)
+		if(target.getarmor_organ(affected, ARMOR_BIO) < 75)
 			var/atom/movable/AM = parent
 			if(istype(AM.loc, /obj/item/organ/internal))
 				var/obj/item/organ/internal/I = AM.loc
+				if(affected.max_volume < affected.get_total_occupied_volume() + I.specific_organ_size)
+					to_chat(user, SPAN_NOTICE("The target limb does not have enough space to hold \the [I]."))
+					return
 				attacker.drop_item()
 				I.replaced(affected)
 				target.apply_damage(10, HALLOSS, affected)
 				target.apply_damage(5, BRUTE, affected)
 				user.visible_message(SPAN_WARNING("[user.name] implants \the [I] into [target.name]'s [affected.name]!"), SPAN_WARNING("You implant \the [I] into [target.name]'s [affected.name]!"))
+		else
+			to_chat(user, SPAN_NOTICE("The target limb has too much protection."))
