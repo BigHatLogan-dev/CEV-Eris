@@ -102,6 +102,7 @@
 						in a stack will trigger the process, but larger cells and rarer materials will provide a slight cognition and sanity boost.\n\n\
 						Use a laser cutting tool to change the power source type."
 	icon_state = "input_organoid-hive"
+	use_generated_icon = FALSE
 
 /obj/item/modification/organ/internal/input/power_source/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
 	var/datum/component/modification/organ/input/power_source/I = AddComponent(/datum/component/modification/organ/input/power_source)
@@ -133,6 +134,3 @@
 	
 	I.input_qualities = new_input_qualities
 	..()
-
-/obj/item/modification/organ/internal/input/power_source/update_icon()
-	return

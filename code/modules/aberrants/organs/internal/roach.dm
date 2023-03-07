@@ -1,15 +1,9 @@
 // Special
 // Blattedin receptor (full organ, unable to be dissected) - blattedin input, resus output, single use
-// Seuche sac - reagent gas
 // Gestrahlte gland - reagent spit
 
 // Generic
 // roach toxin hepatic/gastric organoid/membrane - roach toxin output
-// ovarian - produces eggs, cubes
-// oesophagal - eat organs, roaches
-
-// Non-roach needs
-// Input organoid that can trigger the aberrant process at-will, somatic organoid. Unrelated: autonomic organoid could allow process to trigger for free each cycle.
 
 /obj/item/organ/internal/scaffold/aberrant/roach
 	name = "roach organ"
@@ -20,7 +14,7 @@
 	ruined_description_info = null
 	rarity_value = 20
 	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN_ROACH
-	spawn_blacklisted = TRUE	// Go butcher roaches
+	spawn_blacklisted = TRUE
 	bad_type = /obj/item/organ/internal/scaffold/aberrant/roach
 	b_type = "Ü~"				// Will trigger rejection
 	max_upgrades = 4
@@ -41,3 +35,19 @@
 	description_info = "A modular organ with seven slots for organ mods or organoids."
 	rarity_value = 120
 	max_upgrades = 7
+
+/obj/item/organ/internal/scaffold/aberrant/roach/seuche
+	name = "Seuche sac"
+
+	use_generated_color = FALSE
+	use_generated_icon = FALSE
+	use_generated_name = FALSE
+
+	input_mod_path = /obj/item/modification/organ/internal/input/consume
+	process_mod_path = /obj/item/modification/organ/internal/process/multiplier
+	output_mod_path = /obj/item/modification/organ/internal/output/chem_smoke/roach
+	special_mod_path = /obj/item/modification/organ/internal/special/on_cooldown/stat_boost
+	specific_input_type_pool = STANDARD_ORGANIC_CONSUMABLES
+	process_info = list(0.50)
+	output_pool = list(/datum/reagent/toxin/blattedin)
+	special_info = list(STAT_ROB, 15)

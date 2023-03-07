@@ -148,12 +148,10 @@
 	..()
 
 /obj/item/modification/organ/internal/output/chem_smoke/roach
-	name = "Seuche glands"
+	name = "Seuche organoid"
 	//icon
 	//icon_state
 	description_info = "Causes the user to emit a gas cloud containing reagents in their blood, stomach, or an internal gas sac.\n\n\
 						Use a laser cutting tool to change the target stat."
+	use_generated_icon = FALSE
 	modes = ROACH_CHEM_SMOKE_MODES
-
-/obj/item/modification/organ/internal/output/chem_smoke/roach/update_icon()
-	return

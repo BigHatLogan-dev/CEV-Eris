@@ -287,10 +287,40 @@
 	exclusive_type = /obj/item/modification/organ/internal/deployable
 	somatic = TRUE
 	var/obj/stored_object
-	var/list/target_limbs = list()
-	var/is_deployed = FALSE
+	var/stored_type
 
-/datum/component/modification/organ/deployable/trigger(atom/A, mob/user)
-	if(!A || !user)
-		return
+/datum/component/modification/organ/deployable/apply(obj/item/organ/O, mob/living/user)
+	. = ..()
+
+	// If the mod failed to install, do nothing
+	if(!.)
+		return FALSE
 	
+	if(stored_type)
+		stored_object = new stored_type(parent)
+		//stored_object.canremove = FALSE
+
+/datum/component/modification/organ/deployable/trigger(obj/item/organ/holder, mob/living/carbon/human/user)
+	if(!holder || !user)
+		return
+
+	var/obj/item/organ/external/E = holder.parent
+	
+	if(!E)
+		return
+
+	if(stored_object.loc == parent) //item not in hands
+		if(user.put_in_active_hand(stored_object))
+			user.visible_message(
+				SPAN_WARNING("[H] extend \his [stored_object.name] from [E]."),
+				SPAN_NOTICE("You extend your [stored_object.name] from [E].")
+			)
+	else if(stored_object.loc == user)
+		user.drop_from_inventory(stored_object)
+		user.visible_message(
+			SPAN_WARNING("[M] retracts \his [stored_object.name] into [E]."),
+			SPAN_NOTICE("You retract your [stored_object.name] into [E].")
+		)
+		user.forceMove(src)
+	else
+		to_chat(user, SPAN_WARNING("ERROR: Stored object does not exist or is in the wrong place."))

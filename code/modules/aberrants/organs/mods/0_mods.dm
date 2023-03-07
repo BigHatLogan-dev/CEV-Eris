@@ -4,6 +4,7 @@
 	matter = list(MATERIAL_BIOMATTER = 5)
 	origin_tech = list(TECH_BIO = 3)	// One level higher than regular organs
 	price_tag = 25		// Biomatter is 5 credits per unit
+	var/use_generated_icon = TRUE
 
 /obj/item/modification/organ/internal
 	icon = 'icons/obj/aberrant_organs/organ_mods.dmi'
@@ -29,7 +30,8 @@
 	return ..()
 
 /obj/item/modification/organ/internal/update_icon()
-	icon_state = initial(icon_state) + "-[rand(1,5)]"
+	if(use_generated_icon)
+		icon_state = initial(icon_state) + "-[rand(1,5)]"
 
 /obj/item/modification/organ/internal/proc/generate_organ_stats_for_mod(datum/component/modification/organ/O, predefined_modifier = null)
 	var/is_parasitic = FALSE

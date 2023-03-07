@@ -1,11 +1,12 @@
+// =================================================
+// ===============     MEMBRANES     ===============
+// =================================================
+
 /obj/item/modification/organ/internal/special
 	name = "membrane"
 	desc = "A graftable outer membrane for organ tissues."
 	icon_state = "membrane"
 	bad_type = /obj/item/modification/organ/internal/special
-
-/obj/item/modification/organ/internal/special/update_icon()
-	icon_state = initial(icon_state) + "-[rand(1,5)]"
 
 /obj/item/modification/organ/internal/special/on_item_examine
 	bad_type = /obj/item/modification/organ/internal/special/on_item_examine
@@ -78,19 +79,21 @@
 		S.boost = modifier
 	..()
 
+// =================================================
+// ===============     ORGANOIDS     ===============
+// =================================================
+
 /obj/item/modification/organ/internal/special/symbiotic
 	name = "parasitic organoid"
-	desc = "Functional tissue of one or more organs in graftable form. Inhibits organ functions, but allows for painful implantation of organs."
 	icon_state = "parasitic_organoid"
+	desc = "Functional tissue of one or more organs in graftable form. Inhibits organ functions, but allows for painful implantation of organs."
+	use_generated_icon = FALSE
 	var/organ_mod = -0.10
 
-/obj/item/modification/organ/internal/special/symbiotic/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = organ_mod)
-	var/datum/component/modification/organ/symbiotic/P = AddComponent(/datum/component/modification/organ/symbiotic)
-	P.specific_organ_size_multiplier = 0.10
+/obj/item/modification/organ/internal/special/symbiotic/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = organ_mod, list/chosen_special_info)
+	var/datum/component/modification/organ/symbiotic/S = AddComponent(/datum/component/modification/organ/symbiotic)
+	S.specific_organ_size_multiplier = 0.10
 	..()
-
-/obj/item/modification/organ/internal/special/symbiotic/update_icon()
-	return
 
 /obj/item/modification/organ/internal/special/symbiotic/commensal
 	name = "commensalistic organoid"
@@ -101,3 +104,13 @@
 	name = "mutualistic organoid"
 	desc = "Functional tissue of one or more organs in graftable form. Supplements organ functions and allows for painful implantation of organs."
 	organ_mod = 0.1
+
+/obj/item/modification/organ/internal/deployable
+	name = "protractile organoid"
+	icon_state = "parasitic_organoid"		// temp
+	desc = "Functional tissue of one or more organs in graftable form. Allows for protraction/retraction of an appendage."
+
+/obj/item/modification/organ/internal/deployable/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/special_args)
+	var/datum/component/modification/organ/deployable/D = AddComponent(/datum/component/modification/organ/deployable)
+	D.stored_type = special_args[1]
+	..()
