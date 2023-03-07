@@ -4,8 +4,6 @@
 
 	var/list/possible_outputs = list()
 	var/list/output_qualities = list()
-	var/charge_level_max = 0
-	var/current_charge_level = 0
 
 /datum/component/modification/organ/output/reagents
 	adjustable = TRUE
@@ -94,7 +92,7 @@
 	var/datum/reagents/metabolism/RM = owner.get_metabolism_handler(mode)
 	var/triggered = FALSE
 
-	if(LAZYLEN(input) && LAZYLEN(input) <= LAZYLEN(possible_outputs))
+	if(LAZYLEN(input))
 		for(var/i in input)
 			var/index = input.Find(i)
 			var/is_input_valid = input[i] ? TRUE : FALSE
@@ -179,7 +177,7 @@
 	var/datum/reagents/metabolism/RM = owner.get_metabolism_handler(CHEM_BLOOD)
 	var/triggered = FALSE
 
-	if(LAZYLEN(input) && LAZYLEN(input) <= LAZYLEN(possible_outputs))
+	if(LAZYLEN(input))
 		for(var/i in input)
 			var/index = input.Find(i)
 			var/is_input_valid = input[i] ? TRUE : FALSE
@@ -329,6 +327,120 @@
 			playsound(owner, 'sound/effects/splat.ogg', 50, 1)
 		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
 		SEND_SIGNAL(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
+
+/datum/component/modification/organ/output/chem_smoke
+	adjustable = TRUE
+	var/current_mode = null
+	var/list/modes = list()
+	var/datum/reagents/gas_sac
+	var/datum/effect/effect/system/smoke_spread/chem/gas_cloud
+
+/datum/component/modification/organ/output/chem_smoke/Initialize(...)
+	. = ..()
+	gas_sac = new /datum/reagents(80, null)	// Null my_atom means no reactions or chem processing
+	gas_cloud = new
+
+/datum/component/modification/organ/output/chem_smoke/get_function_info()
+	var/metabolism
+	switch(current_mode)
+		if(null)
+			metabolism = "internal gas sac"
+		if(CHEM_TOUCH)
+			metabolism = "skin"
+		if(CHEM_INGEST)
+			metabolism = "stomach"
+		if(CHEM_BLOOD)
+			metabolism = "bloodstream"
+		else
+			metabolism = "nothing"
+
+	var/description = "<span style='color:blue'>Functional information (output):</span> produces gas cloud from [metabolism]"
+
+	if(!current_mode)
+		var/outputs
+		for(var/datum/reagent/R in possible_outputs)
+			outputs += initial(R.name) + "([possible_outputs[R]]u), "
+		outputs = copytext(outputs, 1, length(outputs) - 1)
+		description +="<span style='color:blue'>Reagent(s):</span> [outputs]"
+
+	return description
+
+/datum/component/modification/organ/output/chem_smoke/modify(obj/item/I, mob/living/user)
+	var/list/can_adjust = list("reagent source", "reagent")
+
+	var/decision_adjust = input("What do you want to adjust?","Adjusting Organoid") as null|anything in can_adjust
+	if(!decision_adjust)
+		return
+
+	var/list/adjustable_qualities = list()
+	switch(decision_adjust)
+		if("reagent source")
+			if(LAZYLEN(modes) < 2)
+				to_chat(user, SPAN_NOTICE("\The [parent] does not have any other reagent sources."))
+				return
+
+			adjustable_qualities = modes
+
+			var/decision = input("Choose a reagent source","Adjusting Organoid") as null|anything in adjustable_qualities
+			if(!decision)
+				return
+
+			current_mode = adjustable_qualities[decision]
+		if("reagent")
+			if(!LAZYLEN(output_qualities))
+				to_chat(user, SPAN_NOTICE("\The [parent] does not have any reagents to select."))
+				return
+
+			adjustable_qualities = output_qualities
+
+			var/decision = input("Choose a reagent","Adjusting Organoid") as null|anything in adjustable_qualities
+			if(!decision)
+				return
+
+			current_mode = adjustable_qualities[decision]
+
+
+/datum/component/modification/organ/output/chem_smoke/trigger(atom/movable/holder, mob/living/carbon/owner, list/input)
+	if(!holder || !owner || !input)
+		return
+	if(!istype(holder, /obj/item/organ/internal/scaffold))
+		return
+
+	var/obj/item/organ/internal/scaffold/S = holder
+	var/organ_multiplier = (S.max_damage - S.damage) / S.max_damage
+	var/datum/reagents/metabolism/RM = owner.get_metabolism_handler(current_mode)
+	var/triggered = FALSE
+
+	if(LAZYLEN(input))
+		for(var/i in input)
+			var/index = input.Find(i)
+			var/is_input_valid = input[i] ? TRUE : FALSE
+			if(is_input_valid && index <= LAZYLEN(possible_outputs))
+				var/input_multiplier = input[i] * organ_multiplier
+				var/datum/reagent/cloud_reagent = possible_outputs[index]
+				var/gas_cloud_volume = min(possible_outputs[cloud_reagent] * input_multiplier, gas_sac.maximum_volume)	// Every 10 units is 3 tiles of range
+
+				if(RM)
+					RM.trans_to_holder(gas_sac, gas_cloud_volume, copy = FALSE)
+				else
+					gas_sac.add_reagent(initial(cloud_reagent.id), gas_cloud_volume)
+
+				if(gas_sac.total_volume)
+					var/location = get_turf(owner)
+					gas_cloud.attach(location)
+					gas_cloud.set_up(gas_sac, gas_cloud_volume, 0, location)
+					owner.visible_message(SPAN_DANGER("\the [owner] secretes strange vapors!"))
+					addtimer(CALLBACK(src, .proc/smoke_trigger), 1, TIMER_STOPPABLE)
+					triggered = TRUE
+
+	if(triggered)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
+
+/datum/component/modification/organ/output/chem_smoke/proc/smoke_trigger()
+	if(gas_cloud)
+		gas_cloud.start()
+		gas_sac.clear_reagents()
 
 /*	Unused and incomplete. Leaving this here if anyone decides to make use of it.
 /datum/component/modification/organ/output/research

@@ -1321,6 +1321,7 @@
 #include "code\modules\aberrants\organs\design_disks\designs.dm"
 #include "code\modules\aberrants\organs\design_disks\disks.dm"
 #include "code\modules\aberrants\organs\internal\deepmaint_organs.dm"
+#include "code\modules\aberrants\organs\internal\faction.dm"
 #include "code\modules\aberrants\organs\internal\hivemind.dm"
 #include "code\modules\aberrants\organs\internal\roach.dm"
 #include "code\modules\aberrants\organs\internal\simple.dm"

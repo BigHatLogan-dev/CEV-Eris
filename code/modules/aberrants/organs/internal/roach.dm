@@ -22,6 +22,7 @@
 	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN_ROACH
 	spawn_blacklisted = TRUE	// Go butcher roaches
 	bad_type = /obj/item/organ/internal/scaffold/aberrant/roach
+	b_type = "Ü~"				// Will trigger rejection
 	max_upgrades = 4
 	aberrant_cooldown_time = ROACH_ABERRANT_COOLDOWN
 

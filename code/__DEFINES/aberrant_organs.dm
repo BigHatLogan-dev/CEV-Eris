@@ -93,6 +93,10 @@
 							/datum/reagent/nanites/uncapped/control_booster_utility, /datum/reagent/nanites/uncapped/control_booster_combat,\
 							/datum/reagent/nanites/uncapped/voice_mimic, /datum/reagent/nanites/uncapped/dynamic_handprints)
 
+#define STANDARD_CHEM_SMOKE_MODES list("internal gas sac" = null)
+
+#define ROACH_CHEM_SMOKE_MODES list("stomach" = CHEM_INGEST, "bloodstream" = CHEM_BLOOD, "internal gas sac" = null)
+
 
 // MISCELLANEOUS
 #define STANDARD_ABERRANT_COOLDOWN 10 SECONDS

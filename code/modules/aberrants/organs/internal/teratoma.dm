@@ -260,6 +260,15 @@
 	output_pool = LIGHT_ANTAG_ORGANIC_PRODUCEABLES
 	output_info = list(1)
 
+/obj/item/organ/internal/scaffold/aberrant/teratoma/output/chem_smoke
+	name = "eructal teratoma"
+	description_info = "A teratoma that houses an eructal organoid. Use a laser cutting tool to remove the organoid. 35 BIO and 15 COG recommended.\n\n\
+						Organoid information:\n\
+						Causes the user to emit a gas cloud containing reagents in their blood, stomach, or an internal gas sac."
+	output_mod_path = /obj/item/modification/organ/internal/output/produce
+	output_pool = STANDARD_ORGANIC_PRODUCEABLES
+	output_info = list(1)
+
 // special
 /obj/item/organ/internal/scaffold/aberrant/teratoma/special
 	name = "teratoma (unknown)"

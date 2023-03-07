@@ -126,3 +126,32 @@
 	
 	O.output_qualities = additional_output_info.Copy()
 	..()
+
+/obj/item/modification/organ/internal/output/chem_smoke
+	name = "eructal organoid"
+	desc = "Functional tissue of one or more organs in graftable form. Expels stored reagents as a gas cloud."
+	description_info = "Causes the user to emit a gas cloud containing reagents in their blood, stomach, or an internal gas sac.\n\n\
+						Use a laser cutting tool to change the target stat."
+	var/list/modes = STANDARD_CHEM_SMOKE_MODES
+
+/obj/item/modification/organ/internal/output/chem_smoke/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
+	var/datum/component/modification/organ/output/chem_smoke/O = AddComponent(/datum/component/modification/organ/output/chem_smoke)
+
+	for(var/output in output_types)
+		O.possible_outputs += output
+		O.possible_outputs[output] = output_types[output]
+	
+	O.modes = modes.Copy()
+	O.output_qualities = additional_output_info.Copy()
+	..()
+
+/obj/item/modification/organ/internal/output/chem_smoke/roach
+	name = "Seuche glands"
+	//icon
+	//icon_state
+	description_info = "Causes the user to emit a gas cloud containing reagents in their blood, stomach, or an internal gas sac.\n\n\
+						Use a laser cutting tool to change the target stat."
+	modes = ROACH_CHEM_SMOKE_MODES
+
+/obj/item/modification/organ/internal/output/chem_smoke/roach/update_icon()
+	return

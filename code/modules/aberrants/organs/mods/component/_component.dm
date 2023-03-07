@@ -140,7 +140,7 @@
 		holder.owner_verbs |= owner_verb
 	
 	if(somatic)
-		holder.action_button_name = somatic_action_name
+		holder.action_button_name = holder.name ? "Activate [holder.name]" : somatic_action_name
 		holder.action_button_proc = somatic_verb
 		holder.action_button_is_hands_free = somatic_hands_free
 

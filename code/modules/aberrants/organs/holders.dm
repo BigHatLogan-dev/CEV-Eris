@@ -233,6 +233,8 @@
 
 /obj/item/organ/internal/scaffold/proc/end_cooldown()
 	on_cooldown = FALSE
+	if(action_button_name && owner)
+		to_chat(owner, SPAN_NOTICE("Your [name] twitches. It is ready to be used again."))
 
 /obj/item/organ/internal/scaffold/large
 	name = "large organ scaffold"
