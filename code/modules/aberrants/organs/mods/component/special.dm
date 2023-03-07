@@ -282,3 +282,15 @@
 				user.visible_message(SPAN_WARNING("[user.name] implants \the [I] into [target.name]'s [affected.name]!"), SPAN_WARNING("You implant \the [I] into [target.name]'s [affected.name]!"))
 		else
 			to_chat(user, SPAN_NOTICE("The target limb has too much protection."))
+
+/datum/component/modification/organ/deployable
+	exclusive_type = /obj/item/modification/organ/internal/deployable
+	somatic = TRUE
+	var/obj/stored_object
+	var/list/target_limbs = list()
+	var/is_deployed = FALSE
+
+/datum/component/modification/organ/deployable/trigger(atom/A, mob/user)
+	if(!A || !user)
+		return
+	

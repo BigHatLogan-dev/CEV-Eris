@@ -344,13 +344,15 @@
 /datum/component/modification/organ/input/power_source/trigger(atom/movable/holder, mob/living/carbon/human/owner)
 	if(!holder || !owner)
 		return
-	if(!owner.get_siemens_coefficient_organ(owner.get_organ(check_zone(BP_L_ARM))) && !owner.get_siemens_coefficient_organ(owner.get_organ(check_zone(BP_R_ARM))))
-		return
 	if(!istype(holder, /obj/item/organ/internal/scaffold))
 		return
 
 	var/obj/item/organ/internal/scaffold/S = holder
 	var/organ_multiplier = ((S.max_damage - S.damage) / S.max_damage)
+	var/siemens_coefficient = min((owner.get_siemens_coefficient_organ(owner.get_organ(check_zone(BP_L_ARM))) + owner.get_siemens_coefficient_organ(owner.get_organ(check_zone(BP_R_ARM)))) / 2, 1)
+
+	if(siemens_coefficient < 0.5)
+		return
 
 	var/list/input = list()
 	var/active_hand_held = owner.get_active_hand()
@@ -369,7 +371,7 @@
 		if(istype(AM, /obj/item/cell))
 			var/obj/item/cell/C = AM
 			if(C.charge)
-				energy_supplied = C.use(C.charge) / CELLRATE		// Using a rigged cell will make it explode, which is funny
+				energy_supplied = C.use(C.charge) * siemens_coefficient / CELLRATE		// Using a rigged cell will make it explode, which is funny
 
 		// 1 plasma sheet = 192 kJ, 1 uranium sheet = 1152 kJ, 1 tritium sheet = 1440 kJ
 		if(istype(AM, /obj/item/stack/material))

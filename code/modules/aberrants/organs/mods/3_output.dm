@@ -125,6 +125,7 @@
 		O.possible_outputs[output] = output_types[output]
 	
 	O.output_qualities = additional_output_info.Copy()
+	O.aberrant_cooldown_time_mod = 5 MINUTES	// Don't want these popping out too often
 	..()
 
 /obj/item/modification/organ/internal/output/chem_smoke
@@ -143,6 +144,7 @@
 	
 	O.modes = modes.Copy()
 	O.output_qualities = additional_output_info.Copy()
+	O.aberrant_cooldown_time_mod = 5 MINUTES
 	..()
 
 /obj/item/modification/organ/internal/output/chem_smoke/roach

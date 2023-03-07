@@ -256,7 +256,6 @@
 
 /datum/component/modification/organ/output/produce
 	adjustable = TRUE
-	aberrant_cooldown_time_mod = 5 MINUTES	// Don't want these popping out too often
 
 /datum/component/modification/organ/output/produce/get_function_info()
 	var/outputs
@@ -407,16 +406,21 @@
 		return
 
 	var/obj/item/organ/internal/scaffold/S = holder
+	var/obj/item/organ/external/parent = S.parent
 	var/organ_multiplier = (S.max_damage - S.damage) / S.max_damage
 	var/datum/reagents/metabolism/RM = owner.get_metabolism_handler(current_mode)
+	var/reagent_permeability = owner.reagent_permeability()
 	var/triggered = FALSE
+
+	if(reagent_permeability < 0.10)
+		return
 
 	if(LAZYLEN(input))
 		for(var/i in input)
 			var/index = input.Find(i)
 			var/is_input_valid = input[i] ? TRUE : FALSE
 			if(is_input_valid && index <= LAZYLEN(possible_outputs))
-				var/input_multiplier = input[i] * organ_multiplier
+				var/input_multiplier = input[i] * organ_multiplier * reagent_permeability
 				var/datum/reagent/cloud_reagent = possible_outputs[index]
 				var/gas_cloud_volume = min(possible_outputs[cloud_reagent] * input_multiplier, gas_sac.maximum_volume)	// Every 10 units is 3 tiles of range
 
