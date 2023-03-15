@@ -4,9 +4,9 @@
 	tags_to_spawn = list(SPAWN_ABERRANT_ORGAN)
 
 /obj/spawner/aberrant_organs/normal
-	name = "roach organ"
+	name = "maint organ"
 	icon_state = "machine-orange"
-	tags_to_spawn = list(SPAWN_ABERRANT_ORGAN_ROACH)
+	tags_to_spawn = list(SPAWN_TAG_ABERRANT_MAINT)
 
 /obj/spawner/aberrant_organs/rare
 	name = "rare aberrant organ"

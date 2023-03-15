@@ -107,7 +107,7 @@
 
 	// If the organ was already modded, do nothing
 	if(!O.owner || LAZYLEN(O.item_upgrades) > 1)
-		return FALSE
+		return TRUE
 
 	O.owner.mutation_index++
 

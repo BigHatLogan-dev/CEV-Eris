@@ -233,7 +233,7 @@
 /datum/component/modification/organ/input/consume/trigger(atom/movable/holder, mob/living/carbon/human/owner)
 	if(!holder || !owner)
 		return
-	if(!owner.get_siemens_coefficient_organ(owner.get_organ(check_zone(BP_L_ARM))) && !owner.get_siemens_coefficient_organ(owner.get_organ(check_zone(BP_R_ARM))))
+	if(!owner.check_mouth_coverage())
 		return
 	if(!istype(holder, /obj/item/organ/internal/scaffold))
 		return

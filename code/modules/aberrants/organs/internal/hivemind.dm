@@ -5,7 +5,7 @@
 	name = "hivemind blood vessel"
 	icon_state = "blood_vessel"
 	desc = "Transports blood throughout the human body."
-	organ_efficiency = list(OP_BLOOD_VESSEL= 125)
+	organ_efficiency = list(OP_BLOOD_VESSEL = 125)
 	nature = MODIFICATION_ASSISTED
 	max_damage = 50
 	specific_organ_size = 0.5

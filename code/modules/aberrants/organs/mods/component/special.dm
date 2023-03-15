@@ -305,22 +305,22 @@
 		return
 
 	var/obj/item/organ/external/E = holder.parent
-	
+
 	if(!E)
 		return
 
 	if(stored_object.loc == parent) //item not in hands
 		if(user.put_in_active_hand(stored_object))
 			user.visible_message(
-				SPAN_WARNING("[H] extend \his [stored_object.name] from [E]."),
+				SPAN_WARNING("[user] extends \his [stored_object.name] from [E]."),
 				SPAN_NOTICE("You extend your [stored_object.name] from [E].")
 			)
 	else if(stored_object.loc == user)
 		user.drop_from_inventory(stored_object)
 		user.visible_message(
-			SPAN_WARNING("[M] retracts \his [stored_object.name] into [E]."),
+			SPAN_WARNING("[user] retracts \his [stored_object.name] into [E]."),
 			SPAN_NOTICE("You retract your [stored_object.name] into [E].")
 		)
-		user.forceMove(src)
+		stored_object.forceMove(parent)
 	else
 		to_chat(user, SPAN_WARNING("ERROR: Stored object does not exist or is in the wrong place."))

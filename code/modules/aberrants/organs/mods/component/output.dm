@@ -406,7 +406,7 @@
 		return
 
 	var/obj/item/organ/internal/scaffold/S = holder
-	var/obj/item/organ/external/parent = S.parent
+	var/obj/item/organ/external/limb = S.parent
 	var/organ_multiplier = (S.max_damage - S.damage) / S.max_damage
 	var/datum/reagents/metabolism/RM = owner.get_metabolism_handler(current_mode)
 	var/reagent_permeability = owner.reagent_permeability()
@@ -433,7 +433,7 @@
 					var/location = get_turf(owner)
 					gas_cloud.attach(location)
 					gas_cloud.set_up(gas_sac, gas_cloud_volume, 0, location)
-					owner.visible_message(SPAN_DANGER("\the [owner] secretes strange vapors!"))
+					owner.visible_message(SPAN_DANGER("\the [owner] exhales strange vapors!"))
 					addtimer(CALLBACK(src, .proc/smoke_trigger), 1, TIMER_STOPPABLE)
 					triggered = TRUE
 

@@ -320,8 +320,8 @@
 	if(ispath(output_mod_path, /obj/item/modification/organ/internal/output))
 		O = new output_mod_path(src, FALSE, null, output_types, additional_output_info)
 
-	var/obj/item/modification/organ/internal/special/S
-	if(ispath(special_mod_path, /obj/item/modification/organ/internal/special))
+	var/obj/item/modification/organ/internal/S
+	if(ispath(special_mod_path, /obj/item/modification/organ/internal))
 		S = new special_mod_path(src, FALSE, null, special_info)
 
 	if(I)
