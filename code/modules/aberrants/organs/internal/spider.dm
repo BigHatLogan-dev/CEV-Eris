@@ -9,7 +9,7 @@
 	ruined_desc = null
 	description_info = "A modular organ with four slots for organ mods or organoids."
 	ruined_description_info = null
-	icon = 'icons/obj/aberrant_organs/spider_organs.dmi'
+	icon = 'icons/obj/aberrant_organs/arachno_organs.dmi'
 	rarity_value = 20
 	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN_MAINT
 	spawn_blacklisted = TRUE
@@ -61,4 +61,4 @@
 	process_info = list(0.50)
 	output_pool = list(STAT_VIG)
 	output_info = list(15)
-	special_info = list(/obj/item/gun/projectile/automatic/armsmg)	// Should be spider gun
+	special_info = list(/obj/item/gun/matter/regenerating/gestrahlte_gland)	// Should be spider gun

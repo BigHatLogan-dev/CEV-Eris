@@ -53,6 +53,7 @@
 
 /obj/item/organ/internal/scaffold/aberrant/roach/seuche
 	name = "Seuche sac"
+	icon_state = "organ_scaffold-roach-4"
 
 	use_generated_color = FALSE
 	use_generated_icon = FALSE
@@ -71,6 +72,7 @@
 
 /obj/item/organ/internal/scaffold/aberrant/roach/gestrahlte
 	name = "Gestrahlte gland"
+	icon_state = "organ_scaffold-roach-1"
 
 	use_generated_color = FALSE
 	use_generated_icon = FALSE
@@ -85,4 +87,4 @@
 	process_info = list(0.50)
 	output_pool = list(STAT_TGH)
 	output_info = list(15)
-	special_info = list(/obj/item/gun/projectile/automatic/armsmg)	// Should be roach gun
+	special_info = list(/obj/item/gun/matter/regenerating/gestrahlte_gland)
