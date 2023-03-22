@@ -1326,7 +1326,6 @@
 #include "code\modules\aberrants\organs\internal\faction.dm"
 #include "code\modules\aberrants\organs\internal\hivemind.dm"
 #include "code\modules\aberrants\organs\internal\roach.dm"
-#include "code\modules\aberrants\organs\internal\simple.dm"
 #include "code\modules\aberrants\organs\internal\spider.dm"
 #include "code\modules\aberrants\organs\internal\teratoma.dm"
 #include "code\modules\aberrants\organs\machinery\disgorger.dm"

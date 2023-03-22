@@ -406,7 +406,7 @@
 		return
 
 	var/obj/item/organ/internal/scaffold/S = holder
-	var/obj/item/organ/external/limb = S.parent
+	//var/obj/item/organ/external/limb = S.parent
 	var/organ_multiplier = (S.max_damage - S.damage) / S.max_damage
 	var/datum/reagents/metabolism/RM = owner.get_metabolism_handler(current_mode)
 	var/reagent_permeability = owner.reagent_permeability()

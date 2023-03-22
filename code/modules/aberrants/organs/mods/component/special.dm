@@ -1,5 +1,5 @@
 /datum/component/modification/organ/on_item_examine
-	exclusive_type = /obj/item/modification/organ/internal/special/on_item_examine
+	exclusive_type = /obj/item/modification/organ/internal/on_item_examine
 	trigger_signal = COMSIG_EXAMINE
 
 /datum/component/modification/organ/on_item_examine/brainloss
@@ -22,7 +22,7 @@
 
 
 /datum/component/modification/organ/on_pickup
-	exclusive_type = /obj/item/modification/organ/internal/special/on_pickup
+	exclusive_type = /obj/item/modification/organ/internal/on_pickup
 	trigger_signal = COMSIG_ITEM_PICKED
 
 /datum/component/modification/organ/on_pickup/shock
@@ -44,8 +44,34 @@
 		L.electrocute_act(damage, parent)
 
 /datum/component/modification/organ/on_cooldown
-	exclusive_type = /obj/item/modification/organ/internal/special/on_cooldown
+	exclusive_type = /obj/item/modification/organ/internal/on_cooldown
 	trigger_signal = COMSIG_ABERRANT_SECONDARY
+
+/datum/component/modification/organ/on_cooldown/reagents_blood
+	adjustable = FALSE
+	var/reagent
+
+/datum/component/modification/organ/on_cooldown/reagents_blood/get_function_info()
+	var/datum/reagent/R = reagent
+
+	var/description = "<span style='color:purple'>Functional information (secondary):</span> produces reagents in blood"
+	description += "\n<span style='color:purple'>Reagents produced:</span> [initial(R.name)]"
+
+	return description
+
+/datum/component/modification/organ/on_cooldown/reagents_blood/trigger(obj/item/holder, mob/living/carbon/owner)
+	if(!holder || !owner)
+		return
+	if(!istype(holder, /obj/item/organ/internal/scaffold))
+		return
+
+	var/obj/item/organ/internal/scaffold/S = holder
+	var/organ_multiplier = ((S.max_damage - S.damage) / S.max_damage) * (S.aberrant_cooldown_time / (2 SECONDS))	// Life() is called every 2 seconds
+	var/datum/reagents/metabolism/RM = owner.get_metabolism_handler(CHEM_BLOOD)
+
+	var/datum/reagent/output = reagent
+	var/amount_to_add = initial(output.metabolism) * organ_multiplier
+	RM.add_reagent(initial(output.id), amount_to_add)
 
 /datum/component/modification/organ/on_cooldown/chemical_effect
 	adjustable = TRUE
@@ -154,7 +180,7 @@
 
 
 /datum/component/modification/organ/symbiotic
-	exclusive_type = /obj/item/modification/organ/internal/special/symbiotic
+	exclusive_type = /obj/item/modification/organ/internal/symbiotic
 	adjustable = TRUE
 	trigger_signal = COMSIG_ITEM_PICKED
 
@@ -298,7 +324,7 @@
 	
 	if(stored_type)
 		stored_object = new stored_type(parent)
-		//stored_object.canremove = FALSE
+		stored_object.canremove = FALSE
 
 /datum/component/modification/organ/deployable/trigger(obj/item/organ/holder, mob/living/carbon/human/user)
 	if(!holder || !user)

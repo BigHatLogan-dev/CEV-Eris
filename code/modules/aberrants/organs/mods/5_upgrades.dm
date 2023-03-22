@@ -223,7 +223,7 @@
 /obj/item/modification/organ/internal/stromal/hivemind_conversion
 	name = "hivemind membrane"
 	desc = "An outer membrane that absorbs typical medical scanning wavelengths. Slightly impedes organ functions and reduces organ size."
-	icon_state = "stealth_composites"
+	icon_state = "hivemind_conversion"
 
 /obj/item/modification/organ/internal/stromal/hivemind_conversion/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
@@ -233,7 +233,7 @@
 	M.organ_efficiency_multiplier = 0.10
 	M.specific_organ_size_multiplier = -0.10
 	M.scanner_hidden = TRUE
-	M.prefix = "hive-assisted"
+	M.prefix = "hivemind-assisted"
 	..()
 
 /obj/item/modification/organ/internal/stromal/overclock_hivemind
@@ -249,5 +249,5 @@
 	M.blood_req_multiplier = -0.50
 	M.nutriment_req_multiplier = -0.50
 	M.oxygen_req_multiplier = -0.50
-	M.prefix = "hive-assisted"
+	M.prefix = "silicified"
 	..()

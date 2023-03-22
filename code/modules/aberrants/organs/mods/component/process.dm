@@ -124,3 +124,4 @@
 			condensed_input["condensed input"] |= input[element]
 
 		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_OUTPUT, holder, owner, condensed_input)
+*/

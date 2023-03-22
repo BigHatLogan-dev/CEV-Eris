@@ -265,8 +265,8 @@
 	description_info = "A teratoma that houses an eructal organoid. Use a laser cutting tool to remove the organoid. 35 BIO and 15 COG recommended.\n\n\
 						Organoid information:\n\
 						Causes the user to emit a gas cloud containing reagents in their blood, stomach, or an internal gas sac."
-	output_mod_path = /obj/item/modification/organ/internal/output/produce
-	output_pool = STANDARD_ORGANIC_PRODUCEABLES
+	output_mod_path = /obj/item/modification/organ/internal/output/chem_smoke
+	output_pool = REAGENTS_ALCOHOL
 	output_info = list(1)
 
 // special
@@ -279,35 +279,36 @@
 	description_info = "A teratoma that houses a pygmy endocrinal membrane. Use a laser cutting tool to remove the membrane. 35 BIO and 15 COG recommended.\n\n\
 						Membrane information:\n\
 						Produces a hormone when the primary function triggers."
-	special_mod_path = /obj/item/modification/organ/internal/special/on_cooldown/chemical_effect
+	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/chemical_effect
+	special_info = TYPE_1_HORMONES
 
 /obj/item/organ/internal/scaffold/aberrant/teratoma/special/stat_boost
 	name = "pygmy intracrinal teratoma"
 	description_info = "A teratoma that houses a pygmy intracrinal membrane. Use a laser cutting tool to remove the membrane. 35 BIO and 15 COG recommended.\n\n\
 						Membrane information:\n\
 						Slightly increases a stat when the primary function triggers."
-	special_mod_path = /obj/item/modification/organ/internal/special/on_cooldown/stat_boost
+	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/stat_boost
 
 /obj/item/organ/internal/scaffold/aberrant/teratoma/special/parasitic
 	name = "parasitic teratoma"
 	description_info = "A teratoma that houses a parasitic organoid. Use a laser cutting tool to remove the organoid. 35 BIO and 15 COG recommended.\n\n\
 						Membrane information:\n\
 						Inhibits organ functions, but allows for aberrant organ insertion without surgery."
-	special_mod_path = /obj/item/modification/organ/internal/special/symbiotic
+	special_mod_path = /obj/item/modification/organ/internal/symbiotic
 
 /obj/item/organ/internal/scaffold/aberrant/teratoma/special/commensal
 	name = "commensalistic teratoma"
 	description_info = "A teratoma that houses a commensalistic organoid. Use a laser cutting tool to remove the organoid. 35 BIO and 15 COG recommended.\n\n\
 						Membrane information:\n\
 						Allows for aberrant organ insertion without surgery."
-	special_mod_path = /obj/item/modification/organ/internal/special/symbiotic/commensal
+	special_mod_path = /obj/item/modification/organ/internal/symbiotic/commensal
 
 /obj/item/organ/internal/scaffold/aberrant/teratoma/special/mutual
 	name = "mutualistic teratoma"
 	description_info = "A teratoma that houses a mutualistic organoid. Use a laser cutting tool to remove the organoid. 35 BIO and 15 COG recommended.\n\n\
 						Membrane information:\n\
 						Allows for aberrant organ insertion without surgery."
-	special_mod_path = /obj/item/modification/organ/internal/special/symbiotic/mutual
+	special_mod_path = /obj/item/modification/organ/internal/symbiotic/mutual
 
 /*
 /obj/item/storage/freezer/medical/contains_teratomas/populate_contents()

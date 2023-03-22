@@ -15,6 +15,8 @@
 	var/use_generated_name = TRUE
 	var/use_generated_icon = TRUE
 	var/organ_type = null
+	var/num_variants = 8		// Number of sprite variants in the dmi
+	var/num_colors = 5			// Number of colored sprites in the dmi
 	var/use_generated_color = TRUE
 	var/generated_color = null
 
@@ -31,7 +33,10 @@
 	. = ..()
 	RegisterSignal(src, COMSIG_ABERRANT_COOLDOWN, PROC_REF(start_cooldown))
 	if(use_generated_icon)
-		organ_type = "-[rand(1,8)]"
+		if(organ_type)
+			organ_type = "-[organ_type]"
+		else if(num_variants)
+			organ_type = "-[rand(1,num_variants)]"
 	update_icon()
 
 /obj/item/organ/internal/scaffold/Destroy()
@@ -48,7 +53,7 @@
 		return FALSE
 
 	if(owner && !on_cooldown && damage < min_broken_damage)
-		SEND_SIGNAL_OLD(src, COMSIG_ABERRANT_INPUT, src, owner)
+		SEND_SIGNAL(src, COMSIG_ABERRANT_INPUT, owner)
 
 /obj/item/organ/internal/scaffold/examine(mob/user)
 	. = ..()
@@ -80,11 +85,11 @@
 			var/datum/component/modification/organ/organ_mod = holder.GetComponent(/datum/component/modification/organ)
 			if(istype(mod, /obj/item/modification/organ/internal/input))
 				input_info = organ_mod.get_function_info()
-			if(istype(mod, /obj/item/modification/organ/internal/process))
+			else if(istype(mod, /obj/item/modification/organ/internal/process))
 				process_info = organ_mod.get_function_info()
-			if(istype(mod, /obj/item/modification/organ/internal/output))
+			else if(istype(mod, /obj/item/modification/organ/internal/output))
 				output_info = organ_mod.get_function_info()
-			if(istype(mod, /obj/item/modification/organ/internal/special))
+			else if(istype(mod, /obj/item/modification/organ/internal))
 				secondary_info += organ_mod.get_function_info()
 
 		function_info = input_info + "\n" +\
@@ -139,13 +144,15 @@
 		icon_state = initial(icon_state)
 
 /obj/item/organ/internal/scaffold/proc/update_color()
+	if(!num_colors)
+		return
 	if(!use_generated_color || !item_upgrades.len)
 		color = ruined ? ruined_color : color
 		generated_color = null
 		return
 
 	if(!generated_color)
-		generated_color = "-[rand(1,5)]"
+		generated_color = "-[rand(1,num_colors)]"
 
 /obj/item/organ/internal/scaffold/proc/update_name()
 	if(use_generated_name)

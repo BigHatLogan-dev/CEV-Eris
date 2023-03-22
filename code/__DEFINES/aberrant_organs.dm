@@ -72,6 +72,12 @@
 #define REAGENTS_ROACH list(/datum/reagent/toxin/diplopterum, /datum/reagent/toxin/seligitillin, /datum/reagent/toxin/starkellin,\
 							/datum/reagent/toxin/gewaltine, /datum/reagent/toxin/blattedin)
 
+#define REAGENTS_FUHRER list(/datum/reagent/toxin/diplopterum, /datum/reagent/toxin/seligitillin, /datum/reagent/toxin/starkellin,\
+							/datum/reagent/toxin/gewaltine, /datum/reagent/toxin/blattedin, /datum/reagent/toxin/fuhrerole)
+
+#define REAGENTS_KAISER list(/datum/reagent/toxin/diplopterum, /datum/reagent/toxin/seligitillin, /datum/reagent/toxin/starkellin,\
+							/datum/reagent/toxin/gewaltine, /datum/reagent/toxin/blattedin, /datum/reagent/toxin/fuhrerole, /datum/reagent/toxin/kaiseraurum)
+
 #define REAGENTS_SPIDER list(/datum/reagent/toxin/pararein, /datum/reagent/toxin/aranecolmin)
 
 #define REAGENTS_FUNGAL list(/datum/reagent/toxin/amatoxin, /datum/reagent/toxin/mold, /datum/reagent/drug/psilocybin)
@@ -88,6 +94,10 @@
 							/datum/reagent/alcohol/gin, /datum/reagent/alcohol/rum, /datum/reagent/alcohol/tequilla, /datum/reagent/alcohol/vermouth,\
 							/datum/reagent/alcohol/vodka, /datum/reagent/alcohol/whiskey, /datum/reagent/alcohol/wine, /datum/reagent/alcohol/cognac)
 
+#define REAGENTS_SANTANA_COCKTAIL list(\
+		/datum/reagent/alcohol/martini, /datum/reagent/alcohol/coffee/b52, /datum/reagent/alcohol/black_russian, /datum/reagent/alcohol/gintonic\
+	)
+
 #define REAGENTS_NANITES list(/datum/reagent/nanites/arad, /datum/reagent/nanites/implant_medics, /datum/reagent/nanites/nantidotes, /datum/reagent/nanites/nanosymbiotes,\
 							/datum/reagent/nanites/oxyrush, /datum/reagent/nanites/trauma_control_system, /datum/reagent/nanites/purgers,\
 							/datum/reagent/nanites/uncapped/control_booster_utility, /datum/reagent/nanites/uncapped/control_booster_combat,\
@@ -100,37 +110,40 @@
 
 // MISCELLANEOUS
 #define STANDARD_ABERRANT_COOLDOWN 10 SECONDS
-#define ROACH_ABERRANT_COOLDOWN 30 SECONDS
+#define MAINT_ABERRANT_COOLDOWN 30 SECONDS
 #define EXTENDED_ABERRANT_COOLDOWN 1 MINUTE
 
 #define NOT_USED 1
 
 #define DISGORGER_RESEARCH_LIST list(\
-		/datum/design/organ/teratoma/output/reagents_blood_roach,\
-		/datum/design/organ/teratoma/input/damage_basic,\
-		/datum/design/organ/scaffold/large,\
-		/datum/design/organ/teratoma/special/chemical_effect,\
-		/datum/design/organ/teratoma/special/stat_boost,\
-		/datum/design/organ/teratoma/special/symbiotic_parasite,\
-		/datum/design/organ/teratoma/process/cooldown/long,\
-		/datum/design/organ/teratoma/process/multiplier/low,\
-		/datum/design/organ/teratoma/output/reagents_blood_dispenser_base,\
-		/datum/design/organ/teratoma/output/reagents_blood_fungal,\
-		/datum/design/organ/teratoma/output/reagents_blood_spider,\
-		/datum/design/organ/teratoma/output/chemical_effects_type_2,\
-		/datum/design/organ/teratoma/output/produce,\
-		/datum/design/organ/teratoma/input/damage_all,\
-		/datum/design/organ/organ_mod/parenchymal_large,\
-		/datum/design/organ/teratoma/special/symbiotic_commensal,\
-		/datum/design/organ/teratoma/process/cooldown,\
-		/datum/design/organ/teratoma/process/multiplier,\
-		/datum/design/organ/teratoma/output/reagents_blood_dispenser_one,\
-		/datum/design/organ/teratoma/output/stat_boost,\
-		/datum/design/organ/teratoma/output/produce_light_antag,\
-		/datum/design/organ/teratoma/special/symbiotic_mutual,\
-		/datum/design/organ/teratoma/process/cooldown/negative,\
-		/datum/design/organ/teratoma/process/multiplier/negative_low,\
-		/datum/design/organ/teratoma/process/multiplier/negative,\
-		/datum/design/organ/teratoma/process/multiplier/high,\
-		/datum/design/organ/teratoma/output/reagents_blood_dispenser_two\
-		)
+	/datum/design/organ/teratoma/input/damage_basic,\
+	/datum/design/organ/scaffold/large,\
+	/datum/design/organ/teratoma/special/stat_boost,\
+	/datum/design/organ/teratoma/special/symbiotic_parasite,\
+	/datum/design/organ/teratoma/process/cooldown/long,\
+	/datum/design/organ/teratoma/process/multiplier/low,\
+	/datum/design/organ/teratoma/output/chemical_effects_type_2,\
+	/datum/design/organ/teratoma/output/reagents_blood_dispenser_base,\
+	/datum/design/organ/teratoma/output/produce,\
+	/datum/design/organ/teratoma/input/damage_all,\
+	/datum/design/organ/organ_mod/parenchymal_large,\
+	/datum/design/organ/teratoma/special/chemical_effects,\
+	/datum/design/organ/teratoma/special/symbiotic_commensal,\
+	/datum/design/organ/teratoma/process/cooldown,\
+	/datum/design/organ/teratoma/process/multiplier,\
+	/datum/design/organ/teratoma/output/reagents_blood_dispenser_one,\
+	/datum/design/organ/teratoma/output/stat_boost,\
+	/datum/design/organ/teratoma/output/chem_smoke,\
+	/datum/design/organ/teratoma/output/produce_light_antag,\
+	/datum/design/organ/teratoma/special/symbiotic_mutual,\
+	/datum/design/organ/teratoma/process/cooldown/negative,\
+	/datum/design/organ/teratoma/process/multiplier/negative_low,\
+	/datum/design/organ/teratoma/process/multiplier/negative,\
+	/datum/design/organ/teratoma/process/multiplier/high,\
+	/datum/design/organ/teratoma/output/reagents_blood_dispenser_two\
+	)
+
+#define DISGORGER_INSPIRATION_LIST list(\
+	/datum/design/organ/organ_mod/durability_roach,\
+	/datum/design/organ/organ_mod/efficiency_roach\
+	)

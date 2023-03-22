@@ -12,13 +12,14 @@
 	var/list/organ_efficiency = list()	//Efficency of an organ, should become the most important variable
 	var/list/initial_organ_efficiency = list()
 	var/scanner_hidden = FALSE	//Does this organ show up on the body scanner
-	var/unique_tag	//If an organ is unique and doesn't scale off of organ processes
-	var/specific_organ_size = 1  //Space organs take up in weight calculations, unaffected by w_class for balance reasons
+	var/unique_tag				//If an organ is unique and doesn't scale off of organ processes
+	var/specific_organ_size = 1 //Space organs take up in weight calculations, unaffected by w_class for balance reasons
 	var/max_blood_storage = 0	//How much blood an organ stores. Base is 5 * blood_req, so the organ can survive without blood for 5 ticks beofre taking damage (+ blood supply of blood vessels)
-	var/current_blood = 100	//How much blood is currently in the organ
-	var/blood_req = 0	//How much blood an organ takes to funcion
-	var/nutriment_req = 0	//Controls passive nutriment loss
-	var/oxygen_req = 0	//If oxygen reqs are not satisfied, get debuff and brain starts taking damage
+	var/current_blood = 100		//How much blood is currently in the organ
+	var/blood_req = 0			//How much blood an organ takes to funcion
+	var/nutriment_req = 0		//Controls passive nutriment loss
+	var/oxygen_req = 0			//If oxygen reqs are not satisfied, get debuff and brain starts taking damage
+	var/breath_modulo = 0		// Used by lung/breath processes
 	var/list/prefixes = list()
 
 /obj/item/organ/internal/Initialize()

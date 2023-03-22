@@ -149,8 +149,8 @@
 
 /obj/item/modification/organ/internal/output/chem_smoke/roach
 	name = "Seuche organoid"
-	//icon
-	//icon_state
+	icon = 'icons/obj/aberrant_organs/roach_organs.dmi'
+	icon_state = "output_organoid-seuche"
 	description_info = "Causes the user to emit a gas cloud containing reagents in their blood, stomach, or an internal gas sac.\n\n\
 						Use a laser cutting tool to change the target stat."
 	use_generated_icon = FALSE

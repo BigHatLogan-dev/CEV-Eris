@@ -27,6 +27,29 @@
 /datum/design/organ/aberrant_organ/damage_response
 	build_path = /obj/item/organ/internal/scaffold/aberrant/damage_response
 
+/datum/design/organ/aberrant_organ/roach
+	build_path = /obj/item/organ/internal/scaffold/aberrant/roach
+
+/datum/design/organ/aberrant_organ/roach_seuche
+	build_path = /obj/item/organ/internal/scaffold/aberrant/roach/seuche
+
+/datum/design/organ/aberrant_organ/roach/gestrahlte
+	build_path = /obj/item/organ/internal/scaffold/aberrant/roach/gestrahlte
+
+/datum/design/organ/aberrant_organ/roach_fuhrer
+	build_path = /obj/item/organ/internal/scaffold/aberrant/roach/fuhrer
+
+/datum/design/organ/aberrant_organ/roach_kaiser
+	build_path = /obj/item/organ/internal/scaffold/aberrant/roach/kaiser
+
+/datum/design/organ/aberrant_organ/spider
+	build_path = /obj/item/organ/internal/scaffold/aberrant/spider
+
+/datum/design/organ/aberrant_organ/spider_spinneret
+	build_path = /obj/item/organ/internal/scaffold/aberrant/spider/spinneret
+
+/datum/design/organ/aberrant_organ/spider_chelicera
+	build_path = /obj/item/organ/internal/scaffold/aberrant/spider/chelicera
 
 // Mods
 /datum/design/organ/organ_mod
@@ -61,6 +84,14 @@
 	build_path = /obj/item/modification/organ/internal/parenchymal/large
 	starts_unlocked = FALSE
 
+/datum/design/organ/organ_mod/durability_roach
+	build_path = /obj/item/modification/organ/internal/stromal/durability_roach
+	starts_unlocked = FALSE
+
+/datum/design/organ/organ_mod/efficiency_roach
+	build_path = /obj/item/modification/organ/internal/stromal/efficiency_roach
+	starts_unlocked = FALSE
+
 
 // Teratomas
 /datum/design/organ/teratoma
@@ -74,6 +105,7 @@
 
 /datum/design/organ/teratoma/input/reagents_roach
 	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/input/reagents/roach
+	starts_unlocked = FALSE
 
 /datum/design/organ/teratoma/input/reagents_spider
 	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/input/reagents/spider
@@ -207,12 +239,16 @@
 	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/produce/light_antag
 	starts_unlocked = FALSE
 
+/datum/design/organ/teratoma/output/chem_smoke
+	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/output/chem_smoke
+	starts_unlocked = FALSE
+
 
 /datum/design/organ/teratoma/special
 	category = "Secondary"
 	starts_unlocked = FALSE
 
-/datum/design/organ/teratoma/special/chemical_effect
+/datum/design/organ/teratoma/special/chemical_effects
 	build_path = /obj/item/organ/internal/scaffold/aberrant/teratoma/special/chemical_effect
 
 /datum/design/organ/teratoma/special/stat_boost

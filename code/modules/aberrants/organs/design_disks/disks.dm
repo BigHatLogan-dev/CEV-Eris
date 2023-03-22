@@ -43,9 +43,7 @@
 	license = 10
 	designs = list(
 		/datum/design/organ/organ_mod/parenchymal_large,
-		/datum/design/organ/teratoma/special/chemical_effect,
 		/datum/design/organ/teratoma/special/stat_boost,
-		/datum/design/organ/teratoma/output/chemical_effects_type_2,
 		/datum/design/organ/teratoma/process/multiplier
 	)
 
