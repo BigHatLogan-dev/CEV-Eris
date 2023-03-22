@@ -104,7 +104,7 @@
 				triggered = TRUE
 
 	if(triggered)
-		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_COOLDOWN, TRUE)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
 		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
 
 
@@ -189,7 +189,7 @@
 				triggered = TRUE
 
 	if(triggered)
-		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_COOLDOWN, TRUE)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
 		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
 
 
@@ -250,16 +250,54 @@
 				triggered = TRUE
 
 	if(triggered)
-		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_COOLDOWN, TRUE)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
 		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
 
 
-/datum/component/modification/organ/output/damaging_insight_gain
-/datum/component/modification/organ/output/damaging_insight_gain/get_function_info()
-	var/description = "<span style='color:blue'>Functional information (output):</span> unknown"
+/datum/component/modification/organ/output/produce
+	adjustable = TRUE
+
+/datum/component/modification/organ/output/produce/get_function_info()
+	var/outputs
+	for(var/output in possible_outputs)
+		var/atom/movable/AM = output
+		outputs += initial(AM.name) + " ([possible_outputs[AM]]), "
+
+	outputs = copytext(outputs, 1, length(outputs) - 1)
+
+	var/description = "<span style='color:blue'>Functional information (output):</span> produces objects"
+	description += "\n<span style='color:blue'>Products (quantity):</span> [outputs]"
+
 	return description
 
-/datum/component/modification/organ/output/damaging_insight_gain/trigger(atom/movable/holder, mob/living/carbon/owner, list/input)
+/datum/component/modification/organ/output/produce/modify(obj/item/I, mob/living/user)
+	if(!LAZYLEN(output_qualities))
+		return
+
+	var/list/possibilities_by_name = list()
+
+	for(var/atom/movable/possible in possible_outputs)
+		possibilities_by_name.Insert(initial(possible.name), possible)
+
+	for(var/output in possible_outputs)
+		var/atom/movable/AM = output
+		var/name = initial(AM.name)
+		var/list/possibilities = output_qualities.Copy()
+		var/output_amount = possible_outputs[output]
+		if(LAZYLEN(possible_outputs) > 1)
+			for(var/object_path in possibilities)
+				if(output != object_path && possible_outputs.Find(object_path))
+					possibilities.Remove(object_path)
+
+		var/decision = input("Choose a product (current: [name])","Adjusting Organoid") as null|anything in possibilities_by_name
+		if(!decision)
+			continue
+
+		var/decision_path = possibilities_by_name[decision]
+		possible_outputs[possible_outputs.Find(output)] = decision_path
+		possible_outputs[decision_path] = output_amount
+
+/datum/component/modification/organ/output/produce/trigger(atom/movable/holder, mob/living/carbon/owner, list/input)
 	if(!holder || !owner || !input)
 		return
 	if(!istype(holder, /obj/item/organ/internal/scaffold))
@@ -269,109 +307,184 @@
 	var/organ_multiplier = (S.max_damage - S.damage) / S.max_damage
 	var/triggered = FALSE
 
-	if(LAZYLEN(input) && ishuman(owner))
+	if(LAZYLEN(input) && iscarbon(owner))
 		for(var/i in input)
 			var/index = input.Find(i)
-			var/is_input_valid = input[i]
+			var/is_input_valid = input[i] ? TRUE : FALSE
 			if(is_input_valid && index <= LAZYLEN(possible_outputs))
 				var/input_multiplier = input[i]
-				var/mob/living/carbon/human/H = owner
-				var/damage_type = possible_outputs[index]
-				var/damage_amount = possible_outputs[damage_type] * organ_multiplier * input_multiplier
-				H.apply_damage(damage_amount, damage_type)
-				H.adjustBrainLoss(damage_amount)		// Added brainloss because we're gaining insight and most damage is trivial anyway
-				H.sanity.give_insight(damage_amount)
+				var/object_count = round(input_multiplier * organ_multiplier)
+				var/object_path = possible_outputs[index]
+				for(var/count in 1 to object_count)
+					new object_path(get_turf(owner))
 				triggered = TRUE
 
 	if(triggered)
-		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_COOLDOWN, TRUE)
+		if(prob(50))
+			playsound(owner, 'sound/effects/squelch1.ogg', 50, 1)
+		else
+			playsound(owner, 'sound/effects/splat.ogg', 50, 1)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
 		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
 
-/datum/component/modification/organ/output/activate_organ_functions
-	var/list/active_organ_efficiency_mod = list()
-	var/active_blood_req_mod = 0
-	var/active_nutriment_req_mod = 0
-	var/active_oxygen_req_mod = 0
-	var/list/active_owner_verb_adds = list()
+/datum/component/modification/organ/output/chem_smoke
+	adjustable = TRUE
+	var/current_mode = null
+	var/list/modes = list()
+	var/datum/reagents/gas_sac
+	var/datum/effect/effect/system/smoke_spread/chem/gas_cloud
 
-	// Internal
-	// Keeps track of original values since we can't use initial() (vars aren't defined by default)
-	var/are_values_stored = FALSE
-	var/list/old_organ_efficiency_mod = list()
-	var/old_blood_req_mod = 0
-	var/old_nutriment_req_mod = 0
-	var/old_oxygen_req_mod = 0
-	var/list/old_owner_verb_adds = list()
+/datum/component/modification/organ/output/chem_smoke/Initialize(...)
+	. = ..()
+	gas_sac = new /datum/reagents(80, null)	// Null my_atom means no reactions or chem processing
+	gas_cloud = new
 
-/datum/component/modification/organ/output/activate_organ_functions/get_function_info()
-	var/description = "<span style='color:blue'>Functional information (output):</span> conditional organ functions"
-	description += "\n<span style='color:blue'>Organ tissues:</span> "
-	for(var/organ in active_organ_efficiency_mod)
-		description += "<span style='color:pink'>[organ] ([active_organ_efficiency_mod[organ]])</span>/"
-	description += "<span style='color:red'>[active_blood_req_mod]</span>/"
-	description += "<span style='color:blue'>[active_oxygen_req_mod]</span>/"
-	description += "<span style='color:orange'>[active_nutriment_req_mod]</span>"
+/datum/component/modification/organ/output/chem_smoke/get_function_info()
+	var/metabolism
+	switch(current_mode)
+		if(null)
+			metabolism = "internal gas sac"
+		if(CHEM_TOUCH)
+			metabolism = "skin"
+		if(CHEM_INGEST)
+			metabolism = "stomach"
+		if(CHEM_BLOOD)
+			metabolism = "bloodstream"
+		else
+			metabolism = "nothing"
+
+	var/description = "<span style='color:blue'>Functional information (output):</span> produces gas cloud from [metabolism]"
+
+	if(!current_mode)
+		var/outputs
+		for(var/datum/reagent/R in possible_outputs)
+			outputs += initial(R.name) + "([possible_outputs[R]]u), "
+		outputs = copytext(outputs, 1, length(outputs) - 1)
+		description +="<span style='color:blue'>Reagent(s):</span> [outputs]"
+
 	return description
 
-/datum/component/modification/organ/output/activate_organ_functions/trigger(obj/item/holder, mob/living/carbon/owner, list/input)
+/datum/component/modification/organ/output/chem_smoke/modify(obj/item/I, mob/living/user)
+	var/list/can_adjust = list("reagent source", "reagent")
+
+	var/decision_adjust = input("What do you want to adjust?","Adjusting Organoid") as null|anything in can_adjust
+	if(!decision_adjust)
+		return
+
+	var/list/adjustable_qualities = list()
+	switch(decision_adjust)
+		if("reagent source")
+			if(LAZYLEN(modes) < 2)
+				to_chat(user, SPAN_NOTICE("\The [parent] does not have any other reagent sources."))
+				return
+
+			adjustable_qualities = modes
+
+			var/decision = input("Choose a reagent source","Adjusting Organoid") as null|anything in adjustable_qualities
+			if(!decision)
+				return
+
+			current_mode = adjustable_qualities[decision]
+		if("reagent")
+			if(!LAZYLEN(output_qualities))
+				to_chat(user, SPAN_NOTICE("\The [parent] does not have any reagents to select."))
+				return
+
+			adjustable_qualities = output_qualities
+
+			var/decision = input("Choose a reagent","Adjusting Organoid") as null|anything in adjustable_qualities
+			if(!decision)
+				return
+
+			current_mode = adjustable_qualities[decision]
+
+
+/datum/component/modification/organ/output/chem_smoke/trigger(atom/movable/holder, mob/living/carbon/owner, list/input)
 	if(!holder || !owner || !input)
 		return
-	if(!ishuman(owner))
+	if(!istype(holder, /obj/item/organ/internal/scaffold))
+		return
+
+	var/obj/item/organ/internal/scaffold/S = holder
+	var/obj/item/organ/external/limb = S.parent
+	var/organ_multiplier = (S.max_damage - S.damage) / S.max_damage
+	var/datum/reagents/metabolism/RM = owner.get_metabolism_handler(current_mode)
+	var/reagent_permeability = owner.reagent_permeability()
+	var/triggered = FALSE
+
+	if(reagent_permeability < 0.10)
+		return
+
+	if(LAZYLEN(input))
+		for(var/i in input)
+			var/index = input.Find(i)
+			var/is_input_valid = input[i] ? TRUE : FALSE
+			if(is_input_valid && index <= LAZYLEN(possible_outputs))
+				var/input_multiplier = input[i] * organ_multiplier * reagent_permeability
+				var/datum/reagent/cloud_reagent = possible_outputs[index]
+				var/gas_cloud_volume = min(possible_outputs[cloud_reagent] * input_multiplier, gas_sac.maximum_volume)	// Every 10 units is 3 tiles of range
+
+				if(RM)
+					RM.trans_to_holder(gas_sac, gas_cloud_volume, copy = FALSE)
+				else
+					gas_sac.add_reagent(initial(cloud_reagent.id), gas_cloud_volume)
+
+				if(gas_sac.total_volume)
+					var/location = get_turf(owner)
+					gas_cloud.attach(location)
+					gas_cloud.set_up(gas_sac, gas_cloud_volume, 0, location)
+					owner.visible_message(SPAN_DANGER("\the [owner] exhales strange vapors!"))
+					addtimer(CALLBACK(src, .proc/smoke_trigger), 1, TIMER_STOPPABLE)
+					triggered = TRUE
+
+	if(triggered)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
+
+/datum/component/modification/organ/output/chem_smoke/proc/smoke_trigger()
+	if(gas_cloud)
+		gas_cloud.start()
+		gas_sac.clear_reagents()
+
+/*	Unused and incomplete. Leaving this here if anyone decides to make use of it.
+/datum/component/modification/organ/output/research
+	var/charges				// How many times this should trigger before being vomited out
+
+/datum/component/modification/organ/output/research/get_function_info()
+	var/description = "<span style='color:blue'>Functional information (output):</span> harvests visceral research data from parent limb"
+	description += "\n<span style='color:blue'>Harvest cycles remaining:</span> [charges ? charges : "none"]"
+
+	return description
+
+/datum/component/modification/organ/output/research/trigger(atom/movable/holder, mob/living/carbon/owner, list/input)
+	if(!holder || !owner || !input)
 		return
 	if(!istype(holder, /obj/item/organ/internal/scaffold))
 		return
 
 	var/obj/item/organ/internal/scaffold/S = holder
 	var/organ_multiplier = (S.max_damage - S.damage) / S.max_damage
-	var/mob/living/carbon/human/H = owner
+	var/triggered = FALSE
 
-	if(!are_values_stored)
-		old_organ_efficiency_mod = organ_efficiency_mod
-		old_blood_req_mod = blood_req_mod
-		old_nutriment_req_mod = nutriment_req_mod
-		old_oxygen_req_mod = oxygen_req_mod
-		old_owner_verb_adds = owner_verb_adds
-		active_organ_efficiency_mod |= old_organ_efficiency_mod
-		active_blood_req_mod += old_blood_req_mod
-		active_nutriment_req_mod += old_nutriment_req_mod
-		active_oxygen_req_mod += old_oxygen_req_mod
-		active_owner_verb_adds |= old_owner_verb_adds
-		are_values_stored = TRUE
+	if(ishuman(owner))
+		if(LAZYLEN(input))
+			for(var/i in input)
+				var/index = input.Find(i)
+				var/is_input_valid = input[i] ? TRUE : FALSE
+				if(is_input_valid && index <= LAZYLEN(possible_outputs))
+					var/input_multiplier = input[i]
+					// research SS
+					triggered = TRUE
 
-	if(LAZYLEN(input))
-		for(var/i in input)
-			var/is_input_valid = input[i]
-			if(is_input_valid)
-				var/input_multiplier = input[i]
-				organ_efficiency_mod = active_organ_efficiency_mod.Copy()
-				for(var/process in organ_efficiency_mod)
-					organ_efficiency_mod[process] *= organ_multiplier * input_multiplier
-				blood_req_mod = active_blood_req_mod * organ_multiplier * input_multiplier
-				nutriment_req_mod = active_nutriment_req_mod * organ_multiplier * input_multiplier
-				oxygen_req_mod = active_oxygen_req_mod * organ_multiplier * input_multiplier
-				owner_verb_adds = active_owner_verb_adds.Copy()
+		if(charges)
+			--charges
+		else
+			var/mob/living/carbon/human/H = owner
+			H.vomit(TRUE)
+			S.removed()
+			triggered = FALSE
 
-				if(LAZYLEN(active_organ_efficiency_mod))
-					for(var/process in active_organ_efficiency_mod)
-						if(!islist(H.internal_organs_by_efficiency[process]))
-							H.internal_organs_by_efficiency[process] = list()
-						H.internal_organs_by_efficiency[process] |= holder
-
-				holder.refresh_upgrades()
-				SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_COOLDOWN, TRUE)
-				SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
-				return TRUE
-
-	organ_efficiency_mod = old_organ_efficiency_mod
-	blood_req_mod = old_blood_req_mod
-	nutriment_req_mod = old_nutriment_req_mod
-	oxygen_req_mod = old_oxygen_req_mod
-	owner_verb_adds = old_owner_verb_adds
-
-	if(LAZYLEN(active_organ_efficiency_mod) && !LAZYLEN(organ_efficiency_mod))
-		for(var/process in active_organ_efficiency_mod)
-			if(!islist(H.internal_organs_by_efficiency[process]))
-				H.internal_organs_by_efficiency[process] = list()
-			H.internal_organs_by_efficiency[process] -= holder
-
-	holder.refresh_upgrades()
+	if(triggered)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
+*/

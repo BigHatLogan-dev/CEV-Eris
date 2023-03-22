@@ -17,7 +17,7 @@
 		return FALSE
 
 	if(limb && C)
-		var/organ_size_delta = (organ.specific_organ_size * (1 - C.specific_organ_size_multiplier) + C.specific_organ_size_mod) - organ.specific_organ_size
+		var/organ_size_delta = ((organ.specific_organ_size + C.specific_organ_size_mod) * (1 + C.specific_organ_size_multiplier) + C.specific_organ_size_flat_mod) - organ.specific_organ_size
 		if(limb.get_total_occupied_volume() + organ_size_delta > limb.max_volume)
 			to_chat(user, SPAN_WARNING("There isn't enough space in \the [limb] to apply \the [mod]."))
 			return FALSE

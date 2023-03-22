@@ -1,4 +1,5 @@
 /datum/reagent/stim
+	name = "stimulant"
 	scannable = 1
 	metabolism = REM/4
 	constant_metabolism = TRUE

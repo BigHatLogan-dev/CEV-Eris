@@ -40,6 +40,13 @@ COMSIG_ABERRANT_SECONDARY
 	var/mod_stat = STAT_COG
 	var/mod_sound = WORKSOUND_HONK
 
+	var/examine_msg = null	// Examine message for the mod, not the item it is attached to
+	var/examine_stat = STAT_COG
+	var/examine_difficulty = STAT_LEVEL_BASIC
+	var/examine_stat_secondary = null
+	var/examine_difficulty_secondary = STAT_LEVEL_BASIC
+
+	// These should be flags used by a single var
 	var/adjustable = FALSE
 	var/destroy_on_removal = FALSE 
 	var/removable = TRUE
@@ -48,14 +55,8 @@ COMSIG_ABERRANT_SECONDARY
 	var/list/apply_to_types = list()  		// The mod can be applied to an item of these types
 	var/list/blacklisted_types = list()		// The mod can not be applied to an item of these types
 	var/exclusive_type						// Use if children of a mod path should be checked
-
-	var/examine_msg = null	// Examine message for the mod, not the item it is attached to
-
-	// Stat-gated details
-	var/examine_stat = STAT_COG
-	var/examine_difficulty = STAT_LEVEL_BASIC
-	var/examine_stat_secondary = null
-	var/examine_difficulty_secondary = STAT_LEVEL_BASIC
+	var/list/apply_to_natures = list()		// The mod can be applied to items of these natures (for organs: organic, assisted, silicon). Must be used in a child proc.
+	var/multiples_allowed = FALSE
 
 	// Trigger
 	var/trigger_signal
@@ -78,26 +79,26 @@ COMSIG_ABERRANT_SECONDARY
 
 /datum/component/modification/proc/can_apply(atom/A, mob/living/user)
 	if(isitem(A))
-		var/obj/item/I = A
-		//No using multiples of the same upgrade
-		for (var/obj/item/item in I.item_upgrades)
-			if(item.type == parent.type || (exclusive_type && istype(item, exclusive_type)))
-				if(user)
-					to_chat(user, SPAN_WARNING("A modification of this type is already attached!"))
-				return FALSE
+		if(!multiples_allowed)
+			var/obj/item/I = A
+			//No using multiples of the same upgrade
+			for (var/obj/item/item in I.item_upgrades)
+				if(item.type == parent.type || (exclusive_type && istype(item, exclusive_type)))
+					if(user)
+						to_chat(user, SPAN_WARNING("A modification of this type is already attached!"))
+					return FALSE
 
-	if(istype(A, /obj/item))
 		return check_item(A, user)
 
 	return FALSE
 
 /datum/component/modification/proc/check_item(obj/item/I, mob/living/user)
-	if(I.item_upgrades.len >= I.max_upgrades)
+	if(LAZYLEN(I.item_upgrades) >= I.max_upgrades)
 		if(user)
 			to_chat(user, SPAN_WARNING("\The [I] can not fit anymore modifications!"))
 		return FALSE
 
-	if(apply_to_types.len)
+	if(LAZYLEN(apply_to_types))
 		var/type_match = FALSE
 		for(var/path in apply_to_types)
 			if(istype(I, path))
@@ -109,7 +110,7 @@ COMSIG_ABERRANT_SECONDARY
 				to_chat(user, SPAN_WARNING("\The [I] can not accept \the [parent]!"))
 			return FALSE
 
-	if(blacklisted_types.len)
+	if(LAZYLEN(blacklisted_types))
 		for(var/path in blacklisted_types)
 			if(istype(I, path))
 				if(user)
@@ -131,7 +132,9 @@ COMSIG_ABERRANT_SECONDARY
 	I.forceMove(A)	// May want to change this to I.loc = A or something similar. forceMove() calls all Crossed() procs between the src and the target.
 	A.item_upgrades.Add(I)
 	RegisterSignal(A, trigger_signal, PROC_REF(trigger))
-	RegisterSignal(A, COMSIG_APPVAL, PROC_REF(apply_values))
+	RegisterSignal(A, COMSIG_APPVAL, PROC_REF(apply_mod_values))
+	RegisterSignal(A, COMSIG_APPVAL_MULT, PROC_REF(apply_mult_values))
+	RegisterSignal(A, COMSIG_APPVAL_FLAT, PROC_REF(apply_flat_values))
 
 	var/datum/component/modification_removal/MR = A.AddComponent(/datum/component/modification_removal)
 	MR.removal_tool_quality = removal_tool_quality
@@ -147,12 +150,13 @@ COMSIG_ABERRANT_SECONDARY
 		modify(I, user)
 
 /datum/component/modification/proc/modify(obj/item/I, mob/living/user)
+	to_chat(user, SPAN_NOTICE("There is nothing to adjust in \the [parent]."))
 	return TRUE
 
 /datum/component/modification/proc/trigger(obj/item/I, mob/living/user)
 	return TRUE
 
-/datum/component/modification/proc/apply_values(atom/holder)
+/datum/component/modification/proc/apply_mod_values(atom/holder)
 	SIGNAL_HANDLER
 	ASSERT(holder)
 	if(new_name)
@@ -163,6 +167,14 @@ COMSIG_ABERRANT_SECONDARY
 		holder.desc = new_desc
 	if(new_color)
 		holder.color = new_color
+	return TRUE
+
+/datum/component/modification/proc/apply_mult_values(atom/holder)
+	ASSERT(holder)
+	return TRUE
+
+/datum/component/modification/proc/apply_flat_values(atom/holder)
+	ASSERT(holder)
 	return TRUE
 
 /datum/component/modification/proc/on_examine(mob/user)
@@ -189,11 +201,15 @@ COMSIG_ABERRANT_SECONDARY
 	if(destroy_on_removal)
 		UnregisterSignal(I, trigger_signal)
 		UnregisterSignal(I, COMSIG_APPVAL)
+		UnregisterSignal(I, COMSIG_APPVAL_MULT)
+		UnregisterSignal(I, COMSIG_APPVAL_FLAT)
 		qdel(P)
 		return
 	P.forceMove(get_turf(I))
 	UnregisterSignal(I, trigger_signal)
 	UnregisterSignal(I, COMSIG_APPVAL)
+	UnregisterSignal(I, COMSIG_APPVAL_MULT)
+	UnregisterSignal(I, COMSIG_APPVAL_FLAT)
 
 /datum/component/modification/UnregisterFromParent()
 	UnregisterSignal(parent, COMSIG_IATTACK)
@@ -243,6 +259,7 @@ COMSIG_ABERRANT_SECONDARY
 					to_chat(user, SPAN_NOTICE("You successfully extract \the [toremove] while leaving it intact."))
 				SEND_SIGNAL_OLD(toremove, COMSIG_REMOVE, upgrade_loc)
 				upgrade_loc.refresh_upgrades()
+				user.update_action_buttons()
 				return TRUE
 			else
 				//You failed the check, lets see what happens

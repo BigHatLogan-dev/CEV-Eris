@@ -81,11 +81,26 @@
 
 /obj/machinery/sleeper/sarcophagus/hive
 	rarity_value = 60
-	accompanying_loot = /obj/item/storage/freezer/medical/contains_teratomas
 
 /obj/machinery/sleeper/sarcophagus/hive/Initialize()
 	. = ..()
 	horror_occupant = pick(subtypesof(/mob/living/simple_animal/hostile/hivemind))
+	update_icon()
+
+/obj/machinery/sleeper/sarcophagus/roach
+	rarity_value = 20
+
+/obj/machinery/sleeper/sarcophagus/roach/Initialize()
+	. = ..()
+	horror_occupant = pick(typesof(/mob/living/carbon/superior_animal/roach))
+	update_icon()
+
+/obj/machinery/sleeper/sarcophagus/spider
+	rarity_value = 30
+
+/obj/machinery/sleeper/sarcophagus/spider/Initialize()
+	. = ..()
+	horror_occupant = pick(typesof(/mob/living/carbon/superior_animal/giant_spider))
 	update_icon()
 
 // To be placed on the map
@@ -98,8 +113,9 @@
 /obj/machinery/sleeper/sarcophagus/random/Initialize()
 	. = ..()
 	if(prob(50))
-		horror_occupant = pick(subtypesof(/mob/living/simple_animal/hostile/hivemind))
-		accompanying_loot = /obj/item/storage/freezer/medical/contains_teratomas
+		horror_occupant = pick(subtypesof(/mob/living/simple_animal/hostile/hivemind) +\
+							typesof(/mob/living/carbon/superior_animal/roach) +\
+							typesof(/mob/living/carbon/superior_animal/giant_spider))
 	else
 		horror_occupant = null
 		desc = "A fancy bed with built-in injectors, a dialysis machine, and a limited health scanner."

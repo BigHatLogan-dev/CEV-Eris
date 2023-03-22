@@ -215,6 +215,7 @@
 #define SPECIES_SKELETON        "Skeleton"
 
 #define RANDOM_BLOOD_TYPE pick(4;"O-", 36;"O+", 3;"A-", 28;"A+", 1;"B-", 20;"B+", 1;"AB-", 5;"AB+")
+#define ROACH_BLOOD_TYPE "Ö~"
 
 #define NECROZTIME 	(15 MINUTES)
 

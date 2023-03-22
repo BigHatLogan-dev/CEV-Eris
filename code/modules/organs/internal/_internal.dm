@@ -387,7 +387,6 @@
 	unique_tag = initial(unique_tag)
 	specific_organ_size = initial(specific_organ_size)
 	max_blood_storage = initial(max_blood_storage)
-	current_blood = initial(current_blood)
 	blood_req = initial(blood_req)
 	nutriment_req = initial(nutriment_req)
 	oxygen_req = initial(oxygen_req)
@@ -397,6 +396,8 @@
 	SEND_SIGNAL(src, COMSIG_IWOUND_EFFECTS)
 	SEND_SIGNAL(src, COMSIG_IWOUND_LIMB_EFFECTS)
 	SEND_SIGNAL(src, COMSIG_APPVAL)
+	SEND_SIGNAL(src, COMSIG_APPVAL_MULT)
+	SEND_SIGNAL(src, COMSIG_APPVAL_FLAT)
 	SEND_SIGNAL(src, COMSIG_IWOUND_FLAGS_ADD)
 
 	refresh_damage()

@@ -25,7 +25,7 @@
 	)
 
 	special_actions = list(
-		list("action" = "rip", "name" = "Rip OMG! designs", "icon" = "document")
+		list("action" = "rip", "name" = "Rip Organ Designs", "icon" = "document")
 	)
 
 	var/datum/research/files
@@ -52,7 +52,8 @@
 /obj/machinery/autolathe/organ_fabricator/proc/rip_disk()
 	if(!disk)
 		return
-	if(!istype(disk, /obj/item/computer_hardware/hard_drive/portable/design/omg))
+
+	if(!istype(disk, /obj/item/computer_hardware/hard_drive/portable/design/omg) || !istype(disk, /obj/item/computer_hardware/hard_drive/portable/design/surgery))
 		audible_message(SPAN_WARNING("Invalid disk."))
 		return
 
