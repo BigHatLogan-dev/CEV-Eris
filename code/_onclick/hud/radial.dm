@@ -266,17 +266,17 @@ GLOBAL_LIST_EMPTY(radial_menus)
 		current_user.images -= menu_holder
 
 /datum/radial_menu/proc/wait(atom/user, atom/anchor, require_near = FALSE)
-	while (current_user && !finished && !selected_choice)
-		if(need_in_screen && !(anchor in user.contents))
+	if(need_in_screen && !(anchor in user.contents))
+		return
+	if(require_near && !in_range(anchor, user))
+		return
+	if(custom_check_callback && next_check < world.time)
+		if(!custom_check_callback.Invoke())
 			return
-		if(require_near && !in_range(anchor, user))
-			return
-		if(custom_check_callback && next_check < world.time)
-			if(!custom_check_callback.Invoke())
-				return
-			else
-				next_check = world.time + check_delay
-		stoplag(1)
+		else
+			next_check = world.time + check_delay
+	if(current_user && !finished && !selected_choice)
+		addtimer(CALLBACK(src, PROC_REF(wait)), 1)
 
 /datum/radial_menu/Destroy()
 	Reset()
