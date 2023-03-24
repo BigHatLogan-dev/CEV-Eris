@@ -312,7 +312,7 @@
 /datum/component/modification/organ/deployable
 	exclusive_type = /obj/item/modification/organ/internal/deployable
 	somatic = TRUE
-	var/obj/stored_object
+	var/obj/item/stored_object
 	var/stored_type
 
 /datum/component/modification/organ/deployable/apply(obj/item/organ/O, mob/living/user)
