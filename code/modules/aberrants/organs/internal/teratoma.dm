@@ -280,7 +280,7 @@
 						Membrane information:\n\
 						Produces a hormone when the primary function triggers."
 	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/chemical_effect
-	special_info = TYPE_1_HORMONES
+	special_info = TYPE_1_HORMONES + TYPE_2_HORMONES
 
 /obj/item/organ/internal/scaffold/aberrant/teratoma/special/stat_boost
 	name = "pygmy intracrinal teratoma"

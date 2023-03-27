@@ -70,4 +70,4 @@
 	input_mode = CHEM_BLOOD
 	output_pool = list(STAT_VIG)
 	output_info = list(15)
-	special_info = list(/obj/item/gun/matter/regenerating/gestrahlte_gland)	// Should be spider gun
+	special_info = list(/obj/item/tool/armblade/jorogumo)

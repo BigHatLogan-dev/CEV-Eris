@@ -117,7 +117,6 @@
 
 #define DISGORGER_RESEARCH_LIST list(\
 	/datum/design/organ/teratoma/input/damage_basic,\
-	/datum/design/organ/scaffold/large,\
 	/datum/design/organ/teratoma/special/stat_boost,\
 	/datum/design/organ/teratoma/special/symbiotic_parasite,\
 	/datum/design/organ/teratoma/process/cooldown/long,\
@@ -126,24 +125,17 @@
 	/datum/design/organ/teratoma/output/reagents_blood_dispenser_base,\
 	/datum/design/organ/teratoma/output/produce,\
 	/datum/design/organ/teratoma/input/damage_all,\
-	/datum/design/organ/organ_mod/parenchymal_large,\
 	/datum/design/organ/teratoma/special/chemical_effects,\
 	/datum/design/organ/teratoma/special/symbiotic_commensal,\
 	/datum/design/organ/teratoma/process/cooldown,\
 	/datum/design/organ/teratoma/process/multiplier,\
 	/datum/design/organ/teratoma/output/reagents_blood_dispenser_one,\
 	/datum/design/organ/teratoma/output/stat_boost,\
-	/datum/design/organ/teratoma/output/chem_smoke,\
-	/datum/design/organ/teratoma/output/produce_light_antag,\
 	/datum/design/organ/teratoma/special/symbiotic_mutual,\
+	/datum/design/organ/scaffold/large,\
 	/datum/design/organ/teratoma/process/cooldown/negative,\
 	/datum/design/organ/teratoma/process/multiplier/negative_low,\
 	/datum/design/organ/teratoma/process/multiplier/negative,\
 	/datum/design/organ/teratoma/process/multiplier/high,\
 	/datum/design/organ/teratoma/output/reagents_blood_dispenser_two\
-	)
-
-#define DISGORGER_INSPIRATION_LIST list(\
-	/datum/design/organ/organ_mod/durability_roach,\
-	/datum/design/organ/organ_mod/efficiency_roach\
 	)

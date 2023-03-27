@@ -9,7 +9,7 @@
 	description_info = "Maps inputs to outputs. Works for any number of inputs and outputs.\n\n\
 						Use a laser cutting tool to modify the organ efficiency."
 
-/obj/item/modification/organ/internal/process/map/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = 0.10)
+/obj/item/modification/organ/internal/process/map/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = null)
 	AddComponent(/datum/component/modification/organ/process/map)
 	..()
 
@@ -19,7 +19,7 @@
 	description_info = "Maps inputs to outputs. Works for any number of inputs and outputs.\n\n\
 						Use a laser cutting tool to modify the organ efficiency."
 
-/obj/item/modification/organ/internal/process/cooldown/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = 0.10, list/process_info)
+/obj/item/modification/organ/internal/process/cooldown/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = null, list/process_info)
 	var/datum/component/modification/organ/process/map/P = AddComponent(/datum/component/modification/organ/process/map)
 	P.aberrant_cooldown_time_mod = LAZYLEN(process_info) ? process_info[1] : STANDARD_ABERRANT_COOLDOWN
 	..()
@@ -30,7 +30,7 @@
 	description_info = "Maps inputs to outputs. Increases output magnitude.\n\n\
 						Use a laser cutting tool to modify the organ efficiency."
 
-/obj/item/modification/organ/internal/process/multiplier/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = 0.10, list/process_info)
+/obj/item/modification/organ/internal/process/multiplier/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = null, list/process_info)
 	var/datum/component/modification/organ/process/multiplier/P = AddComponent(/datum/component/modification/organ/process/multiplier)
 
 	var/multiplier = LAZYLEN(process_info) ? process_info[1] : 0.20

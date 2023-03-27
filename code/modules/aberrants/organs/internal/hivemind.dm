@@ -74,7 +74,7 @@
 /obj/item/organ/internal/scaffold/aberrant/hivemind/kidney
 	name = "hivemind-assisted kidney"
 	icon_state = "kidney_hivemind"
-	organ_efficiency = list(OP_KIDNEYS = 62.5)
+	organ_efficiency = list(OP_KIDNEYS = 87.5)
 	parent_organ_base = BP_GROIN
 	specific_organ_size = 1
 	blood_req = 0
