@@ -136,8 +136,8 @@
 	if(new_color && !using_generated_color)
 		holder.color = new_color
 
-	for(var/owner_verb in owner_verb_adds)
-		holder.owner_verbs |= owner_verb
+	if(LAZYLEN(owner_verb_adds))
+		holder.owner_verbs |= owner_verb_adds
 	
 	if(somatic)
 		holder.action_button_name = holder.name ? "Activate [holder.name]" : somatic_action_name
@@ -328,4 +328,4 @@
 			return
 
 	if(O && O.owner)
-		SEND_SIGNAL(src, COMSIG_ABERRANT_INPUT_VERB, src, O.owner)
+		SEND_SIGNAL(src, COMSIG_ABERRANT_INPUT_VERB, O.owner)

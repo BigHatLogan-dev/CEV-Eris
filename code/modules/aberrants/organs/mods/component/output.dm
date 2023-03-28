@@ -105,7 +105,7 @@
 
 	if(triggered)
 		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
-		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_SECONDARY, owner)
 
 
 /datum/component/modification/organ/output/chemical_effects	// More organ-like than producing reagents
@@ -190,7 +190,7 @@
 
 	if(triggered)
 		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
-		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_SECONDARY, owner)
 
 
 /datum/component/modification/organ/output/stat_boost
@@ -251,7 +251,7 @@
 
 	if(triggered)
 		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
-		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_SECONDARY, owner)
 
 
 /datum/component/modification/organ/output/produce
@@ -325,7 +325,7 @@
 		else
 			playsound(owner, 'sound/effects/splat.ogg', 50, 1)
 		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
-		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_SECONDARY, owner)
 
 /datum/component/modification/organ/output/chem_smoke
 	adjustable = TRUE
@@ -439,7 +439,7 @@
 
 	if(triggered)
 		SEND_SIGNAL(holder, COMSIG_ABERRANT_COOLDOWN)
-		SEND_SIGNAL(holder, COMSIG_ABERRANT_SECONDARY, holder, owner)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_SECONDARY, owner)
 
 /datum/component/modification/organ/output/chem_smoke/proc/smoke_trigger()
 	if(gas_cloud)

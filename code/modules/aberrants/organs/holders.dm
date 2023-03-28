@@ -6,7 +6,7 @@
 	description_info = "A functionless organ with three slots for organ mods or organoids. Best used with an input, process, and output organoid to create a modular organ."
 	price_tag = 100
 	organ_efficiency = list()
-	specific_organ_size = 0.01
+	specific_organ_size = 0.1
 	origin_tech = list(TECH_BIO = 3)	// One level higher than regular organs
 	rarity_value = 60
 	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN
@@ -254,7 +254,7 @@
 	rarity_value = 80
 	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN_RARE
 	max_upgrades = 4
-	specific_organ_size = 0.02
+	specific_organ_size = 0.2
 
 /obj/item/organ/internal/scaffold/aberrant
 	name = "aberrant organ"

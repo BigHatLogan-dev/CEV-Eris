@@ -56,7 +56,7 @@
 		for(var/element in input)
 			input[element] *= 1 + multiplier
 
-		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_OUTPUT, holder, owner, input)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_OUTPUT, owner, input)
 
 
 /datum/component/modification/organ/process/map
@@ -103,7 +103,7 @@
 		input = shuffled_input
 
 	if(input.len)
-		SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_OUTPUT, holder, owner, input)
+		SEND_SIGNAL(holder, COMSIG_ABERRANT_OUTPUT, owner, input)
 
 
 /*	Multi-input aberrant organs are still supported, but not present in-game

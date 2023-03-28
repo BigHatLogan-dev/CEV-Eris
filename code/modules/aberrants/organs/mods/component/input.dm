@@ -103,7 +103,7 @@
 			input |= reagent_path
 			input[reagent_path] |= threshold_met
 
-	SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_PROCESS, holder, owner, input)
+	SEND_SIGNAL(holder, COMSIG_ABERRANT_PROCESS, owner, input)
 
 
 /datum/component/modification/organ/input/damage
@@ -190,7 +190,7 @@
 		input += desired_damage_type
 		input[desired_damage_type] = threshold_met
 
-	SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_PROCESS, holder, owner, input)
+	SEND_SIGNAL(holder, COMSIG_ABERRANT_PROCESS, owner, input)
 
 /datum/component/modification/organ/input/consume
 	adjustable = TRUE
@@ -233,7 +233,7 @@
 /datum/component/modification/organ/input/consume/trigger(atom/movable/holder, mob/living/carbon/human/owner)
 	if(!holder || !owner)
 		return
-	if(!owner.check_mouth_coverage())
+	if(owner.check_mouth_coverage())
 		return
 	if(!istype(holder, /obj/item/organ/internal/scaffold))
 		return
@@ -289,7 +289,7 @@
 		input += digestable
 		input[digestable] = (nutrition_supplied > 0) ? TRUE : FALSE
 
-	SEND_SIGNAL(holder, COMSIG_ABERRANT_PROCESS, holder, owner, input)
+	SEND_SIGNAL(holder, COMSIG_ABERRANT_PROCESS, owner, input)
 
 
 // =================================================
@@ -410,7 +410,7 @@
 		input += power_source
 		input[power_source] = energy_supplied ? TRUE : FALSE
 
-	SEND_SIGNAL_OLD(holder, COMSIG_ABERRANT_PROCESS, holder, owner, input)
+	SEND_SIGNAL(holder, COMSIG_ABERRANT_PROCESS, owner, input)
 
 // =================================================
 // ================     ROBOTIC     ================

@@ -43,7 +43,7 @@
 	UnregisterSignal(src, COMSIG_IORGAN_ADD_WOUND)
 	UnregisterSignal(src, COMSIG_IORGAN_REMOVE_WOUND)
 	UnregisterSignal(src, COMSIG_IORGAN_REFRESH_SELF)
-	..()
+	return ..()
 
 /obj/item/organ/internal/removed()
 	UnregisterSignal(parent, COMSIG_IORGAN_WOUND_COUNT)
@@ -382,7 +382,7 @@
 	min_bruised_damage = initial(min_bruised_damage)
 	min_broken_damage = initial(min_broken_damage)
 	max_damage = initial(max_damage)
-	owner_verbs = initial(owner_verbs)
+	owner_verbs = initial_owner_verbs.Copy()
 	organ_efficiency = initial_organ_efficiency.Copy()
 	scanner_hidden = initial(scanner_hidden)
 	unique_tag = initial(unique_tag)

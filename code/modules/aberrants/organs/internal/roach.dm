@@ -82,7 +82,7 @@
 	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/stat_boost
 
 	output_pool = list(/datum/reagent/toxin/blattedin)
-	output_info = REAGENTS_ROACH
+	output_info = list(10)
 	special_info = list(STAT_TGH, 15)
 
 /obj/item/organ/internal/scaffold/aberrant/roach/gestrahlte
