@@ -139,3 +139,53 @@
 	/datum/design/organ/teratoma/process/multiplier/high,\
 	/datum/design/organ/teratoma/output/reagents_blood_dispenser_two\
 	)
+
+// Move to DEFINES -> items.dm when merged with item_upgrades
+
+#define ATOM_NAME
+#define ATOM_PREFIX
+#define ATOM_DESC
+#define ATOM_COLOR
+
+// Organs
+
+#define ORGAN_NATURE
+#define ORGAN_MAX_UPGRADES
+#define ORGAN_SCANNER_HIDDEN
+
+// Additive adjustments, affected by multiplicative adjustments
+#define ORGAN_EFFICIENCY_NEW_BASE
+#define ORGAN_SPECIFIC_SIZE_BASE
+#define ORGAN_MAX_BLOOD_STORAGE_BASE
+#define ORGAN_BLOOD_REQ_BASE
+#define ORGAN_NUTRIMENT_REQ_BASE
+#define ORGAN_OXYGEN_REQ_BASE
+#define ORGAN_MIN_BRUISED_DAMAGE_BASE
+#define ORGAN_MIN_BROKEN_DAMAGE_BASE
+#define ORGAN_MAX_DAMAGE_BASE
+
+// Multiplicative adjustments
+#define ORGAN_EFFICIENCY_MULT
+#define ORGAN_SPECIFIC_SIZE_MULT
+#define ORGAN_MAX_BLOOD_STORAGE_MULT
+#define ORGAN_BLOOD_REQ_MULT
+#define ORGAN_NUTRIMENT_REQ_MULT
+#define ORGAN_OXYGEN_REQ_MULT
+#define ORGAN_MIN_BRUISED_DAMAGE_MULT
+#define ORGAN_MIN_BROKEN_DAMAGE_MULT
+#define ORGAN_MAX_DAMAGE_MULT
+
+// Additive adjustments, NOT affected by multiplicative adjustments
+#define ORGAN_EFFICIENCY_NEW_MOD
+#define ORGAN_SPECIFIC_SIZE_MOD
+#define ORGAN_MAX_BLOOD_STORAGE_MOD
+#define ORGAN_BLOOD_REQ_MOD
+#define ORGAN_NUTRIMENT_REQ_MOD
+#define ORGAN_OXYGEN_REQ_MOD
+#define ORGAN_MIN_BRUISED_DAMAGE_MOD
+#define ORGAN_MIN_BROKEN_DAMAGE_MOD
+#define ORGAN_MAX_DAMAGE_MOD
+
+// Aberrant organs
+
+#define ORGAN_ABERRANT_COOLDOWN

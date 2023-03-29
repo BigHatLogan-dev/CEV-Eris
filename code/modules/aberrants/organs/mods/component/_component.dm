@@ -37,6 +37,8 @@
 	var/somatic_hands_free = FALSE
 	var/list/owner_verb_adds = list()
 
+	var/list/organ_upgrades = list()
+
 	// Additive adjustments
 	var/list/organ_efficiency_mod = list()
 	var/specific_organ_size_mod = null
