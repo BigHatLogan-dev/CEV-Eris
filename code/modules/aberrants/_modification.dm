@@ -53,19 +53,18 @@ COMSIG_ABERRANT_SECONDARY
 	var/breakable = FALSE //Some mods are meant to be tamper-resistant and should be removed only in a hard way
 
 	var/list/apply_to_types = list()  		// The mod can be applied to an item of these types
-	var/list/blacklisted_types = list()		// The mod can not be applied to an item of these types
 	var/exclusive_type						// Use if children of a mod path should be checked
-	var/list/apply_to_natures = list()		// The mod can be applied to items of these natures (for organs: organic, assisted, silicon). Must be used in a child proc.
+	/// Replaces required_qualities in item_upgrades
+	var/list/apply_to_qualities = list()	// The mod can be applied to items of these qualities (for organs: organic, assisted, silicon). Must be used in a child proc.
+	/// Replaces negative_qualities in item_upgrades
+	var/list/blacklisted_qualities = list()	// The mod can NOT be applied to items of these qualities (for organs: organic, assisted, silicon). Must be used in a child proc.
 	var/multiples_allowed = FALSE
 
 	// Trigger
 	var/trigger_signal
 
 	// Applied to holder object
-	var/prefix
-	var/new_name
-	var/new_desc
-	var/new_color
+	var/list/modifications = list()
 
 /datum/component/modification/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_IATTACK, PROC_REF(attempt_install))
@@ -109,13 +108,6 @@ COMSIG_ABERRANT_SECONDARY
 			if(user)
 				to_chat(user, SPAN_WARNING("\The [I] can not accept \the [parent]!"))
 			return FALSE
-
-	if(LAZYLEN(blacklisted_types))
-		for(var/path in blacklisted_types)
-			if(istype(I, path))
-				if(user)
-					to_chat(user, SPAN_WARNING("\The [I] can not accept \the [parent]!"))
-				return FALSE
 	
 	return TRUE
 
@@ -132,9 +124,9 @@ COMSIG_ABERRANT_SECONDARY
 	I.forceMove(A)	// May want to change this to I.loc = A or something similar. forceMove() calls all Crossed() procs between the src and the target.
 	A.item_upgrades.Add(I)
 	RegisterSignal(A, trigger_signal, PROC_REF(trigger))
-	RegisterSignal(A, COMSIG_APPVAL, PROC_REF(apply_mod_values))
+	RegisterSignal(A, COMSIG_APPVAL, PROC_REF(apply_base_values))
 	RegisterSignal(A, COMSIG_APPVAL_MULT, PROC_REF(apply_mult_values))
-	RegisterSignal(A, COMSIG_APPVAL_FLAT, PROC_REF(apply_flat_values))
+	RegisterSignal(A, COMSIG_APPVAL_FLAT, PROC_REF(apply_mod_values))
 
 	var/datum/component/modification_removal/MR = A.AddComponent(/datum/component/modification_removal)
 	MR.removal_tool_quality = removal_tool_quality
@@ -156,9 +148,15 @@ COMSIG_ABERRANT_SECONDARY
 /datum/component/modification/proc/trigger(obj/item/I, mob/living/user)
 	return TRUE
 
-/datum/component/modification/proc/apply_mod_values(atom/holder)
+/datum/component/modification/proc/apply_base_values(atom/holder)
 	SIGNAL_HANDLER
 	ASSERT(holder)
+
+	var/new_name = modifications[ATOM_NAME]
+	var/prefix = modifications[ATOM_PREFIX]
+	var/new_desc = modifications[ATOM_DESC]
+	var/new_color = modifications[ATOM_COLOR]
+
 	if(new_name)
 		holder.name = new_name
 	if(prefix)
@@ -167,13 +165,14 @@ COMSIG_ABERRANT_SECONDARY
 		holder.desc = new_desc
 	if(new_color)
 		holder.color = new_color
+
 	return TRUE
 
 /datum/component/modification/proc/apply_mult_values(atom/holder)
 	ASSERT(holder)
 	return TRUE
 
-/datum/component/modification/proc/apply_flat_values(atom/holder)
+/datum/component/modification/proc/apply_mod_values(atom/holder)
 	ASSERT(holder)
 	return TRUE
 

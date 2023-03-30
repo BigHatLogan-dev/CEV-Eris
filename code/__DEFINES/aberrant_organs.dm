@@ -1,6 +1,6 @@
 // ORGAN GENERATION
 #define ALL_STANDARD_ORGAN_EFFICIENCIES list(OP_HEART, OP_LUNGS, OP_LIVER, OP_KIDNEYS, OP_STOMACH, OP_BONE, OP_MUSCLE, OP_NERVE, OP_BLOOD_VESSEL)
-#define SYMBIOTIC_ORGAN_EFFICIENCIES list(OP_LIVER, OP_STOMACH, OP_BONE, OP_MUSCLE, OP_NERVE, OP_BLOOD_VESSEL)
+#define SYMBIOTIC_ORGAN_EFFICIENCIES list(OP_LIVER, OP_STOMACH, OP_KIDNEYS, OP_BONE, OP_MUSCLE, OP_NERVE, OP_BLOOD_VESSEL)
 
 #define ALL_ORGAN_STATS list(\
 		OP_HEART		= list(100,   2,   0,   0,   10,  10,  list("he", "ar", "t"), list()),\
@@ -142,50 +142,59 @@
 
 // Move to DEFINES -> items.dm when merged with item_upgrades
 
-#define ATOM_NAME
-#define ATOM_PREFIX
-#define ATOM_DESC
-#define ATOM_COLOR
+#define ATOM_NAME "atom_name"
+#define ATOM_PREFIX "atom_prefix"
+#define ATOM_DESC "atom_desc"
+#define ATOM_COLOR "atom_color"
+
+// Items
+
+#define ITEM_VERB_NAME "item_verb_name"
+#define ITEM_VERB_PROC "item_verb_proc"
+#define ITEM_VERB_HANDS_FREE "item_verb_hands_free"
+#define ITEM_VERB_ARGS "item_verb_args"
 
 // Organs
 
-#define ORGAN_NATURE
-#define ORGAN_MAX_UPGRADES
-#define ORGAN_SCANNER_HIDDEN
+#define ORGAN_NATURE "organ_nature"
+#define ORGAN_SCANNER_HIDDEN "organ_scanner_hidden"
+#define ORGAN_OWNER_VERB "organ_owner_verb"
 
 // Additive adjustments, affected by multiplicative adjustments
-#define ORGAN_EFFICIENCY_NEW_BASE
-#define ORGAN_SPECIFIC_SIZE_BASE
-#define ORGAN_MAX_BLOOD_STORAGE_BASE
-#define ORGAN_BLOOD_REQ_BASE
-#define ORGAN_NUTRIMENT_REQ_BASE
-#define ORGAN_OXYGEN_REQ_BASE
-#define ORGAN_MIN_BRUISED_DAMAGE_BASE
-#define ORGAN_MIN_BROKEN_DAMAGE_BASE
-#define ORGAN_MAX_DAMAGE_BASE
+#define ORGAN_EFFICIENCY_NEW_BASE "organ_efficiency_new_base"
+#define ORGAN_SPECIFIC_SIZE_BASE "organ_specific_size_base"
+#define ORGAN_MAX_BLOOD_STORAGE_BASE "organ_max_blood_storage_base"
+#define ORGAN_BLOOD_REQ_BASE "organ_blood_req_base"
+#define ORGAN_NUTRIMENT_REQ_BASE "organ_nutriment_req_base"
+#define ORGAN_OXYGEN_REQ_BASE "organ_oxygen_req_base"
+#define ORGAN_MIN_BRUISED_DAMAGE_BASE "organ_min_bruised_damage_base"
+#define ORGAN_MIN_BROKEN_DAMAGE_BASE "organ_min_broken_damage_base"
+#define ORGAN_MAX_DAMAGE_BASE "organ_max_damage_base"
 
 // Multiplicative adjustments
-#define ORGAN_EFFICIENCY_MULT
-#define ORGAN_SPECIFIC_SIZE_MULT
-#define ORGAN_MAX_BLOOD_STORAGE_MULT
-#define ORGAN_BLOOD_REQ_MULT
-#define ORGAN_NUTRIMENT_REQ_MULT
-#define ORGAN_OXYGEN_REQ_MULT
-#define ORGAN_MIN_BRUISED_DAMAGE_MULT
-#define ORGAN_MIN_BROKEN_DAMAGE_MULT
-#define ORGAN_MAX_DAMAGE_MULT
+#define ORGAN_EFFICIENCY_MULT "organ_efficiency_mult"
+#define ORGAN_SPECIFIC_SIZE_MULT "organ_specific_size_mult"
+#define ORGAN_MAX_BLOOD_STORAGE_MULT "organ_max_blood_storage_mult"
+#define ORGAN_BLOOD_REQ_MULT "organ_blood_req_mult"
+#define ORGAN_NUTRIMENT_REQ_MULT "organ_nutriment_req_mult"
+#define ORGAN_OXYGEN_REQ_MULT "organ_oxygen_req_mult"
+#define ORGAN_MIN_BRUISED_DAMAGE_MULT "organ_min_bruised_damage_mult"
+#define ORGAN_MIN_BROKEN_DAMAGE_MULT "organ_min_broken_damage_mult"
+#define ORGAN_MAX_DAMAGE_MULT "organ_max_damage_mult"
 
 // Additive adjustments, NOT affected by multiplicative adjustments
-#define ORGAN_EFFICIENCY_NEW_MOD
-#define ORGAN_SPECIFIC_SIZE_MOD
-#define ORGAN_MAX_BLOOD_STORAGE_MOD
-#define ORGAN_BLOOD_REQ_MOD
-#define ORGAN_NUTRIMENT_REQ_MOD
-#define ORGAN_OXYGEN_REQ_MOD
-#define ORGAN_MIN_BRUISED_DAMAGE_MOD
-#define ORGAN_MIN_BROKEN_DAMAGE_MOD
-#define ORGAN_MAX_DAMAGE_MOD
+#define ORGAN_EFFICIENCY_NEW_MOD "organ_efficiency_new_mod"
+#define ORGAN_SPECIFIC_SIZE_MOD "organ_specific_size_mod"
+#define ORGAN_MAX_BLOOD_STORAGE_MOD "organ_max_blood_storage_mod"
+#define ORGAN_BLOOD_REQ_MOD "organ_blood_req_mod"
+#define ORGAN_NUTRIMENT_REQ_MOD "organ_nutriment_req_mod"
+#define ORGAN_OXYGEN_REQ_MOD "organ_oxygen_req_mod"
+#define ORGAN_MIN_BRUISED_DAMAGE_MOD "organ_min_bruised_damage_mod"
+#define ORGAN_MIN_BROKEN_DAMAGE_MOD "organ_min_broken_damage_mod"
+#define ORGAN_MAX_DAMAGE_MOD "organ_max_damage_mod"
 
 // Aberrant organs
 
-#define ORGAN_ABERRANT_COOLDOWN
+#define ORGAN_ABERRANT_COOLDOWN "organ_aberrant_cooldown"
+
+#define ORGAN_ABERRANT_PROCESS_MULT "organ_aberrant_process_mult"

@@ -47,6 +47,18 @@
 	organ_list = shuffle(organ_list)
 
 	// Organ stat generation
+	var/list/organ_efficiency_base
+	var/specific_organ_size_base
+	var/max_blood_storage_base
+	var/blood_req_base
+	var/nutriment_req_base
+	var/oxygen_req_base
+
+	if(!islist(O.modifications[ORGAN_EFFICIENCY_NEW_BASE]))
+		O.modifications[ORGAN_EFFICIENCY_NEW_BASE] = list()
+
+	organ_efficiency_base = O.modifications[ORGAN_EFFICIENCY_NEW_BASE]
+
 	var/probability = 100
 
 	for(var/organ in organ_list)
@@ -55,15 +67,20 @@
 			var/modifier = abs(predefined_modifier)
 			if(!modifier)
 				modifier = 0.10
-			O.organ_efficiency_flat_mod.Add(organ)
-			O.organ_efficiency_flat_mod[organ] 	= round(organ_stats[1] * modifier * (1 - (2 * is_parasitic)), 1)
-			O.specific_organ_size_flat_mod 		+= round(organ_stats[2] * modifier * (1 + (2 * is_parasitic)), 0.01)
-			O.max_blood_storage_flat_mod		+= round(organ_stats[3] * modifier, 1)
-			O.blood_req_flat_mod 				+= round(organ_stats[4] * modifier * (1 + (1 * is_parasitic)), 0.01)
-			O.nutriment_req_flat_mod 			+= round(organ_stats[5] * modifier * (1 + (1 * is_parasitic)), 0.01)
-			O.oxygen_req_flat_mod 				+= round(organ_stats[6] * modifier * (1 + (1 * is_parasitic)), 0.01)
+			organ_efficiency_base[organ] 	+= round(organ_stats[1] * modifier * (1 - (2 * is_parasitic)), 1)
+			specific_organ_size_base 		+= round(organ_stats[2] * modifier * (1 + (2 * is_parasitic)), 0.01)
+			max_blood_storage_base			+= round(organ_stats[3] * modifier, 1)
+			blood_req_base 					+= round(organ_stats[4] * modifier * (1 + (1 * is_parasitic)), 0.01)
+			nutriment_req_base 				+= round(organ_stats[5] * modifier * (1 + (1 * is_parasitic)), 0.01)
+			oxygen_req_base 				+= round(organ_stats[6] * modifier * (1 + (1 * is_parasitic)), 0.01)
 
 			if(predefined_modifier)
 				break
 
 			probability = probability / 8
+	
+	O.modifications[ORGAN_SPECIFIC_SIZE_BASE] = specific_organ_size_base
+	O.modifications[ORGAN_MAX_BLOOD_STORAGE_BASE] = max_blood_storage_base
+	O.modifications[ORGAN_BLOOD_REQ_BASE] = blood_req_base
+	O.modifications[ORGAN_NUTRIMENT_REQ_BASE] = nutriment_req_base
+	O.modifications[ORGAN_OXYGEN_REQ_BASE] = oxygen_req_base

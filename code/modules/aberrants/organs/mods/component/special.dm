@@ -203,18 +203,24 @@
 
 	switch(decision_adjust)
 		if("organ tissue")
-			specific_organ_size_flat_mod = 0
-			max_blood_storage_flat_mod = 0
-			blood_req_flat_mod = 0
-			nutriment_req_flat_mod = 0
-			oxygen_req_flat_mod = 0
+			var/list/organ_efficiency_base
+			var/specific_organ_size_base
+			var/max_blood_storage_base
+			var/blood_req_base
+			var/nutriment_req_base
+			var/oxygen_req_base
 
-			var/list/possibilities = SYMBIOTIC_ORGAN_EFFICIENCIES
+			if(!islist(modifications[ORGAN_EFFICIENCY_NEW_BASE]))
+				modifications[ORGAN_EFFICIENCY_NEW_BASE] = list()
 
-			for(var/organ in organ_efficiency_flat_mod)
-				if(LAZYLEN(organ_efficiency_flat_mod) > 1)
+			organ_efficiency_base = modifications[ORGAN_EFFICIENCY_NEW_BASE]
+
+			var/list/possibilities = ALL_STANDARD_ORGAN_EFFICIENCIES
+
+			for(var/organ in organ_efficiency_base)
+				if(LAZYLEN(organ_efficiency_base) > 1)
 					for(var/organ_eff in possibilities)
-						if(organ != organ_eff && LAZYFIND(organ_efficiency_flat_mod, organ_eff))
+						if(organ != organ_eff && LAZYFIND(organ_efficiency_base, organ_eff))
 							LAZYREMOVE(possibilities, organ_eff)
 
 				var/decision = input("Choose an organ type (current: [organ])","Adjusting Organoid") as null|anything in possibilities
@@ -222,19 +228,24 @@
 					decision = organ
 
 				var/list/organ_stats = ALL_ORGAN_STATS[decision]
-				var/modifier = round(organ_efficiency_flat_mod[organ] / 100, 0.01)
+				var/modifier = round(organ_efficiency_base[organ] / 100, 0.01)
 
 				if(!modifier)
 					return
 
-				LAZYREMOVE(organ_efficiency_flat_mod, organ)
-				LAZYADD(organ_efficiency_flat_mod, decision)
-				organ_efficiency_flat_mod[decision] = round(organ_stats[1] * modifier, 1)
-				specific_organ_size_flat_mod 		+= round(organ_stats[2] * modifier, 0.01)
-				max_blood_storage_flat_mod			+= round(organ_stats[3] * modifier, 1)
-				blood_req_flat_mod 					+= round(organ_stats[4] * modifier, 0.01)
-				nutriment_req_flat_mod 				+= round(organ_stats[5] * modifier, 0.01)
-				oxygen_req_flat_mod 				+= round(organ_stats[6] * modifier, 0.01)
+				organ_efficiency_base -= organ
+				organ_efficiency_base[decision] += round(organ_stats[1] * modifier, 1)
+				specific_organ_size_base 		+= round(organ_stats[2] * modifier, 0.01)
+				max_blood_storage_base			+= round(organ_stats[3] * modifier, 1)
+				blood_req_base 					+= round(organ_stats[4] * modifier, 0.01)
+				nutriment_req_base 				+= round(organ_stats[5] * modifier, 0.01)
+				oxygen_req_base 				+= round(organ_stats[6] * modifier, 0.01)
+			
+			modifications[ORGAN_SPECIFIC_SIZE_BASE] = specific_organ_size_base
+			modifications[ORGAN_MAX_BLOOD_STORAGE_BASE] = max_blood_storage_base
+			modifications[ORGAN_BLOOD_REQ_BASE] = blood_req_base
+			modifications[ORGAN_NUTRIMENT_REQ_BASE] = nutriment_req_base
+			modifications[ORGAN_OXYGEN_REQ_BASE] = oxygen_req_base
 		if("implant behavior")
 			var/list/possibilities = list(
 				"on pick-up" = COMSIG_ITEM_PICKED,

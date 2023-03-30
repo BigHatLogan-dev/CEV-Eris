@@ -28,61 +28,16 @@
 	breakable = FALSE
 
 	apply_to_types = list(/obj/item/organ/internal/scaffold)
-	apply_to_natures = list(MODIFICATION_ORGANIC, MODIFICATION_ASSISTED)	// So organic mods don't get applied to robotic organs and vice versa
+	apply_to_qualities = list(MODIFICATION_ORGANIC, MODIFICATION_ASSISTED)	// So organic mods don't get applied to robotic organs and vice versa
 
 	// Internal organ stuff
 	var/somatic = FALSE							// If TRUE, will add a verb that allows for at-will use. Still subject to cooldowns.
-	var/somatic_verb = "somatic_trigger"		// TODO: Add this as a var mod that gets applied (See items.dm for more details on actions)
-	var/somatic_action_name = "Activate Organ"	// TODO: Add this as a var mod that gets applied
-	var/somatic_hands_free = FALSE
-	var/list/owner_verb_adds = list()
-
-	var/list/organ_upgrades = list()
-
-	// Additive adjustments
-	var/list/organ_efficiency_mod = list()
-	var/specific_organ_size_mod = null
-	var/max_blood_storage_mod = null
-	var/blood_req_mod = null
-	var/nutriment_req_mod = null
-	var/oxygen_req_mod = null
-	var/min_bruised_damage_mod = null
-	var/min_broken_damage_mod = null
-	var/max_damage_mod = null
-
-	// Multiplicative adjustments
-	var/organ_efficiency_multiplier = null
-	var/specific_organ_size_multiplier = null
-	var/max_blood_storage_multiplier = null
-	var/blood_req_multiplier = null
-	var/nutriment_req_multiplier = null
-	var/oxygen_req_multiplier = null
-	var/min_bruised_damage_multiplier = null
-	var/min_broken_damage_multiplier = null
-	var/max_damage_multiplier = null
-
-	// Flat value adjustments, these are added after multiplicative modifiers
-	var/list/organ_efficiency_flat_mod = list()
-	var/specific_organ_size_flat_mod = null
-	var/max_blood_storage_flat_mod = null
-	var/blood_req_flat_mod = null
-	var/nutriment_req_flat_mod = null
-	var/oxygen_req_flat_mod = null
-	var/min_bruised_damage_flat_mod = null
-	var/min_broken_damage_flat_mod = null
-	var/max_damage_flat_mod = null
-
-	// Other adjustments
-	var/aberrant_cooldown_time_mod = null	// Scaffolds only
-	var/nature_adjustment = null
-	var/max_upgrade_mod = null
-	var/scanner_hidden = FALSE
 
 /datum/component/modification/organ/Initialize()
 	if(somatic)
 		trigger_signal = COMSIG_ABERRANT_INPUT_VERB
-		owner_verb_adds += /datum/component/modification/organ/verb/somatic_trigger
-		somatic_verb = /datum/component/modification/organ/verb/somatic_trigger
+		modifications[ORGAN_OWNER_VERB] = list(/datum/component/modification/organ/verb/somatic_trigger)
+		modifications[ITEM_VERB_PROC] = /datum/component/modification/organ/verb/somatic_trigger
 	. = ..()
 
 /datum/component/modification/organ/check_item(obj/item/I, mob/living/user)
@@ -91,9 +46,9 @@
 	if(istype(I, /obj/item/organ))
 		var/obj/item/organ/O = I
 
-		var/organ_nature = nature_adjustment ? nature_adjustment : O.nature
+		var/organ_nature = modifications[ORGAN_NATURE] ? modifications[ORGAN_NATURE] : O.nature
 		
-		if(LAZYFIND(apply_to_natures, organ_nature))
+		if(LAZYFIND(apply_to_qualities, organ_nature))
 			return TRUE
 
 	return FALSE
@@ -113,11 +68,39 @@
 
 	O.owner.mutation_index++
 
-/datum/component/modification/organ/apply_mod_values(obj/item/organ/internal/holder)
+/datum/component/modification/organ/apply_base_values(obj/item/organ/internal/holder)
 	ASSERT(holder)
 	
 	var/using_generated_name = FALSE
 	var/using_generated_color = FALSE
+
+	var/new_name = modifications[ATOM_NAME]
+	var/prefix = modifications[ATOM_PREFIX]
+	var/new_desc = modifications[ATOM_DESC]
+	var/new_color = modifications[ATOM_COLOR]
+
+	var/max_upgrade_base = modifications[UPGRADE_MAXUPGRADES]
+
+	var/list/organ_efficiency_base = modifications[ORGAN_EFFICIENCY_NEW_BASE]
+	var/specific_organ_size_base = modifications[ORGAN_SPECIFIC_SIZE_BASE]
+	var/max_blood_storage_base = modifications[ORGAN_MAX_BLOOD_STORAGE_BASE]
+	var/blood_req_base = modifications[ORGAN_BLOOD_REQ_BASE]
+	var/nutriment_req_base = modifications[ORGAN_NUTRIMENT_REQ_BASE]
+	var/oxygen_req_base = modifications[ORGAN_OXYGEN_REQ_BASE]
+	var/min_bruised_damage_base = modifications[ORGAN_MIN_BRUISED_DAMAGE_BASE]
+	var/min_broken_damage_base = modifications[ORGAN_MIN_BROKEN_DAMAGE_BASE]
+	var/max_damage_base = modifications[ORGAN_MAX_DAMAGE_BASE]
+
+	var/nature_adjustment = modifications[ORGAN_NATURE]
+	var/scanner_hidden = modifications[ORGAN_SCANNER_HIDDEN]
+
+	var/aberrant_cooldown_time_base = modifications[ORGAN_ABERRANT_COOLDOWN]
+
+	var/somatic_action_name = modifications[ITEM_VERB_NAME]
+	var/somatic_verb = somatic ? modifications[ITEM_VERB_PROC] : "somatic_trigger"
+	var/somatic_hands_free = modifications[ITEM_VERB_HANDS_FREE]
+	var/list/somatic_verb_args = modifications[ITEM_VERB_ARGS]
+	var/list/owner_verb_adds = modifications[ORGAN_OWNER_VERB]
 
 	var/obj/item/organ/internal/scaffold/S
 	if(istype(holder, /obj/item/organ/internal/scaffold))
@@ -126,8 +109,8 @@
 	if(S)
 		using_generated_name = S.use_generated_name
 		using_generated_color = S.use_generated_color
-		if(aberrant_cooldown_time_mod)
-			S.aberrant_cooldown_time += aberrant_cooldown_time_mod
+		if(aberrant_cooldown_time_base)
+			S.aberrant_cooldown_time += aberrant_cooldown_time_base
 
 	if(new_name && using_generated_name)
 		holder.name = new_name
@@ -142,47 +125,45 @@
 		holder.owner_verbs |= owner_verb_adds
 	
 	if(somatic)
-		holder.action_button_name = holder.name ? "Activate [holder.name]" : somatic_action_name
+		holder.action_button_name = somatic_action_name ? somatic_action_name :"Activate [holder.name]"
 		holder.action_button_proc = somatic_verb
 		holder.action_button_is_hands_free = somatic_hands_free
+		if(LAZYLEN(somatic_verb_args))
+			holder.action_button_arguments = somatic_verb_args.Copy()
 
 	if(!islist(holder.organ_efficiency))
 		holder.organ_efficiency = list()
 
-	if(organ_efficiency_mod.len)
-		for(var/organ in organ_efficiency_mod)
-			var/added_efficiency = organ_efficiency_mod[organ]
-			if(holder.organ_efficiency.Find(organ))
-				holder.organ_efficiency[organ] += round(added_efficiency, 1)
-			else
-				holder.organ_efficiency.Add(organ)
-				holder.organ_efficiency[organ] = round(added_efficiency, 1)
+	if(LAZYLEN(organ_efficiency_base))
+		for(var/organ in organ_efficiency_base)
+			var/added_efficiency = organ_efficiency_base[organ]
+			holder.organ_efficiency[organ] += round(added_efficiency, 1)
 
 		if(ishuman(holder.owner))
 			var/mob/living/carbon/human/H = holder.owner
-			for(var/process in organ_efficiency_mod)
+			for(var/process in organ_efficiency_base)
 				if(!islist(H.internal_organs_by_efficiency[process]))
 					H.internal_organs_by_efficiency[process] = list()
 				H.internal_organs_by_efficiency[process] |= holder
 
-	if(specific_organ_size_mod)
-		holder.specific_organ_size += round(specific_organ_size_mod, 0.01)
-	if(max_blood_storage_mod)
-		holder.max_blood_storage += round(max_blood_storage_mod, 0.01)
-	if(blood_req_mod)
-		holder.blood_req += round(blood_req_mod, 0.01)
-	if(nutriment_req_mod)
-		holder.nutriment_req += round(nutriment_req_mod, 0.01)
-	if(oxygen_req_mod)
-		holder.oxygen_req += round(oxygen_req_mod, 0.01)
-	if(max_upgrade_mod)
-		holder.max_upgrades += max_upgrade_mod
-	if(min_bruised_damage_mod)
-		holder.min_bruised_damage += min_bruised_damage_mod
-	if(min_broken_damage_mod)
-		holder.min_broken_damage += min_broken_damage_mod
-	if(max_damage_mod)
-		holder.max_damage += max_damage_mod
+	if(specific_organ_size_base)
+		holder.specific_organ_size += round(specific_organ_size_base, 0.01)
+	if(max_blood_storage_base)
+		holder.max_blood_storage += round(max_blood_storage_base, 0.01)
+	if(blood_req_base)
+		holder.blood_req += round(blood_req_base, 0.01)
+	if(nutriment_req_base)
+		holder.nutriment_req += round(nutriment_req_base, 0.01)
+	if(oxygen_req_base)
+		holder.oxygen_req += round(oxygen_req_base, 0.01)
+	if(max_upgrade_base)
+		holder.max_upgrades += max_upgrade_base
+	if(min_bruised_damage_base)
+		holder.min_bruised_damage += min_bruised_damage_base
+	if(min_broken_damage_base)
+		holder.min_broken_damage += min_broken_damage_base
+	if(max_damage_base)
+		holder.max_damage += max_damage_base
 
 	if(scanner_hidden)
 		holder.scanner_hidden = scanner_hidden
@@ -191,6 +172,16 @@
 
 /datum/component/modification/organ/apply_mult_values(obj/item/organ/internal/holder)
 	ASSERT(holder)
+
+	var/organ_efficiency_multiplier = modifications[ORGAN_EFFICIENCY_MULT]
+	var/specific_organ_size_multiplier = modifications[ORGAN_SPECIFIC_SIZE_MULT]
+	var/max_blood_storage_multiplier = modifications[ORGAN_MAX_BLOOD_STORAGE_MULT]
+	var/blood_req_multiplier = modifications[ORGAN_BLOOD_REQ_MULT]
+	var/nutriment_req_multiplier = modifications[ORGAN_NUTRIMENT_REQ_MULT]
+	var/oxygen_req_multiplier = modifications[ORGAN_OXYGEN_REQ_MULT]
+	var/min_bruised_damage_multiplier = modifications[ORGAN_MIN_BRUISED_DAMAGE_MULT]
+	var/min_broken_damage_multiplier = modifications[ORGAN_MIN_BROKEN_DAMAGE_MULT]
+	var/max_damage_multiplier = modifications[ORGAN_MAX_DAMAGE_MULT]
 
 	if(organ_efficiency_multiplier)
 		for(var/organ in holder.organ_efficiency)
@@ -213,44 +204,50 @@
 	if(max_damage_multiplier)
 		holder.max_damage *= 1 + round(max_damage_multiplier, 0.01)
 
-/datum/component/modification/organ/apply_flat_values(obj/item/organ/internal/holder)
+/datum/component/modification/organ/apply_mod_values(obj/item/organ/internal/holder)
 	ASSERT(holder)
+
+	var/list/organ_efficiency_mod = modifications[ORGAN_EFFICIENCY_NEW_MOD]
+	var/specific_organ_size_mod = modifications[ORGAN_SPECIFIC_SIZE_MOD]
+	var/max_blood_storage_mod = modifications[ORGAN_MAX_BLOOD_STORAGE_MOD]
+	var/blood_req_mod = modifications[ORGAN_BLOOD_REQ_MOD]
+	var/nutriment_req_mod = modifications[ORGAN_NUTRIMENT_REQ_MOD]
+	var/oxygen_req_mod = modifications[ORGAN_OXYGEN_REQ_MOD]
+	var/min_bruised_damage_mod = modifications[ORGAN_MIN_BRUISED_DAMAGE_MOD]
+	var/min_broken_damage_mod = modifications[ORGAN_MIN_BROKEN_DAMAGE_MOD]
+	var/max_damage_mod = modifications[ORGAN_MAX_DAMAGE_MOD]
 	
 	if(!islist(holder.organ_efficiency))
 		holder.organ_efficiency = list()
 
-	if(organ_efficiency_flat_mod.len)
-		for(var/organ in organ_efficiency_flat_mod)
-			var/added_efficiency = organ_efficiency_flat_mod[organ]
-			if(holder.organ_efficiency.Find(organ))
-				holder.organ_efficiency[organ] += round(added_efficiency, 1)
-			else
-				holder.organ_efficiency.Add(organ)
-				holder.organ_efficiency[organ] = round(added_efficiency, 1)
+	if(LAZYLEN(organ_efficiency_mod))
+		for(var/organ in organ_efficiency_mod)
+			var/added_efficiency = organ_efficiency_mod[organ]
+			holder.organ_efficiency[organ] += round(added_efficiency, 1)
 
 		if(ishuman(holder.owner))
 			var/mob/living/carbon/human/H = holder.owner
-			for(var/process in organ_efficiency_flat_mod)
+			for(var/process in organ_efficiency_mod)
 				if(!islist(H.internal_organs_by_efficiency[process]))
 					H.internal_organs_by_efficiency[process] = list()
 				H.internal_organs_by_efficiency[process] |= holder
 
-	if(specific_organ_size_flat_mod)
-		holder.specific_organ_size += round(specific_organ_size_flat_mod, 0.01)
-	if(max_blood_storage_flat_mod)
-		holder.max_blood_storage += round(max_blood_storage_flat_mod, 0.01)
-	if(blood_req_flat_mod)
-		holder.blood_req += round(blood_req_flat_mod, 0.01)
-	if(nutriment_req_flat_mod)
-		holder.nutriment_req += round(nutriment_req_flat_mod, 0.01)
-	if(oxygen_req_flat_mod)
-		holder.oxygen_req += round(oxygen_req_flat_mod, 0.01)
-	if(min_bruised_damage_flat_mod)
-		holder.min_bruised_damage += min_bruised_damage_flat_mod
-	if(min_broken_damage_flat_mod)
-		holder.min_broken_damage += min_broken_damage_flat_mod
-	if(max_damage_flat_mod)
-		holder.max_damage += max_damage_flat_mod
+	if(specific_organ_size_mod)
+		holder.specific_organ_size += round(specific_organ_size_mod, 0.01)
+	if(max_blood_storage_mod)
+		holder.max_blood_storage += round(max_blood_storage_mod, 0.01)
+	if(blood_req_mod)
+		holder.blood_req += round(blood_req_mod, 0.01)
+	if(nutriment_req_mod)
+		holder.nutriment_req += round(nutriment_req_mod, 0.01)
+	if(oxygen_req_mod)
+		holder.oxygen_req += round(oxygen_req_mod, 0.01)
+	if(min_bruised_damage_mod)
+		holder.min_bruised_damage += min_bruised_damage_mod
+	if(min_broken_damage_mod)
+		holder.min_broken_damage += min_broken_damage_mod
+	if(max_damage_mod)
+		holder.max_damage += max_damage_mod
 
 /datum/component/modification/organ/uninstall(obj/item/organ/O, mob/living/user)
 	..()
@@ -267,6 +264,16 @@
 /datum/component/modification/organ/on_examine(mob/user)
 	var/using_sci_goggles = FALSE
 	var/details_unlocked = FALSE
+
+	var/list/organ_efficiency_base = modifications[ORGAN_EFFICIENCY_NEW_BASE]
+	var/list/organ_efficiency_mod = modifications[ORGAN_EFFICIENCY_NEW_MOD]
+
+	var/specific_organ_size_base = modifications[ORGAN_SPECIFIC_SIZE_BASE]
+	var/blood_req_base = modifications[ORGAN_BLOOD_REQ_BASE]
+	var/nutriment_req_base = modifications[ORGAN_NUTRIMENT_REQ_BASE]
+	var/oxygen_req_base = modifications[ORGAN_OXYGEN_REQ_BASE]
+
+	var/aberrant_cooldown_time_base = modifications[ORGAN_ABERRANT_COOLDOWN]
 
 	if(isghost(user))
 		details_unlocked = TRUE
@@ -290,21 +297,21 @@
 		to_chat(user, SPAN_WARNING("Can be adjusted with a laser cutting tool."))
 
 	if(using_sci_goggles || details_unlocked)
-		var/info = "Organoid size: [specific_organ_size_mod ? specific_organ_size_mod : "0"]"
-		info += "\nRequirements: <span style='color:red'>[blood_req_mod ? blood_req_mod : "0"]\
-								</span>/<span style='color:blue'>[oxygen_req_mod ? oxygen_req_mod : "0"]\
-								</span>/<span style='color:orange'>[nutriment_req_mod ? nutriment_req_mod : "0"]</span>"
-		
+		var/info = "Organoid size: [specific_organ_size_base ? specific_organ_size_base : "0"]"
+		info += "\nRequirements: <span style='color:red'>[blood_req_base ? blood_req_base : "0"]\
+								</span>/<span style='color:blue'>[oxygen_req_base ? oxygen_req_base : "0"]\
+								</span>/<span style='color:orange'>[nutriment_req_base ? nutriment_req_base : "0"]</span>"
+
 		var/organs
+		for(var/organ in organ_efficiency_base)
+			organs += organ + " ([organ_efficiency_base[organ]]), "
 		for(var/organ in organ_efficiency_mod)
 			organs += organ + " ([organ_efficiency_mod[organ]]), "
-		for(var/organ in organ_efficiency_flat_mod)
-			organs += organ + " ([organ_efficiency_flat_mod[organ]]), "
 		organs = copytext(organs, 1, length(organs) - 1)
 		info += "\nOrgan tissues present: <span style='color:pink'>[organs ? organs : "none"]</span>"
-		if(aberrant_cooldown_time_mod)
-			info += "\nAverage organ process duration: [aberrant_cooldown_time_mod / (1 SECOND)] seconds"
-		
+		if(aberrant_cooldown_time_base)
+			info += "\nAverage organ process duration: [aberrant_cooldown_time_base / (1 SECOND)] seconds"
+
 		to_chat(user, SPAN_NOTICE(info))
 
 		var/function_info = get_function_info()

@@ -46,11 +46,11 @@
 	description_info = "Produces a hormone when the primary function triggers."
 	var/effect_path = null
 
-/obj/item/modification/organ/internal/on_cooldown/chemical_effect/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_special_info)
+/obj/item/modification/organ/internal/on_cooldown/chemical_effect/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/special_args)
 	var/datum/component/modification/organ/on_cooldown/chemical_effect/S = AddComponent(/datum/component/modification/organ/on_cooldown/chemical_effect)
 
-	if(chosen_special_info?.len >= 1)
-		S.effect = chosen_special_info[1]
+	if(special_args?.len >= 1)
+		S.effect = special_args[1]
 	else if(effect_path)
 		S.effect = effect_path
 	..()
@@ -61,11 +61,11 @@
 	description_info = "Produces a reagent when the primary function triggers."
 	var/reagent_path = null
 
-/obj/item/modification/organ/internal/on_cooldown/reagents_blood/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_special_info)
+/obj/item/modification/organ/internal/on_cooldown/reagents_blood/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/special_args)
 	var/datum/component/modification/organ/on_cooldown/reagents_blood/S = AddComponent(/datum/component/modification/organ/on_cooldown/reagents_blood)
 
-	if(chosen_special_info?.len >= 1)
-		S.reagent = chosen_special_info[1]
+	if(special_args?.len >= 1)
+		S.reagent = special_args[1]
 	else if(reagent_path)
 		S.reagent = reagent_path
 	..()
@@ -131,12 +131,12 @@
 	var/stat = null
 	var/modifier = 10
 
-/obj/item/modification/organ/internal/on_cooldown/stat_boost/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_special_info)
+/obj/item/modification/organ/internal/on_cooldown/stat_boost/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/special_args)
 	var/datum/component/modification/organ/on_cooldown/stat_boost/S = AddComponent(/datum/component/modification/organ/on_cooldown/stat_boost)
 
-	if(chosen_special_info?.len >= 2)
-		S.stat = chosen_special_info[1]
-		S.boost = chosen_special_info[2]
+	if(special_args?.len >= 2)
+		S.stat = special_args[1]
+		S.boost = special_args[2]
 	else if(stat)
 		S.stat = stat
 		S.boost = modifier
@@ -153,9 +153,9 @@
 	use_generated_icon = FALSE
 	var/organ_mod = -0.10
 
-/obj/item/modification/organ/internal/symbiotic/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = organ_mod, list/chosen_special_info)
+/obj/item/modification/organ/internal/symbiotic/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = organ_mod, list/special_args)
 	var/datum/component/modification/organ/symbiotic/S = AddComponent(/datum/component/modification/organ/symbiotic)
-	S.specific_organ_size_multiplier = 0.10
+	S.modifications[ORGAN_SPECIFIC_SIZE_MULT] = 0.10
 	..()
 
 /obj/item/modification/organ/internal/symbiotic/commensal

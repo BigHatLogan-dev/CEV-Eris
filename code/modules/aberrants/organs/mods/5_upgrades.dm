@@ -16,10 +16,12 @@
 /obj/item/modification/organ/internal/stromal/requirements/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
-	M.blood_req_multiplier = -0.50
-	M.nutriment_req_multiplier = -0.50
-	M.oxygen_req_multiplier = -0.50
-	M.prefix = "efficient"
+	M.modifications = list(
+		ORGAN_BLOOD_REQ_MULT = -0.50,
+		ORGAN_NUTRIMENT_REQ_MULT = -0.50,
+		ORGAN_OXYGEN_REQ_MULT = -0.50,
+		ATOM_PREFIX = "efficient"
+	)
 	..()
 
 /obj/item/modification/organ/internal/stromal/durability
@@ -30,11 +32,13 @@
 /obj/item/modification/organ/internal/stromal/durability/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
-	M.specific_organ_size_multiplier = 0.20
-	M.min_bruised_damage_multiplier = 0.20
-	M.min_broken_damage_multiplier = 0.20
-	M.max_damage_multiplier = 0.20
-	M.prefix = "durable"
+	M.modifications = list(
+		ORGAN_SPECIFIC_SIZE_MULT = 0.20,
+		ORGAN_MIN_BRUISED_DAMAGE_MULT = 0.20,
+		ORGAN_MIN_BROKEN_DAMAGE_MULT = 0.20,
+		ORGAN_MAX_DAMAGE_MULT = 0.20,
+		ATOM_PREFIX = "durable"
+	)
 	..()
 
 /obj/item/modification/organ/internal/stromal/efficiency
@@ -44,10 +48,13 @@
 
 /obj/item/modification/organ/internal/stromal/efficiency/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
-
-	M.organ_efficiency_multiplier = 0.25
+	
 	M.removable = FALSE		// Stem cells don't go back to being undifferentiated
-	M.prefix = "enhanced"
+	
+	M.modifications = list(
+		ORGAN_EFFICIENCY_MULT = 0.25,
+		ATOM_PREFIX = "enhanced"
+	)
 	..()
 	
 /obj/item/modification/organ/internal/stromal/overclock
@@ -58,12 +65,14 @@
 /obj/item/modification/organ/internal/stromal/overclock/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
-	M.organ_efficiency_multiplier = 0.20
-	M.blood_req_multiplier = 0.20
-	M.nutriment_req_multiplier = 0.20
-	M.oxygen_req_multiplier = 0.20
-	M.specific_organ_size_multiplier = 0.20
-	M.prefix = "symbiotic"
+	M.modifications = list(
+		ORGAN_EFFICIENCY_MULT = 0.20,
+		ORGAN_BLOOD_REQ_MULT = 0.20,
+		ORGAN_NUTRIMENT_REQ_MULT = 0.20,
+		ORGAN_OXYGEN_REQ_MULT = 0.20,
+		ORGAN_SPECIFIC_SIZE_MULT = 0.20,
+		ATOM_PREFIX = "symbiotic"
+	)
 	..()
 
 /obj/item/modification/organ/internal/stromal/underclock
@@ -74,12 +83,14 @@
 /obj/item/modification/organ/internal/stromal/underclock/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
-	M.organ_efficiency_multiplier = -0.20		// Brings a standard organ just above the efficiency where the body is negatively impacted
-	M.blood_req_multiplier = -0.20
-	M.nutriment_req_multiplier = -0.20
-	M.oxygen_req_multiplier = -0.20
-	M.specific_organ_size_multiplier = -0.20
-	M.prefix = "bypassed"
+	M.modifications = list(
+		ORGAN_EFFICIENCY_MULT = -0.20,
+		ORGAN_BLOOD_REQ_MULT = -0.20,
+		ORGAN_NUTRIMENT_REQ_MULT = -0.20,
+		ORGAN_OXYGEN_REQ_MULT = -0.20,
+		ORGAN_SPECIFIC_SIZE_MULT = -0.20,
+		ATOM_PREFIX = "bypassed"
+	)
 	..()
 
 /obj/item/modification/organ/internal/stromal/expander
@@ -89,11 +100,14 @@
 
 /obj/item/modification/organ/internal/stromal/expander/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
-
-	M.specific_organ_size_mod = 0.10
-	M.max_upgrade_mod = 2
+	
 	M.removable = FALSE		// Not feasible to remove
-	M.prefix = "expanded"
+	
+	M.modifications = list(
+		ORGAN_SPECIFIC_SIZE_BASE = 0.10,
+		UPGRADE_MAXFUEL = 2,
+		ATOM_PREFIX = "expanded"
+	)
 	..()
 
 /obj/item/modification/organ/internal/stromal/silencer
@@ -104,10 +118,12 @@
 /obj/item/modification/organ/internal/stromal/silencer/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
-	M.organ_efficiency_multiplier = -0.10
-	M.specific_organ_size_multiplier = -0.10
-	M.scanner_hidden = TRUE
-	M.prefix = "scanner-masked"
+	M.modifications = list(
+		ORGAN_EFFICIENCY_MULT = -0.10,
+		ORGAN_SPECIFIC_SIZE_MULT = -0.10,
+		ORGAN_SCANNER_HIDDEN = TRUE,
+		ATOM_PREFIX = "scanner-masked"
+	)
 	..()
 
 /obj/item/modification/organ/internal/parenchymal
@@ -119,9 +135,12 @@
 
 /obj/item/modification/organ/internal/parenchymal/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = organ_eff_mod)
 	var/datum/component/modification/organ/parenchymal/M = AddComponent(/datum/component/modification/organ/parenchymal)
-
-	M.prefix = "grafted"
-	M.multiples_allowed = TRUE
+	
+	//M.multiples_allowed = TRUE	// Stacking these causes UI issues. Not important enough to make a fix.
+	
+	M.modifications = list(
+		ATOM_PREFIX = "grafted"
+	)
 	..()
 
 /obj/item/modification/organ/internal/parenchymal/large
@@ -150,10 +169,11 @@
 	M.apply_to_types = list(/obj/item/organ/internal/bone)
 	M.examine_msg = "Can be attached to bones."
 	M.examine_difficulty = STAT_LEVEL_BASIC
-	M.prefix = "reinforced"
 
-	M.organ_efficiency_mod = list(OP_BONE = 0.33)
-
+	M.modifications = list(
+		ORGAN_EFFICIENCY_NEW_MOD = list(OP_BONE = 0.33),
+		ATOM_PREFIX = "reinforced"
+	)
 
 // Roach loot
 
@@ -165,9 +185,12 @@
 /obj/item/modification/organ/internal/stromal/efficiency_roach/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
-	M.organ_efficiency_multiplier = 0.40
 	M.removable = FALSE		// Stem cells don't go back to being undifferentiated
-	M.prefix = "blattidean"
+	
+	M.modifications = list(
+		ORGAN_EFFICIENCY_MULT = 0.25,
+		ATOM_PREFIX = "blattidean"
+	)
 	..()
 
 /obj/item/modification/organ/internal/stromal/durability_roach
@@ -178,28 +201,16 @@
 /obj/item/modification/organ/internal/stromal/durability_roach/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
-	M.min_bruised_damage_multiplier = 1
-	M.min_broken_damage_multiplier = 1
-	M.max_damage_multiplier = 1
-	M.prefix = "chitinous"
-	..()
+	M.modifications = list(
+		ORGAN_SPECIFIC_SIZE_BASE = 1,
+		ORGAN_MIN_BRUISED_DAMAGE_BASE = 1,
+		ORGAN_MIN_BROKEN_DAMAGE_BASE = 1,
+		ORGAN_MAX_DAMAGE_BASE = 1,
+		ATOM_PREFIX = "chitinous"
+	)
 
 
 // One Star loot
-
-/obj/item/modification/organ/internal/stromal/requirements_onestar
-	name = "improved capillaries"
-	desc = "A set of modified capillaries that improve substance transfer within an organ."
-	icon_state = "capillary"
-
-/obj/item/modification/organ/internal/stromal/requirements_onestar/Initialize()
-	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
-
-	M.blood_req_multiplier = -0.90
-	M.nutriment_req_multiplier = -0.90
-	M.oxygen_req_multiplier = -0.90
-	M.prefix = "hyper-efficient"
-	..()
 
 /obj/item/modification/organ/internal/stromal/underclock_onestar
 	name = "bypass tubules"
@@ -209,12 +220,14 @@
 /obj/item/modification/organ/internal/stromal/underclock_onestar/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
-	M.organ_efficiency_multiplier = -0.25		// Brings a standard organ just under the efficiency where the body is negatively impacted
-	M.blood_req_multiplier = -0.40
-	M.nutriment_req_multiplier = -0.40
-	M.oxygen_req_multiplier = -0.40
-	M.specific_organ_size_multiplier = -0.60
-	M.prefix = "bypassed"
+	M.modifications = list(
+		ORGAN_EFFICIENCY_MULT = -0.25,
+		ORGAN_BLOOD_REQ_MULT = -0.40,
+		ORGAN_NUTRIMENT_REQ_MULT = -0.40,
+		ORGAN_OXYGEN_REQ_MULT = -0.40,
+		ORGAN_SPECIFIC_SIZE_MULT = -0.60,
+		ATOM_PREFIX = "reduced"
+	)
 	..()
 
 
@@ -228,12 +241,15 @@
 /obj/item/modification/organ/internal/stromal/hivemind_conversion/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
-	M.apply_to_natures = list(MODIFICATION_ORGANIC, MODIFICATION_SILICON)
-	M.nature_adjustment = MODIFICATION_ASSISTED		// Vulnerable to both organic and robotic wounds, allows robotic organs to take organic mods
-	M.organ_efficiency_multiplier = 0.10
-	M.specific_organ_size_multiplier = -0.10
-	M.scanner_hidden = TRUE
-	M.prefix = "hivemind-assisted"
+	M.apply_to_qualities = list(MODIFICATION_ORGANIC, MODIFICATION_SILICON)
+
+	M.modifications = list(
+		ORGAN_NATURE = MODIFICATION_ASSISTED,		// Vulnerable to both organic and robotic wounds, allows robotic organs to take organic mods
+		ORGAN_EFFICIENCY_MULT = 0.10,
+		ORGAN_SPECIFIC_SIZE_MULT = -0.10,
+		ORGAN_SCANNER_HIDDEN = TRUE,
+		ATOM_PREFIX = "hivemind-assisted"
+	)
 	..()
 
 /obj/item/modification/organ/internal/stromal/overclock_hivemind
@@ -244,10 +260,13 @@
 /obj/item/modification/organ/internal/stromal/overclock_hivemind/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
-	M.apply_to_natures = list(MODIFICATION_ASSISTED)
-	M.organ_efficiency_multiplier = 1
-	M.blood_req_multiplier = -0.50
-	M.nutriment_req_multiplier = -0.50
-	M.oxygen_req_multiplier = -0.50
-	M.prefix = "silicified"
+	M.apply_to_qualities = list(MODIFICATION_ASSISTED)
+
+	M.modifications = list(
+		ORGAN_EFFICIENCY_MULT = 1,
+		ORGAN_BLOOD_REQ_MULT = -0.50,
+		ORGAN_NUTRIMENT_REQ_MULT = -0.50,
+		ORGAN_OXYGEN_REQ_MULT = -0.50,
+		ATOM_PREFIX = "silicified"
+	)
 	..()
