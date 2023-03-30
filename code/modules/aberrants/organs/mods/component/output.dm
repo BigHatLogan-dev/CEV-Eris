@@ -246,7 +246,7 @@
 				var/input_multiplier = input[i]
 				var/stat = possible_outputs[index]
 				var/magnitude = possible_outputs[stat] * organ_multiplier * input_multiplier
-				owner.stats.addTempStat(stat, magnitude, delay, "\ref[parent]")
+				owner.stats.addTempStat(stat, magnitude, delay, "aberrant_output")
 				triggered = TRUE
 
 	if(triggered)

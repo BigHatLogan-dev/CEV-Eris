@@ -176,7 +176,7 @@
 
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
-		H.stats.addTempStat(stat, boost * effect_multiplier, delay, "\ref[parent]")
+		H.stats.addTempStat(stat, boost * effect_multiplier, delay, "aberrant_membrane")
 
 
 /datum/component/modification/organ/symbiotic
