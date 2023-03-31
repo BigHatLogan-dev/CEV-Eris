@@ -105,7 +105,7 @@
 	
 	M.modifications = list(
 		ORGAN_SPECIFIC_SIZE_BASE = 0.10,
-		UPGRADE_MAXFUEL = 2,
+		UPGRADE_MAXUPGRADES = 2,
 		ATOM_PREFIX = "expanded"
 	)
 	..()
@@ -148,6 +148,7 @@
 	organ_eff_mod = 0.40
 
 // Junk loot or craftables
+
 /obj/item/modification/organ/internal/electromechanical
 	bad_type = /obj/item/modification/organ/internal/electromechanical
 	spawn_blacklisted = FALSE
@@ -188,7 +189,7 @@
 	M.removable = FALSE		// Stem cells don't go back to being undifferentiated
 	
 	M.modifications = list(
-		ORGAN_EFFICIENCY_MULT = 0.25,
+		ORGAN_EFFICIENCY_MULT = 0.40,
 		ATOM_PREFIX = "blattidean"
 	)
 	..()
@@ -209,24 +210,19 @@
 		ATOM_PREFIX = "chitinous"
 	)
 
+// Spider loot
 
-// One Star loot
+/obj/item/modification/organ/internal/stromal/size_spider
+	name = "congealed blattedin"
+	desc = "A clump of solidified roach blood that permanently increases the functional efficiency of an organ."
+	icon_state = "roach_stem_cells"
 
-/obj/item/modification/organ/internal/stromal/underclock_onestar
-	name = "bypass tubules"
-	desc = "A series of tubules that siphon blood away from an organ, reducing its effectiveness, to be used elsewhere in the body."
-	icon_state = "tubules"
-
-/obj/item/modification/organ/internal/stromal/underclock_onestar/Initialize()
+/obj/item/modification/organ/internal/stromal/size_spider/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
-
+	
 	M.modifications = list(
-		ORGAN_EFFICIENCY_MULT = -0.25,
-		ORGAN_BLOOD_REQ_MULT = -0.40,
-		ORGAN_NUTRIMENT_REQ_MULT = -0.40,
-		ORGAN_OXYGEN_REQ_MULT = -0.40,
-		ORGAN_SPECIFIC_SIZE_MULT = -0.60,
-		ATOM_PREFIX = "reduced"
+		ORGAN_SPECIFIC_SIZE_MULT = -0.40,
+		ATOM_PREFIX = "shrunken"
 	)
 	..()
 
@@ -235,38 +231,37 @@
 
 /obj/item/modification/organ/internal/stromal/hivemind_conversion
 	name = "hivemind membrane"
-	desc = "An outer membrane that absorbs typical medical scanning wavelengths. Slightly impedes organ functions and reduces organ size."
+	desc = "A graftable aggregate of organ tissues and electromechanical components."
 	icon_state = "hivemind_conversion"
 
-/obj/item/modification/organ/internal/stromal/hivemind_conversion/Initialize()
+/obj/item/modification/organ/internal/stromal/hivemind_conversion/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = 0.50)
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
 	M.apply_to_qualities = list(MODIFICATION_ORGANIC, MODIFICATION_SILICON)
 
 	M.modifications = list(
 		ORGAN_NATURE = MODIFICATION_ASSISTED,		// Vulnerable to both organic and robotic wounds, allows robotic organs to take organic mods
-		ORGAN_EFFICIENCY_MULT = 0.10,
-		ORGAN_SPECIFIC_SIZE_MULT = -0.10,
+		ORGAN_SPECIFIC_SIZE_MULT = -0.25,
 		ORGAN_SCANNER_HIDDEN = TRUE,
 		ATOM_PREFIX = "hivemind-assisted"
 	)
 	..()
 
-/obj/item/modification/organ/internal/stromal/overclock_hivemind
-	name = "visceral symbiont"
-	desc = "A leech-like creature that attaches itself to the viscera of an orgnanism. It mimics the function of the parent organ in exchange for blood, oxygen, and nutrients."
-	icon_state = "symbiont"
+/obj/item/modification/organ/internal/stromal/modular
+	name = "modular ports"
+	desc = "A series of tubules that siphon blood away from an organ, reducing its effectiveness, to be used elsewhere in the body."
+	icon_state = "tubules"
 
-/obj/item/modification/organ/internal/stromal/overclock_hivemind/Initialize()
+/obj/item/modification/organ/internal/stromal/modular/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
 	M.apply_to_qualities = list(MODIFICATION_ASSISTED)
 
 	M.modifications = list(
-		ORGAN_EFFICIENCY_MULT = 1,
-		ORGAN_BLOOD_REQ_MULT = -0.50,
-		ORGAN_NUTRIMENT_REQ_MULT = -0.50,
-		ORGAN_OXYGEN_REQ_MULT = -0.50,
-		ATOM_PREFIX = "silicified"
+		ORGAN_BLOOD_REQ_BASE = 5,
+		ORGAN_NUTRIMENT_REQ_BASE = 5,
+		ORGAN_OXYGEN_REQ_BASE = 5,
+		UPGRADE_MAXUPGRADES = 3,
+		ATOM_PREFIX = "modular"
 	)
 	..()
