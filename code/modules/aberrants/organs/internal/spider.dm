@@ -41,6 +41,10 @@
 	name = "aranecolmin sac"
 	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/reagents_blood/aranecolmin
 
+/obj/item/organ/internal/scaffold/aberrant/spider/size
+	name = "aranecolmin sac"
+	special_mod_path = /obj/item/modification/organ/internal/stromal/size_spider
+
 /obj/item/organ/internal/scaffold/aberrant/spider/spinneret
 	name = "Kouchiku spinneret"
 	icon_state = "organ_scaffold-arachno-3"

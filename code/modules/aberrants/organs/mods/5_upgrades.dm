@@ -2,9 +2,7 @@
 	name = "stromal organoid"
 	icon = 'icons/obj/aberrant_organs/organ_mods.dmi'
 	bad_type = /obj/item/modification/organ/internal/stromal
-
-/obj/item/modification/organ/internal/stromal/update_icon()
-	return
+	use_generated_icon = FALSE
 
 // Printable mods
 
@@ -152,6 +150,7 @@
 /obj/item/modification/organ/internal/electromechanical
 	bad_type = /obj/item/modification/organ/internal/electromechanical
 	spawn_blacklisted = FALSE
+	use_generated_icon = FALSE
 
 /obj/item/modification/organ/internal/electromechanical/bone_braces
 	name = "bone braces"
@@ -161,13 +160,14 @@
 	matter = list(MATERIAL_PLASTEEL = 3)
 	price_tag = 90
 
-/obj/item/modification/organ/internal/electromechanical/bone_braces/update_icon()
-	return
-
 /obj/item/modification/organ/internal/electromechanical/bone_braces/New()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
 	M.apply_to_types = list(/obj/item/organ/internal/bone)
+	M.install_stat = STAT_MEC
+	M.install_difficulty = FAILCHANCE_VERY_EASY - 10
+	M.removal_stat = STAT_MEC
+	M.removal_difficulty = FAILCHANCE_VERY_EASY - 10
 	M.examine_msg = "Can be attached to bones."
 	M.examine_difficulty = STAT_LEVEL_BASIC
 
@@ -176,18 +176,20 @@
 		ATOM_PREFIX = "reinforced"
 	)
 
+
 // Roach loot
 
 /obj/item/modification/organ/internal/stromal/efficiency_roach
 	name = "congealed blattedin"
 	desc = "A clump of solidified roach blood that permanently increases the functional efficiency of an organ."
-	icon_state = "roach_stem_cells"
+	icon = 'icons/obj/aberrant_organs/roach_organs.dmi'
+	icon_state = "congealed_blattedin"
 
 /obj/item/modification/organ/internal/stromal/efficiency_roach/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
-	M.removable = FALSE		// Stem cells don't go back to being undifferentiated
-	
+	M.apply_to_qualities = list(MODIFICATION_ORGANIC)
+
 	M.modifications = list(
 		ORGAN_EFFICIENCY_MULT = 0.40,
 		ATOM_PREFIX = "blattidean"
@@ -197,10 +199,13 @@
 /obj/item/modification/organ/internal/stromal/durability_roach
 	name = "chitinous membrane"
 	desc = "A chitinous membrane that allows an organ to sustain greater injury before its functions are diminished."
-	icon_state = "thick_membrane"
+	icon = 'icons/obj/aberrant_organs/roach_organs.dmi'
+	icon_state = "chitinous_membrane"
 
 /obj/item/modification/organ/internal/stromal/durability_roach/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
+
+	M.apply_to_qualities = list(MODIFICATION_ORGANIC)
 
 	M.modifications = list(
 		ORGAN_SPECIFIC_SIZE_BASE = 1,
@@ -209,6 +214,7 @@
 		ORGAN_MAX_DAMAGE_BASE = 1,
 		ATOM_PREFIX = "chitinous"
 	)
+
 
 // Spider loot
 
@@ -219,7 +225,9 @@
 
 /obj/item/modification/organ/internal/stromal/size_spider/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
-	
+
+	M.apply_to_qualities = list(MODIFICATION_ORGANIC)
+
 	M.modifications = list(
 		ORGAN_SPECIFIC_SIZE_MULT = -0.40,
 		ATOM_PREFIX = "shrunken"

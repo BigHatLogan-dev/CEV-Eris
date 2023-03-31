@@ -49,6 +49,12 @@
 	name = "gewaltine node"
 	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/reagents_blood/gewaltine
 
+/obj/item/organ/internal/scaffold/aberrant/roach/efficiency
+	special_mod_path = /obj/item/modification/organ/internal/stromal/efficiency_roach
+
+/obj/item/organ/internal/scaffold/aberrant/roach/durability
+	special_mod_path = /obj/item/modification/organ/internal/stromal/durability_roach
+
 /obj/item/organ/internal/scaffold/aberrant/roach/fuhrer
 	name = "Fuhrer organ"
 	desc = "An organ harvested from a Fuhrer roach."

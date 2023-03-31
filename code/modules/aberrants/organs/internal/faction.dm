@@ -57,7 +57,7 @@
 	input_mode = CHEM_INGEST
 
 /obj/item/organ/internal/scaffold/aberrant/santana/kidney
-	name = "aristocrat's kidney"
+	name = "plutocrat's kidney"
 	organ_efficiency = list(OP_KIDNEYS = 50)
 	parent_organ_base = BP_GROIN
 	specific_organ_size = 1
@@ -74,7 +74,7 @@
 	price_tag = 2000
 
 /obj/item/organ/internal/scaffold/aberrant/santana/liver
-	name = "aristocrat's liver"
+	name = "plutocrat's liver"
 	organ_efficiency = list(OP_LIVER = 100)
 	parent_organ_base = BP_GROIN
 	blood_req = 0
@@ -154,3 +154,35 @@
 	input_threshold = 20
 	output_pool = list(/datum/reagent/medicine/bicaridine, /datum/reagent/medicine/polystem, /datum/reagent/medicine/dermaline)
 	output_info = list(MID_OUTPUT)
+
+/obj/item/organ/internal/scaffold/aberrant/wifebeater
+	name = "wifebeater's liver"
+	ruined_name = "liver scaffold"
+	desc = "A finely engineered organ for when you really need to put someone in their place."
+	ruined_desc = "A modular liver with four slots for organ mods or organoids."
+	ruined_color = null
+	rarity_value = 60
+	bad_type = /obj/item/organ/internal/scaffold/aberrant/wifebeater
+	max_upgrades = 4
+
+	organ_efficiency = list(OP_LIVER = 100)
+	parent_organ_base = BP_GROIN
+	blood_req = 0
+	max_blood_storage = 25
+	oxygen_req = 7
+	nutriment_req = 2.5
+
+	use_generated_name = FALSE
+
+	input_mod_path = /obj/item/modification/organ/internal/input/reagents
+	process_mod_path = /obj/item/modification/organ/internal/process/cooldown
+	output_mod_path = /obj/item/modification/organ/internal/output/stat_boost
+	special_mod_path = /obj/item/modification/organ/internal/special/on_cooldown/stat_boost
+
+	specific_input_type_pool = list(
+		/datum/reagent/alcohol/beer, /datum/reagent/alcohol/ale, /datum/reagent/alcohol/roachbeer
+	)
+	process_info = list(EXTENDED_ABERRANT_COOLDOWN)
+	output_pool = list(STAT_ROB)
+	output_info = list(15)
+	special_info = list(STAT_ROB, 15)
