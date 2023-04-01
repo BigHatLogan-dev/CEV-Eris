@@ -9,7 +9,7 @@
 	name = "eldritch membrane"
 	desc = "A graftable outer membrane for organ tissues. The alien textures are painful to look at."
 
-/obj/item/modification/organ/internal/on_item_examine/brainloss/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/on_item_examine/brainloss/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0)
 	AddComponent(/datum/component/modification/organ/on_item_examine/brainloss)
 	..()
 
@@ -21,7 +21,7 @@
 	desc = "A graftable outer membrane for organ tissues. There is bioelectric phenomena present and it hurts to touch."
 	icon_state = "membrane-hive"
 
-/obj/item/modification/organ/internal/on_pickup/shock/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/on_pickup/shock/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0)
 	AddComponent(/datum/component/modification/organ/on_pickup/shock)
 	..()
 
@@ -31,8 +31,8 @@
 /obj/item/modification/organ/internal/on_pickup/shock/powerful
 	name = "powerful shocking membrane"
 	desc = "A graftable outer membrane for organ tissues. There is significant bioelectric phenomena present and it hurts to touch."
-	
-/obj/item/modification/organ/internal/on_pickup/shock/powerful/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+
+/obj/item/modification/organ/internal/on_pickup/shock/powerful/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0)
 	AddComponent(/datum/component/modification/organ/on_pickup/shock/powerful)
 	..()
 
@@ -46,7 +46,7 @@
 	description_info = "Produces a hormone when the primary function triggers."
 	var/effect_path = null
 
-/obj/item/modification/organ/internal/on_cooldown/chemical_effect/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/special_args)
+/obj/item/modification/organ/internal/on_cooldown/chemical_effect/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/special_args)
 	var/datum/component/modification/organ/on_cooldown/chemical_effect/S = AddComponent(/datum/component/modification/organ/on_cooldown/chemical_effect)
 
 	if(special_args?.len >= 1)
@@ -61,7 +61,7 @@
 	description_info = "Produces a reagent when the primary function triggers."
 	var/reagent_path = null
 
-/obj/item/modification/organ/internal/on_cooldown/reagents_blood/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/special_args)
+/obj/item/modification/organ/internal/on_cooldown/reagents_blood/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/special_args)
 	var/datum/component/modification/organ/on_cooldown/reagents_blood/S = AddComponent(/datum/component/modification/organ/on_cooldown/reagents_blood)
 
 	if(special_args?.len >= 1)
@@ -131,7 +131,7 @@
 	var/stat = null
 	var/modifier = 10
 
-/obj/item/modification/organ/internal/on_cooldown/stat_boost/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/special_args)
+/obj/item/modification/organ/internal/on_cooldown/stat_boost/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/special_args)
 	var/datum/component/modification/organ/on_cooldown/stat_boost/S = AddComponent(/datum/component/modification/organ/on_cooldown/stat_boost)
 
 	if(special_args?.len >= 2)
@@ -153,7 +153,7 @@
 	use_generated_icon = FALSE
 	var/organ_mod = -0.10
 
-/obj/item/modification/organ/internal/symbiotic/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = organ_mod, list/special_args)
+/obj/item/modification/organ/internal/symbiotic/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = organ_mod, num_eff = 1, list/special_args)
 	var/datum/component/modification/organ/symbiotic/S = AddComponent(/datum/component/modification/organ/symbiotic)
 	S.modifications[ORGAN_SPECIFIC_SIZE_MULT] = 0.10
 	..()
@@ -173,7 +173,7 @@
 	icon_state = "parasitic_organoid"		// temp
 	desc = "Functional tissue of one or more organs in graftable form. Allows for protraction/retraction of an appendage."
 
-/obj/item/modification/organ/internal/deployable/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/special_args)
+/obj/item/modification/organ/internal/deployable/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/special_args)
 	var/datum/component/modification/organ/deployable/D = AddComponent(/datum/component/modification/organ/deployable)
 	D.stored_type = special_args[1]
 	..()
@@ -182,3 +182,8 @@
 	icon = 'icons/obj/aberrant_organs/roach_organs.dmi'
 	icon_state = "output_organoid-gestrahlte"
 	use_generated_icon = FALSE
+
+/obj/item/modification/organ/internal/deployable/gestrahlte/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/special_args)
+	..()
+	var/datum/component/modification/organ/deployable/D = GetComponent(/datum/component/modification/organ/deployable)
+	D.modifications[ORGAN_BLOOD_TYPE] = "Ü~"

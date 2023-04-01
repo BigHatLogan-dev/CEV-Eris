@@ -33,7 +33,7 @@
 	if(use_generated_icon)
 		icon_state = initial(icon_state) + "-[rand(1,5)]"
 
-/obj/item/modification/organ/internal/proc/generate_organ_stats_for_mod(datum/component/modification/organ/O, predefined_modifier = null)
+/obj/item/modification/organ/internal/proc/generate_organ_stats_for_mod(datum/component/modification/organ/O, predefined_modifier = null, num_eff = 1)
 	var/is_parasitic = FALSE
 	if(predefined_modifier < 0)
 		is_parasitic = TRUE
@@ -59,10 +59,9 @@
 
 	organ_efficiency_base = O.modifications[ORGAN_EFFICIENCY_NEW_BASE]
 
-	var/probability = 100
-
+	var/generation_runs = 0
 	for(var/organ in organ_list)
-		if(prob(probability))
+		if(generation_runs < num_eff)
 			var/list/organ_stats = ALL_ORGAN_STATS[organ]
 			var/modifier = abs(predefined_modifier)
 			if(!modifier)
@@ -74,11 +73,8 @@
 			nutriment_req_base 				+= round(organ_stats[5] * modifier * (1 + (1 * is_parasitic)), 0.01)
 			oxygen_req_base 				+= round(organ_stats[6] * modifier * (1 + (1 * is_parasitic)), 0.01)
 
-			if(predefined_modifier)
-				break
+			++generation_runs
 
-			probability = probability / 8
-	
 	O.modifications[ORGAN_SPECIFIC_SIZE_BASE] = specific_organ_size_base
 	O.modifications[ORGAN_MAX_BLOOD_STORAGE_BASE] = max_blood_storage_base
 	O.modifications[ORGAN_BLOOD_REQ_BASE] = blood_req_base

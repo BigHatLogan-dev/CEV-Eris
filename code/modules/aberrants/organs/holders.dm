@@ -90,7 +90,7 @@
 			else if(istype(mod, /obj/item/modification/organ/internal/output))
 				output_info = organ_mod.get_function_info()
 			else if(istype(mod, /obj/item/modification/organ/internal))
-				secondary_info += organ_mod.get_function_info()
+				secondary_info = organ_mod.get_function_info()
 
 		function_info = input_info + "\n" +\
 						process_info + "\n" +\
@@ -158,7 +158,7 @@
 	if(use_generated_name)
 		name = generate_name_from_eff()
 	else
-		name = ruined ? ruined_name : name		
+		name = ruined ? ruined_name : name
 
 	for(var/prefix in prefixes)
 		name = "[prefix] [name]"
@@ -296,7 +296,7 @@
 	var/list/additional_input_info = list()
 	var/list/output_types = list()
 	var/list/additional_output_info = list()
-	
+
 	if(req_num_inputs)
 		var/list/inputs_sans_blacklist = list()
 		var/list/input_pool = list()
@@ -319,19 +319,19 @@
 
 	var/obj/item/modification/organ/internal/input/I
 	if(ispath(input_mod_path, /obj/item/modification/organ/internal/input))
-		I = new input_mod_path(src, FALSE, null, input_info, input_mode, input_threshold, additional_input_info)
+		I = new input_mod_path(src, FALSE, null, 0, input_info, input_mode, input_threshold, additional_input_info)
 
 	var/obj/item/modification/organ/internal/process/P
 	if(ispath(process_mod_path, /obj/item/modification/organ/internal/process))
-		P = new process_mod_path(src, should_process_have_organ_stats, null, process_info)
+		P = new process_mod_path(src, should_process_have_organ_stats, null, 0, process_info)
 
 	var/obj/item/modification/organ/internal/output/O
 	if(ispath(output_mod_path, /obj/item/modification/organ/internal/output))
-		O = new output_mod_path(src, FALSE, null, output_types, additional_output_info)
+		O = new output_mod_path(src, FALSE, null, 0, output_types, additional_output_info)
 
 	var/obj/item/modification/organ/internal/S
 	if(ispath(special_mod_path, /obj/item/modification/organ/internal))
-		S = new special_mod_path(src, FALSE, null, special_info)
+		S = new special_mod_path(src, FALSE, null, 0, special_info)
 
 	if(I)
 		SEND_SIGNAL_OLD(I, COMSIG_IATTACK, src)

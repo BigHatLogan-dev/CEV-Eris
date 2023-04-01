@@ -88,12 +88,12 @@
 		"anti-toxin, type 1" = /datum/reagent/hormone/antitox,
 		"oxygenation, type 1" = /datum/reagent/hormone/oxygenation,
 		"augmented agility, type 1" = /datum/reagent/hormone/speedboost,
-		"blood restoration, type 2" = /datum/reagent/hormone/bloodrestore/alt,
-		"blood clotting, type 2" = /datum/reagent/hormone/bloodclot/alt,
-		"painkiller, type 2" = /datum/reagent/hormone/painkiller/alt,
-		"anti-toxin, type 2" = /datum/reagent/hormone/antitox/alt,
-		"oxygenation, type 2" = /datum/reagent/hormone/oxygenation/alt,
-		"augmented agility, type 2" = /datum/reagent/hormone/speedboost/alt
+		"blood restoration, type 2" = /datum/reagent/hormone/bloodrestore/type_2,
+		"blood clotting, type 2" = /datum/reagent/hormone/bloodclot/type_2,
+		"painkiller, type 2" = /datum/reagent/hormone/painkiller/type_2,
+		"anti-toxin, type 2" = /datum/reagent/hormone/antitox/type_2,
+		"oxygenation, type 2" = /datum/reagent/hormone/oxygenation/type_2,
+		"augmented agility, type 2" = /datum/reagent/hormone/speedboost/type_2
 	)
 
 	var/decision = input("Choose a hormone effect (current: [effect])","Adjusting Organoid") as null|anything in possibilities
@@ -109,17 +109,17 @@
 
 	var/effect_desc
 	switch(effect)
-		if(/datum/reagent/hormone/bloodrestore, /datum/reagent/hormone/bloodrestore/alt)
+		if(/datum/reagent/hormone/bloodrestore, /datum/reagent/hormone/bloodrestore/type_2)
 			effect_desc = "blood restoration"
-		if(/datum/reagent/hormone/bloodclot, /datum/reagent/hormone/bloodclot/alt)
+		if(/datum/reagent/hormone/bloodclot, /datum/reagent/hormone/bloodclot/type_2)
 			effect_desc = "blood clotting"
-		if(/datum/reagent/hormone/painkiller, /datum/reagent/hormone/painkiller/alt)
+		if(/datum/reagent/hormone/painkiller, /datum/reagent/hormone/painkiller/type_2)
 			effect_desc = "painkiller"
-		if(/datum/reagent/hormone/antitox, /datum/reagent/hormone/antitox/alt)
+		if(/datum/reagent/hormone/antitox, /datum/reagent/hormone/antitox/type_2)
 			effect_desc = "anti-toxin"
-		if(/datum/reagent/hormone/oxygenation, /datum/reagent/hormone/oxygenation/alt)
+		if(/datum/reagent/hormone/oxygenation, /datum/reagent/hormone/oxygenation/type_2)
 			effect_desc = "oxygenation"
-		if(/datum/reagent/hormone/speedboost, /datum/reagent/hormone/speedboost/alt)
+		if(/datum/reagent/hormone/speedboost, /datum/reagent/hormone/speedboost/type_2)
 			effect_desc = "augmented agility"
 
 	var/description = "<span style='color:purple'>Functional information (secondary):</span> secretes a hormone"
@@ -240,7 +240,7 @@
 				blood_req_base 					+= round(organ_stats[4] * modifier, 0.01)
 				nutriment_req_base 				+= round(organ_stats[5] * modifier, 0.01)
 				oxygen_req_base 				+= round(organ_stats[6] * modifier, 0.01)
-			
+
 			modifications[ORGAN_SPECIFIC_SIZE_BASE] = specific_organ_size_base
 			modifications[ORGAN_MAX_BLOOD_STORAGE_BASE] = max_blood_storage_base
 			modifications[ORGAN_BLOOD_REQ_BASE] = blood_req_base
@@ -259,7 +259,7 @@
 			var/decision = input("Choose an implant method (current: [inverted_possibles[trigger_signal]])","Adjusting Organoid") as null|anything in possibilities
 			if(!decision)
 				return
-			
+
 			trigger_signal = possibilities[decision]
 
 /datum/component/modification/organ/symbiotic/trigger(atom/A, mob/M)
@@ -332,7 +332,7 @@
 	// If the mod failed to install, do nothing
 	if(!.)
 		return FALSE
-	
+
 	if(stored_type)
 		stored_object = new stored_type(parent)
 		stored_object.canremove = FALSE

@@ -6,7 +6,7 @@
 	install_sound = 'sound/effects/squelch1.ogg'
 
 	mod_time = WORKTIME_FAST
-	mod_tool_quality = QUALITY_LASER_CUTTING			
+	mod_tool_quality = QUALITY_LASER_CUTTING
 	mod_difficulty = FAILCHANCE_HARD - 5
 	mod_stat = STAT_BIO
 	mod_sound = 'sound/effects/squelch1.ogg'
@@ -23,7 +23,7 @@
 	examine_difficulty_secondary = STAT_LEVEL_BASIC - 5
 
 	adjustable = FALSE
-	destroy_on_removal = FALSE 
+	destroy_on_removal = FALSE
 	removable = TRUE
 	breakable = FALSE
 
@@ -47,7 +47,7 @@
 		var/obj/item/organ/O = I
 
 		var/organ_nature = modifications[ORGAN_NATURE] ? modifications[ORGAN_NATURE] : O.nature
-		
+
 		if(LAZYFIND(apply_to_qualities, organ_nature))
 			return TRUE
 
@@ -70,7 +70,7 @@
 
 /datum/component/modification/organ/apply_base_values(obj/item/organ/internal/holder)
 	ASSERT(holder)
-	
+
 	var/using_generated_name = FALSE
 	var/using_generated_color = FALSE
 
@@ -93,6 +93,7 @@
 
 	var/nature_adjustment = modifications[ORGAN_NATURE]
 	var/scanner_hidden = modifications[ORGAN_SCANNER_HIDDEN]
+	var/blood_type = modifications[ORGAN_BLOOD_TYPE]
 
 	var/aberrant_cooldown_time_base = modifications[ORGAN_ABERRANT_COOLDOWN]
 
@@ -123,7 +124,7 @@
 
 	if(LAZYLEN(owner_verb_adds))
 		holder.owner_verbs |= owner_verb_adds
-	
+
 	if(somatic)
 		holder.action_button_name = somatic_action_name ? somatic_action_name :"Activate [holder.name]"
 		holder.action_button_proc = somatic_verb
@@ -169,6 +170,8 @@
 		holder.scanner_hidden = scanner_hidden
 	if(nature_adjustment)
 		holder.nature = nature_adjustment
+	if(blood_type)
+		holder.b_type = blood_type
 
 /datum/component/modification/organ/apply_mult_values(obj/item/organ/internal/holder)
 	ASSERT(holder)
@@ -216,7 +219,7 @@
 	var/min_bruised_damage_mod = modifications[ORGAN_MIN_BRUISED_DAMAGE_MOD]
 	var/min_broken_damage_mod = modifications[ORGAN_MIN_BROKEN_DAMAGE_MOD]
 	var/max_damage_mod = modifications[ORGAN_MAX_DAMAGE_MOD]
-	
+
 	if(!islist(holder.organ_efficiency))
 		holder.organ_efficiency = list()
 
@@ -254,7 +257,7 @@
 	if(istype(O, /obj/item/organ/internal/scaffold))
 		var/obj/item/organ/internal/scaffold/S = O
 		S.try_ruin()
-	
+
 	// If the organ has no owner or is still modded, do nothing
 	if(!O.owner || LAZYLEN(O.item_upgrades))
 		return

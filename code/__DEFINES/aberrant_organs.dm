@@ -40,8 +40,8 @@
 #define TYPE_1_HORMONES list(/datum/reagent/hormone/bloodclot, /datum/reagent/hormone/bloodrestore, /datum/reagent/hormone/painkiller,\
 						/datum/reagent/hormone/speedboost, /datum/reagent/hormone/antitox, /datum/reagent/hormone/oxygenation)
 
-#define TYPE_2_HORMONES list(/datum/reagent/hormone/bloodclot/alt, /datum/reagent/hormone/bloodrestore/alt, /datum/reagent/hormone/painkiller/alt,\
-						/datum/reagent/hormone/speedboost/alt, /datum/reagent/hormone/antitox/alt, /datum/reagent/hormone/oxygenation/alt)
+#define TYPE_2_HORMONES list(/datum/reagent/hormone/bloodclot/type_2, /datum/reagent/hormone/bloodrestore/type_2, /datum/reagent/hormone/painkiller/type_2,\
+						/datum/reagent/hormone/speedboost/type_2, /datum/reagent/hormone/antitox/type_2, /datum/reagent/hormone/oxygenation/type_2)
 
 // Blacklist all reagents with no name or ones that cannot be produced
 #define REAGENT_BLACKLIST list(/datum/reagent/organic, /datum/reagent/metal, /datum/reagent/drug,\
@@ -159,6 +159,7 @@
 #define ORGAN_NATURE "organ_nature"
 #define ORGAN_SCANNER_HIDDEN "organ_scanner_hidden"
 #define ORGAN_OWNER_VERB "organ_owner_verb"
+#define ORGAN_BLOOD_TYPE "organ_blood_type"
 
 // Additive adjustments, affected by multiplicative adjustments
 #define ORGAN_EFFICIENCY_NEW_BASE "organ_efficiency_new_base"

@@ -12,7 +12,7 @@
 						Use a laser cutting tool to change the metabolism source or reagent type.\n\
 						Reagents can only be swapped for like reagents."
 
-/obj/item/modification/organ/internal/input/reagents/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
+/obj/item/modification/organ/internal/input/reagents/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
 	var/datum/component/modification/organ/input/reagents/I = AddComponent(/datum/component/modification/organ/input/reagents)
 
 	for(var/input in chosen_input_info)
@@ -28,7 +28,7 @@
 			var/reagent_name = initial(R.name)
 			new_input_qualities |= reagent_name
 			new_input_qualities[reagent_name] = quality
-	
+
 	I.input_qualities = new_input_qualities
 	..()
 
@@ -39,7 +39,7 @@
 						(can be inflicted before attaching the organ), but no damage is healed.\n\n\
 						Use a laser cutting tool to change the damage type."
 
-/obj/item/modification/organ/internal/input/damage/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
+/obj/item/modification/organ/internal/input/damage/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
 	var/datum/component/modification/organ/input/damage/I = AddComponent(/datum/component/modification/organ/input/damage)
 
 	for(var/input in chosen_input_info)
@@ -65,7 +65,7 @@
 
 			new_input_qualities |= dmg_name
 			new_input_qualities[dmg_name] = quality
-	
+
 	I.input_qualities = new_input_qualities
 	..()
 
@@ -75,7 +75,7 @@
 	description_info = "On use, consumes a held object and ingests any contained reagents.\n\n\
 						Use a laser cutting tool to change the consumable object type."
 
-/obj/item/modification/organ/internal/input/consume/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
+/obj/item/modification/organ/internal/input/consume/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
 	var/datum/component/modification/organ/input/consume/I = AddComponent(/datum/component/modification/organ/input/consume)
 
 	for(var/input in chosen_input_info)
@@ -91,7 +91,7 @@
 			var/object_name = initial(AM.name)
 			new_input_qualities |= object_name
 			new_input_qualities[object_name] = quality
-	
+
 	I.input_qualities = new_input_qualities
 	..()
 
@@ -104,7 +104,7 @@
 	icon_state = "input_organoid-hive"
 	use_generated_icon = FALSE
 
-/obj/item/modification/organ/internal/input/power_source/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
+/obj/item/modification/organ/internal/input/power_source/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/chosen_input_info, chosen_mode, threshold, list/additional_input_info)
 	var/datum/component/modification/organ/input/power_source/I = AddComponent(/datum/component/modification/organ/input/power_source)
 
 	for(var/input in chosen_input_info)
@@ -131,6 +131,6 @@
 
 			new_input_qualities |= source_name
 			new_input_qualities[source_name] = quality
-	
+
 	I.input_qualities = new_input_qualities
 	..()

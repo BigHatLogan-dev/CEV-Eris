@@ -1323,7 +1323,7 @@
 #include "code\modules\aberrants\organs\design_disks\designs.dm"
 #include "code\modules\aberrants\organs\design_disks\disks.dm"
 #include "code\modules\aberrants\organs\implant_items\gestrahlte_gland.dm"
-#include "code\modules\aberrants\organs\implant_items\jorogumo.dm"
+#include "code\modules\aberrants\organs\implant_items\kouchiku_fang.dm"
 #include "code\modules\aberrants\organs\internal\faction.dm"
 #include "code\modules\aberrants\organs\internal\hivemind.dm"
 #include "code\modules\aberrants\organs\internal\roach.dm"

@@ -1,7 +1,3 @@
-// Pararein and aranecolmin injecting knuckledusters
-// Web producer and spitter
-// Aranecolmin membrane
-
 /obj/item/organ/internal/scaffold/aberrant/spider
 	name = "spider organ"
 	ruined_name = "spider organ"
@@ -13,6 +9,7 @@
 	rarity_value = 20
 	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN_MAINT
 	spawn_blacklisted = TRUE
+	organ_efficiency = list(OP_CHEMICALS = 100)
 	b_type = "X="				// Will trigger rejection
 	max_upgrades = 4
 
@@ -20,7 +17,7 @@
 	organ_type = "arachno"
 	num_variants = 0
 	num_colors = 3
-	
+
 	aberrant_cooldown_time = MAINT_ABERRANT_COOLDOWN
 
 	input_mod_path = /obj/item/modification/organ/internal/input/consume
@@ -38,16 +35,17 @@
 	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/reagents_blood/pararein
 
 /obj/item/organ/internal/scaffold/aberrant/spider/aranecolmin
-	name = "aranecolmin sac"
+	name = "aranecolmin duct"
 	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/reagents_blood/aranecolmin
 
 /obj/item/organ/internal/scaffold/aberrant/spider/size
-	name = "aranecolmin sac"
 	special_mod_path = /obj/item/modification/organ/internal/stromal/size_spider
 
 /obj/item/organ/internal/scaffold/aberrant/spider/spinneret
 	name = "Kouchiku spinneret"
 	icon_state = "organ_scaffold-arachno-3"
+
+	organ_efficiency = list(OP_SPINNERET = 100)
 
 	use_generated_color = FALSE
 	use_generated_icon = FALSE
@@ -56,12 +54,14 @@
 	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/stat_boost
 
 	output_pool = list(/obj/effect/spider/stickyweb)
-	output_info = list(/obj/effect/spider/stickyweb)
+	output_info = list(1)
 	special_info = list(STAT_VIG, 15)
 
 /obj/item/organ/internal/scaffold/aberrant/spider/chelicera
 	name = "Kouchiku chelicera"
 	icon_state = "organ_scaffold-arachno-3"
+
+	organ_efficiency = list(OP_MAW = 100)
 
 	use_generated_color = FALSE
 	use_generated_icon = FALSE
@@ -74,4 +74,4 @@
 	input_mode = CHEM_BLOOD
 	output_pool = list(STAT_VIG)
 	output_info = list(15)
-	special_info = list(/obj/item/tool/armblade/jorogumo)
+	special_info = list(/obj/item/tool/armblade/kouchiku)

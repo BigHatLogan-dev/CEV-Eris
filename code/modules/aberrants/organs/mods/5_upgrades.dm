@@ -46,15 +46,15 @@
 
 /obj/item/modification/organ/internal/stromal/efficiency/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
-	
+
 	M.removable = FALSE		// Stem cells don't go back to being undifferentiated
-	
+
 	M.modifications = list(
 		ORGAN_EFFICIENCY_MULT = 0.25,
 		ATOM_PREFIX = "enhanced"
 	)
 	..()
-	
+
 /obj/item/modification/organ/internal/stromal/overclock
 	name = "visceral symbiont"
 	desc = "A leech-like creature that attaches itself to the viscera of an orgnanism. It mimics the function of the parent organ in exchange for blood, oxygen, and nutrients."
@@ -98,9 +98,9 @@
 
 /obj/item/modification/organ/internal/stromal/expander/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
-	
+
 	M.removable = FALSE		// Not feasible to remove
-	
+
 	M.modifications = list(
 		ORGAN_SPECIFIC_SIZE_BASE = 0.10,
 		UPGRADE_MAXUPGRADES = 2,
@@ -131,11 +131,11 @@
 	icon_state = "membrane"
 	var/organ_eff_mod = 0.20
 
-/obj/item/modification/organ/internal/parenchymal/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = organ_eff_mod)
+/obj/item/modification/organ/internal/parenchymal/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = organ_eff_mod, num_eff = 1)
 	var/datum/component/modification/organ/parenchymal/M = AddComponent(/datum/component/modification/organ/parenchymal)
-	
-	//M.multiples_allowed = TRUE	// Stacking these causes UI issues. Not important enough to make a fix.
-	
+
+	//M.multiples_allowed = TRUE	// Stacking these causes UI issues. Not important enough to make a fix right now.
+
 	M.modifications = list(
 		ATOM_PREFIX = "grafted"
 	)
@@ -191,6 +191,9 @@
 	M.apply_to_qualities = list(MODIFICATION_ORGANIC)
 
 	M.modifications = list(
+		ORGAN_BLOOD_REQ_MULT = -0.20,
+		ORGAN_NUTRIMENT_REQ_MULT = -0.20,
+		ORGAN_OXYGEN_REQ_MULT = -0.20,
 		ORGAN_EFFICIENCY_MULT = 0.40,
 		ATOM_PREFIX = "blattidean"
 	)
@@ -208,7 +211,7 @@
 	M.apply_to_qualities = list(MODIFICATION_ORGANIC)
 
 	M.modifications = list(
-		ORGAN_SPECIFIC_SIZE_BASE = 1,
+		ORGAN_SPECIFIC_SIZE_BASE = 0.50,
 		ORGAN_MIN_BRUISED_DAMAGE_BASE = 1,
 		ORGAN_MIN_BROKEN_DAMAGE_BASE = 1,
 		ORGAN_MAX_DAMAGE_BASE = 1,
@@ -242,14 +245,13 @@
 	desc = "A graftable aggregate of organ tissues and electromechanical components."
 	icon_state = "hivemind_conversion"
 
-/obj/item/modification/organ/internal/stromal/hivemind_conversion/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = 0.50)
+/obj/item/modification/organ/internal/stromal/hivemind_conversion/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = 0.50, num_eff = 1)
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
 	M.apply_to_qualities = list(MODIFICATION_ORGANIC, MODIFICATION_SILICON)
 
 	M.modifications = list(
 		ORGAN_NATURE = MODIFICATION_ASSISTED,		// Vulnerable to both organic and robotic wounds, allows robotic organs to take organic mods
-		ORGAN_SPECIFIC_SIZE_MULT = -0.25,
 		ORGAN_SCANNER_HIDDEN = TRUE,
 		ATOM_PREFIX = "hivemind-assisted"
 	)

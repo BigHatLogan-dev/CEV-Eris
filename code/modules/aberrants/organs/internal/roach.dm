@@ -11,14 +11,14 @@
 	spawn_blacklisted = TRUE
 	b_type = "Ü~"				// Will trigger rejection
 	max_upgrades = 4
-	
+
 	use_generated_name = FALSE
 	organ_type = "roach"
 	num_variants = 0
 	num_colors = 4
 
 	aberrant_cooldown_time = MAINT_ABERRANT_COOLDOWN
-	
+
 	input_mod_path = /obj/item/modification/organ/internal/input/consume
 	process_mod_path = /obj/item/modification/organ/internal/process/multiplier
 	output_mod_path = /obj/item/modification/organ/internal/output/reagents_blood
@@ -42,11 +42,11 @@
 	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/reagents_blood/seligitillin
 
 /obj/item/organ/internal/scaffold/aberrant/roach/starkellin
-	name = "starkellin gland"
+	name = "starkellin duct"
 	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/reagents_blood/starkellin
 
 /obj/item/organ/internal/scaffold/aberrant/roach/gewaltine
-	name = "gewaltine node"
+	name = "gewaltine vessel"
 	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/reagents_blood/gewaltine
 
 /obj/item/organ/internal/scaffold/aberrant/roach/efficiency
@@ -83,7 +83,7 @@
 
 	use_generated_color = FALSE
 	use_generated_icon = FALSE
-	
+
 	output_mod_path = /obj/item/modification/organ/internal/output/chem_smoke/roach
 	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/stat_boost
 

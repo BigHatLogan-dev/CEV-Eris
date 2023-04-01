@@ -32,10 +32,10 @@
 	name = "hivemind-assisted blood vessel"
 	icon_state = "blood_vessel_hivemind"
 	desc = "Transports blood throughout the human body."
-	organ_efficiency = list(OP_BLOOD_VESSEL = 175)
+	organ_efficiency = list(OP_BLOOD_VESSEL = 100)
 	max_damage = IORGAN_SMALL_HEALTH * 2
-	min_bruised_damage = 2
-	min_broken_damage = 4
+	min_bruised_damage = 4
+	min_broken_damage = 8
 	specific_organ_size = 0.5
 	max_blood_storage = 100
 	oxygen_req = 2
@@ -47,10 +47,10 @@
 	icon_state = "human_muscle_hivemind"
 	description_info = "Increases limb efficiency, making you run faster or use tools better"
 	desc = "Rip and tear"
-	organ_efficiency = list(OP_MUSCLE = 175)
+	organ_efficiency = list(OP_MUSCLE = 100)
 	max_damage = IORGAN_SMALL_HEALTH * 2
-	min_bruised_damage = 2
-	min_broken_damage = 4
+	min_bruised_damage = 4
+	min_broken_damage = 8
 	specific_organ_size = 0.5
 	blood_req = 0
 	max_blood_storage = 2.5
@@ -62,10 +62,10 @@
 	icon_state = "nerve_hivemind"
 	desc = "Looking at this makes you feel nervous."
 	description_info = "Increases limb sensitivity, making you more susceptible to pain, but also more precise with tools"
-	organ_efficiency = list(OP_NERVE = 175)
+	organ_efficiency = list(OP_NERVE = 100)
 	max_damage = IORGAN_SMALL_HEALTH * 2
-	min_bruised_damage = 2
-	min_broken_damage = 4
+	min_bruised_damage = 4
+	min_broken_damage = 8
 	specific_organ_size = 0
 	blood_req = 0
 	max_blood_storage = 2.5
@@ -78,9 +78,11 @@
 	dead_icon = "heart_hivemind-dead"
 	desc = "A vital organ which pumps blood through the blood vessels of the circulatory system. "
 	description_info = "Increases the efficiency of reagent metabolization in blood"
-	organ_efficiency = list(OP_HEART = 175)
+	organ_efficiency = list(OP_HEART = 100)
 	parent_organ_base = BP_CHEST
 	max_damage = IORGAN_STANDARD_HEALTH * 2
+	min_bruised_damage = 6
+	min_broken_damage = 10
 	specific_organ_size = 2
 	oxygen_req = 10
 	nutriment_req = 5
@@ -89,9 +91,11 @@
 /obj/item/organ/internal/scaffold/aberrant/hivemind/kidney
 	name = "hivemind-assisted kidney"
 	icon_state = "kidney_hivemind"
-	organ_efficiency = list(OP_KIDNEYS = 87.5)
+	organ_efficiency = list(OP_KIDNEYS = 50)
 	parent_organ_base = BP_GROIN
 	max_damage = IORGAN_STANDARD_HEALTH * 2
+	min_bruised_damage = 6
+	min_broken_damage = 10
 	specific_organ_size = 1
 	blood_req = 0
 	max_blood_storage = 7.5
@@ -104,9 +108,11 @@
 	icon_state = "liver_hivemind"
 	desc = "A vital organ that detoxifies metabolites. Among other things."
 	description_info = "Increases the metabolization rate of chemicals in both the stomach and bloodstream"
-	organ_efficiency = list(OP_LIVER = 175)
+	organ_efficiency = list(OP_LIVER = 100)
 	parent_organ_base = BP_GROIN
 	max_damage = IORGAN_STANDARD_HEALTH * 2
+	min_bruised_damage = 6
+	min_broken_damage = 10
 	blood_req = 0
 	max_blood_storage = 25
 	oxygen_req = 7
@@ -118,9 +124,11 @@
 	icon_state = "lungs_hivemind"
 	desc = "A vital respiratory organ."
 	gender = PLURAL
-	organ_efficiency = list(OP_LUNGS = 175)
+	organ_efficiency = list(OP_LUNGS = 100)
 	parent_organ_base = BP_CHEST
 	max_damage = IORGAN_STANDARD_HEALTH * 2
+	min_bruised_damage = 6
+	min_broken_damage = 10
 	specific_organ_size = 2
 	blood_req = 0
 	max_blood_storage = 50
@@ -133,9 +141,11 @@
 	icon_state = "stomach_hivemind"
 	desc = "A vital digestive organ."
 	description_info = "Increases the metabolization rate for reagents in the stomach."
-	organ_efficiency = list(OP_STOMACH = 175)
+	organ_efficiency = list(OP_STOMACH = 100)
 	parent_organ_base = BP_CHEST
 	max_damage = IORGAN_STANDARD_HEALTH * 2
+	min_bruised_damage = 6
+	min_broken_damage = 10
 	blood_req = 0
 	max_blood_storage = 25
 	oxygen_req = 5
@@ -146,10 +156,10 @@
 	desc = "You have got a bone to pick with this"
 	bad_type = /obj/item/organ/internal/scaffold/aberrant/hivemind/bone
 	force = WEAPON_FORCE_NORMAL
-	organ_efficiency = list(OP_BONE = 175)
+	organ_efficiency = list(OP_BONE = 100)
 	max_damage = IORGAN_SKELETAL_HEALTH * 2
-	min_bruised_damage = 4
-	min_broken_damage = 6
+	min_bruised_damage = 8
+	min_broken_damage = 12
 	price_tag = 250
 
 /obj/item/organ/internal/scaffold/aberrant/hivemind/bone/skull

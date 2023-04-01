@@ -20,7 +20,7 @@
 	use_generated_name = FALSE
 
 	aberrant_cooldown_time = EXTENDED_ABERRANT_COOLDOWN
-	
+
 	input_mod_path = /obj/item/modification/organ/internal/input/reagents
 	process_mod_path = /obj/item/modification/organ/internal/process/multiplier
 
@@ -48,7 +48,7 @@
 	use_generated_name = FALSE
 
 	aberrant_cooldown_time = EXTENDED_ABERRANT_COOLDOWN
-	
+
 	input_mod_path = /obj/item/modification/organ/internal/input/reagents
 	process_mod_path = /obj/item/modification/organ/internal/process/map
 	special_mod_path = /obj/item/modification/organ/internal/parenchymal/large
@@ -148,7 +148,7 @@
 	input_mod_path = /obj/item/modification/organ/internal/input/damage
 	process_mod_path = /obj/item/modification/organ/internal/process/multiplier
 	output_mod_path = /obj/item/modification/organ/internal/output/reagents_blood
-	
+
 	specific_input_type_pool = ALL_DAMAGE_TYPES
 	input_mode = NOT_USED
 	input_threshold = 20
@@ -177,7 +177,7 @@
 	input_mod_path = /obj/item/modification/organ/internal/input/reagents
 	process_mod_path = /obj/item/modification/organ/internal/process/cooldown
 	output_mod_path = /obj/item/modification/organ/internal/output/stat_boost
-	special_mod_path = /obj/item/modification/organ/internal/special/on_cooldown/stat_boost
+	special_mod_path = /obj/item/modification/organ/internal/on_cooldown/stat_boost
 
 	specific_input_type_pool = list(
 		/datum/reagent/alcohol/beer, /datum/reagent/alcohol/ale, /datum/reagent/alcohol/roachbeer

@@ -10,7 +10,7 @@
 						Use a laser cutting tool to change the metabolism target or reagent type.\n\
 						Reagents can only be swapped for like reagents."
 
-/obj/item/modification/organ/internal/output/reagents_blood/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
+/obj/item/modification/organ/internal/output/reagents_blood/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/output_types, list/additional_output_info)
 	var/datum/component/modification/organ/output/reagents/O = AddComponent(/datum/component/modification/organ/output/reagents)
 
 	for(var/output in output_types)
@@ -26,7 +26,7 @@
 			var/reagent_name = initial(R.name)
 			new_output_qualities |= reagent_name
 			new_output_qualities[reagent_name] = quality
-	
+
 	O.output_qualities = new_output_qualities
 	..()
 
@@ -37,7 +37,7 @@
 						Use a laser cutting tool to change the metabolism target or reagent type.\n\
 						Reagents can only be swapped for like reagents."
 
-/obj/item/modification/organ/internal/output/reagents_ingest/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
+/obj/item/modification/organ/internal/output/reagents_ingest/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/output_types, list/additional_output_info)
 	var/datum/component/modification/organ/output/reagents/O = AddComponent(/datum/component/modification/organ/output/reagents)
 
 	for(var/output in output_types)
@@ -53,7 +53,7 @@
 			var/reagent_name = initial(R.name)
 			new_output_qualities |= reagent_name
 			new_output_qualities[reagent_name] = quality
-	
+
 	O.output_qualities = new_output_qualities
 	..()
 
@@ -64,7 +64,7 @@
 						Use a laser cutting tool to change the hormone type.\n\
 						Hormone effects of the same type do not stack."
 
-/obj/item/modification/organ/internal/output/chemical_effects/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
+/obj/item/modification/organ/internal/output/chemical_effects/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/output_types, list/additional_output_info)
 	var/datum/component/modification/organ/output/chemical_effects/O = AddComponent(/datum/component/modification/organ/output/chemical_effects)
 
 	for(var/output in output_types)
@@ -76,22 +76,22 @@
 	for(var/quality in additional_output_info)
 		var/effect
 		switch(quality)
-			if(/datum/reagent/hormone/bloodrestore, /datum/reagent/hormone/bloodrestore/alt)
+			if(/datum/reagent/hormone/bloodrestore, /datum/reagent/hormone/bloodrestore/type_2)
 				effect = "blood restoration"
-			if(/datum/reagent/hormone/bloodclot, /datum/reagent/hormone/bloodclot/alt)
+			if(/datum/reagent/hormone/bloodclot, /datum/reagent/hormone/bloodclot/type_2)
 				effect = "blood clotting"
-			if(/datum/reagent/hormone/painkiller, /datum/reagent/hormone/painkiller/alt)
+			if(/datum/reagent/hormone/painkiller, /datum/reagent/hormone/painkiller/type_2)
 				effect = "painkiller"
-			if(/datum/reagent/hormone/antitox, /datum/reagent/hormone/antitox/alt)
+			if(/datum/reagent/hormone/antitox, /datum/reagent/hormone/antitox/type_2)
 				effect = "anti-toxin"
-			if(/datum/reagent/hormone/oxygenation, /datum/reagent/hormone/oxygenation/alt)
+			if(/datum/reagent/hormone/oxygenation, /datum/reagent/hormone/oxygenation/type_2)
 				effect = "oxygenation"
-			if(/datum/reagent/hormone/speedboost, /datum/reagent/hormone/speedboost/alt)
+			if(/datum/reagent/hormone/speedboost, /datum/reagent/hormone/speedboost/type_2)
 				effect = "augmented agility"
 
 		new_output_qualities |= effect
 		new_output_qualities[effect] = quality
-	
+
 	O.output_qualities = new_output_qualities
 	..()
 
@@ -101,13 +101,13 @@
 	description_info = "Slightly increases stats when triggered.\n\n\
 						Use a laser cutting tool to change the target stat."
 
-/obj/item/modification/organ/internal/output/stat_boost/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
+/obj/item/modification/organ/internal/output/stat_boost/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/output_types, list/additional_output_info)
 	var/datum/component/modification/organ/output/stat_boost/O = AddComponent(/datum/component/modification/organ/output/stat_boost)
 
 	for(var/output in output_types)
 		O.possible_outputs += output
 		O.possible_outputs[output] = output_types[output]
-	
+
 	O.output_qualities = additional_output_info.Copy()
 	..()
 
@@ -117,13 +117,13 @@
 	description_info = "Causes the user to vomit an object.\n\n\
 						Use a laser cutting tool to change the target stat."
 
-/obj/item/modification/organ/internal/output/produce/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
+/obj/item/modification/organ/internal/output/produce/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/output_types, list/additional_output_info)
 	var/datum/component/modification/organ/output/produce/O = AddComponent(/datum/component/modification/organ/output/produce)
 
 	for(var/output in output_types)
 		O.possible_outputs += output
 		O.possible_outputs[output] = output_types[output]
-	
+
 	O.output_qualities = additional_output_info.Copy()
 	O.modifications[ORGAN_ABERRANT_COOLDOWN] = 5 MINUTES	// Don't want these popping out too often
 	..()
@@ -135,13 +135,13 @@
 						Use a laser cutting tool to change the target stat."
 	var/list/modes = STANDARD_CHEM_SMOKE_MODES
 
-/obj/item/modification/organ/internal/output/chem_smoke/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, list/output_types, list/additional_output_info)
+/obj/item/modification/organ/internal/output/chem_smoke/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/output_types, list/additional_output_info)
 	var/datum/component/modification/organ/output/chem_smoke/O = AddComponent(/datum/component/modification/organ/output/chem_smoke)
 
 	for(var/output in output_types)
 		O.possible_outputs += output
 		O.possible_outputs[output] = output_types[output]
-	
+
 	O.modes = modes.Copy()
 	O.output_qualities = additional_output_info.Copy()
 	O.modifications[ORGAN_ABERRANT_COOLDOWN] = 5 MINUTES
@@ -155,3 +155,8 @@
 						Use a laser cutting tool to change the target stat."
 	use_generated_icon = FALSE
 	modes = ROACH_CHEM_SMOKE_MODES
+
+/obj/item/modification/organ/internal/output/chem_smoke/roach/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 0, list/output_types, list/additional_output_info)
+	..()
+	var/datum/component/modification/organ/output/chem_smoke/O = GetComponent(/datum/component/modification/organ/output/chem_smoke)
+	O.modifications[ORGAN_BLOOD_TYPE] = "Ü~"
