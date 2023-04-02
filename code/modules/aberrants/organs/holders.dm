@@ -292,8 +292,10 @@
 		if((specific_input_type_pool.len < req_num_inputs && !base_input_type) || output_pool.len < req_num_outputs || output_info.len < req_num_outputs)
 			return
 
+	var/list/input_args = list()
 	var/list/input_info = list()
 	var/list/additional_input_info = list()
+	var/list/output_args = list()
 	var/list/output_types = list()
 	var/list/additional_output_info = list()
 
@@ -311,15 +313,25 @@
 
 		for(var/i in 1 to req_num_inputs)
 			input_info += pick_n_take(input_pool)
+		
+		input_args += list(input_info)
+		if(input_mode)
+			input_args += input_mode
+		if(input_threshold)
+			input_args += input_threshold
+		input_args += list(additional_input_info)
 
 	if(req_num_outputs)
 		additional_output_info = output_pool.Copy()
 		for(var/i in 1 to req_num_outputs)
 			output_types += list(pick_n_take(output_pool) = output_info[i])
+		
+		output_args += list(output_types)
+		output_args += list(additional_output_info)
 
 	var/obj/item/modification/organ/internal/input/I
 	if(ispath(input_mod_path, /obj/item/modification/organ/internal/input))
-		I = new input_mod_path(src, FALSE, null, 0, input_info, input_mode, input_threshold, additional_input_info)
+		I = new input_mod_path(src, FALSE, null, 0, input_args)
 
 	var/obj/item/modification/organ/internal/process/P
 	if(ispath(process_mod_path, /obj/item/modification/organ/internal/process))
@@ -327,7 +339,7 @@
 
 	var/obj/item/modification/organ/internal/output/O
 	if(ispath(output_mod_path, /obj/item/modification/organ/internal/output))
-		O = new output_mod_path(src, FALSE, null, 0, output_types, additional_output_info)
+		O = new output_mod_path(src, FALSE, null, 0, output_args)
 
 	var/obj/item/modification/organ/internal/S
 	if(ispath(special_mod_path, /obj/item/modification/organ/internal))

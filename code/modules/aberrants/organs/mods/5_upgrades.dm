@@ -50,7 +50,7 @@
 	M.removable = FALSE		// Stem cells don't go back to being undifferentiated
 
 	M.modifications = list(
-		ORGAN_EFFICIENCY_MULT = 0.25,
+		ORGAN_EFFICIENCY_MULT = 0.10,
 		ATOM_PREFIX = "enhanced"
 	)
 	..()
@@ -102,7 +102,7 @@
 	M.removable = FALSE		// Not feasible to remove
 
 	M.modifications = list(
-		ORGAN_SPECIFIC_SIZE_BASE = 0.10,
+		ORGAN_SPECIFIC_SIZE_BASE = 0.20,
 		UPGRADE_MAXUPGRADES = 2,
 		ATOM_PREFIX = "expanded"
 	)
@@ -160,7 +160,7 @@
 	matter = list(MATERIAL_PLASTEEL = 3)
 	price_tag = 90
 
-/obj/item/modification/organ/internal/electromechanical/bone_braces/New()
+/obj/item/modification/organ/internal/electromechanical/bone_braces/Initialize()
 	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
 
 	M.apply_to_types = list(/obj/item/organ/internal/bone)
@@ -175,6 +175,7 @@
 		ORGAN_EFFICIENCY_NEW_MOD = list(OP_BONE = 0.33),
 		ATOM_PREFIX = "reinforced"
 	)
+	..()
 
 
 // Roach loot
@@ -194,7 +195,7 @@
 		ORGAN_BLOOD_REQ_MULT = -0.20,
 		ORGAN_NUTRIMENT_REQ_MULT = -0.20,
 		ORGAN_OXYGEN_REQ_MULT = -0.20,
-		ORGAN_EFFICIENCY_MULT = 0.40,
+		ORGAN_EFFICIENCY_MULT = 0.30,
 		ATOM_PREFIX = "blattidean"
 	)
 	..()
@@ -216,24 +217,6 @@
 		ORGAN_MIN_BROKEN_DAMAGE_BASE = 1,
 		ORGAN_MAX_DAMAGE_BASE = 1,
 		ATOM_PREFIX = "chitinous"
-	)
-
-
-// Spider loot
-
-/obj/item/modification/organ/internal/stromal/size_spider
-	name = "congealed blattedin"
-	desc = "A clump of solidified roach blood that permanently increases the functional efficiency of an organ."
-	icon_state = "roach_stem_cells"
-
-/obj/item/modification/organ/internal/stromal/size_spider/Initialize()
-	var/datum/component/modification/organ/stromal/M = AddComponent(/datum/component/modification/organ/stromal)
-
-	M.apply_to_qualities = list(MODIFICATION_ORGANIC)
-
-	M.modifications = list(
-		ORGAN_SPECIFIC_SIZE_MULT = -0.40,
-		ATOM_PREFIX = "shrunken"
 	)
 	..()
 

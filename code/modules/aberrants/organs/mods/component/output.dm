@@ -118,23 +118,7 @@
 		if(ispath(output, /datum/reagent/hormone))
 			H = output
 
-		var/effect
-		switch(output)
-			if(/datum/reagent/hormone/bloodrestore, /datum/reagent/hormone/bloodrestore/type_2)
-				effect = "blood restoration"
-			if(/datum/reagent/hormone/bloodclot, /datum/reagent/hormone/bloodclot/type_2)
-				effect = "blood clotting"
-			if(/datum/reagent/hormone/painkiller, /datum/reagent/hormone/painkiller/type_2)
-				effect = "painkiller"
-			if(/datum/reagent/hormone/antitox, /datum/reagent/hormone/antitox/type_2)
-				effect = "anti-toxin"
-			if(/datum/reagent/hormone/oxygenation, /datum/reagent/hormone/oxygenation/type_2)
-				effect = "oxygenation"
-			if(/datum/reagent/hormone/speedboost, /datum/reagent/hormone/speedboost/type_2)
-				effect = "augmented agility"
-			else
-				effect = "none"
-		outputs += "[effect] (type ["[initial(H.hormone_type)]"]), "
+		outputs += "[initial(H.name)] (type ["[initial(H.hormone_type)]"]), "
 
 	outputs = copytext(outputs, 1, length(outputs) - 1)
 

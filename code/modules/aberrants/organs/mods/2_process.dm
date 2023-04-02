@@ -19,9 +19,9 @@
 	description_info = "Maps inputs to outputs. Works for any number of inputs and outputs.\n\n\
 						Use a laser cutting tool to modify the organ efficiency."
 
-/obj/item/modification/organ/internal/process/cooldown/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = 0.05, num_eff = 2, list/process_info)
+/obj/item/modification/organ/internal/process/cooldown/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = 0.05, num_eff = 2, list/process_args)
 	var/datum/component/modification/organ/process/map/P = AddComponent(/datum/component/modification/organ/process/map)
-	P.modifications[ORGAN_ABERRANT_COOLDOWN] = LAZYLEN(process_info) ? process_info[1] : STANDARD_ABERRANT_COOLDOWN
+	P.modifications[ORGAN_ABERRANT_COOLDOWN] = LAZYLEN(process_args) ? process_args[1] : STANDARD_ABERRANT_COOLDOWN
 	..()
 
 /obj/item/modification/organ/internal/process/multiplier
@@ -30,10 +30,10 @@
 	description_info = "Maps inputs to outputs. Increases output magnitude.\n\n\
 						Use a laser cutting tool to modify the organ efficiency."
 
-/obj/item/modification/organ/internal/process/multiplier/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = 0.05, num_eff = 2, list/process_info)
+/obj/item/modification/organ/internal/process/multiplier/Initialize(loc, generate_organ_stats = TRUE, predefined_modifier = 0.05, num_eff = 2, list/process_args)
 	var/datum/component/modification/organ/process/multiplier/P = AddComponent(/datum/component/modification/organ/process/multiplier)
 
-	var/multiplier = LAZYLEN(process_info) ? process_info[1] : 0.20
+	var/multiplier = LAZYLEN(process_args) ? process_args[1] : 0.20
 
 	if(multiplier < 0)
 		name = "enzymal organoid (inhibitor)"

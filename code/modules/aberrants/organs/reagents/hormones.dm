@@ -33,7 +33,7 @@
 
 // Blood clotting
 /datum/reagent/hormone/bloodclot
-	name = "clotting hormone"
+	name = "blood clotting hormone"
 	id = "bloodclot_t1"
 	effects = list(CE_BLOODCLOT = 0.15)
 
@@ -48,7 +48,7 @@
 
 // Blood restoration
 /datum/reagent/hormone/bloodrestore
-	name = "blood production hormone"
+	name = "blood regeneration hormone"
 	id = "bloodrestore_t1"
 	effects = list(CE_BLOODRESTORE = 0.3)
 

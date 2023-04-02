@@ -57,7 +57,7 @@
 	input_mode = CHEM_INGEST
 
 /obj/item/organ/internal/scaffold/aberrant/santana/kidney
-	name = "plutocrat's kidney"
+	name = "aristocrat's kidney"
 	organ_efficiency = list(OP_KIDNEYS = 50)
 	parent_organ_base = BP_GROIN
 	specific_organ_size = 1
@@ -74,7 +74,7 @@
 	price_tag = 2000
 
 /obj/item/organ/internal/scaffold/aberrant/santana/liver
-	name = "plutocrat's liver"
+	name = "aristocrat's liver"
 	organ_efficiency = list(OP_LIVER = 100)
 	parent_organ_base = BP_GROIN
 	blood_req = 0
@@ -99,11 +99,11 @@
 	use_generated_name = FALSE
 
 	input_mod_path = /obj/item/modification/organ/internal/input/reagents
-	process_mod_path = /obj/item/modification/organ/internal/process/multiplier
+	process_mod_path = /obj/item/modification/organ/internal/process/map
 	output_mod_path = /obj/item/modification/organ/internal/output/chemical_effects
 
 	specific_input_type_pool = list(/datum/reagent/toxin)
-	output_pool = TYPE_2_HORMONES
+	output_pool = TYPE_3_HORMONES
 	output_info = list(NOT_USED)
 
 /obj/item/organ/internal/scaffold/aberrant/scrub_toxin/blood
@@ -182,6 +182,7 @@
 	specific_input_type_pool = list(
 		/datum/reagent/alcohol/beer, /datum/reagent/alcohol/ale, /datum/reagent/alcohol/roachbeer
 	)
+	input_mode = CHEM_INGEST
 	process_info = list(EXTENDED_ABERRANT_COOLDOWN)
 	output_pool = list(STAT_ROB)
 	output_info = list(15)

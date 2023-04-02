@@ -14,13 +14,13 @@
 	spawn_blacklisted = TRUE	// Organoids should only spawn in teratomas and mods will just add more clutter to junk loot
 	bad_type = /obj/item/modification/organ/internal
 
-/obj/item/modification/organ/internal/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null)
+/obj/item/modification/organ/internal/Initialize(loc, generate_organ_stats = FALSE, predefined_modifier = null, num_eff = 1)
 	. = ..()
 	update_icon()
 	if(generate_organ_stats)
 		var/datum/component/modification/organ/M = GetComponent(/datum/component/modification/organ)
 		if(M)
-			generate_organ_stats_for_mod(M, predefined_modifier)
+			generate_organ_stats_for_mod(M, predefined_modifier, num_eff)
 
 /obj/item/modification/organ/internal/Destroy()
 	if(LAZYLEN(datum_components))

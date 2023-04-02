@@ -43,6 +43,9 @@
 #define TYPE_2_HORMONES list(/datum/reagent/hormone/bloodclot/type_2, /datum/reagent/hormone/bloodrestore/type_2, /datum/reagent/hormone/painkiller/type_2,\
 						/datum/reagent/hormone/speedboost/type_2, /datum/reagent/hormone/antitox/type_2, /datum/reagent/hormone/oxygenation/type_2)
 
+#define TYPE_3_HORMONES list(/datum/reagent/hormone/bloodclot/type_3, /datum/reagent/hormone/bloodrestore/type_3, /datum/reagent/hormone/painkiller/type_3,\
+						/datum/reagent/hormone/speedboost/type_3, /datum/reagent/hormone/antitox/type_3, /datum/reagent/hormone/oxygenation/type_3)
+
 // Blacklist all reagents with no name or ones that cannot be produced
 #define REAGENT_BLACKLIST list(/datum/reagent/organic, /datum/reagent/metal, /datum/reagent/drug,\
 								/datum/reagent/other, /datum/reagent/nanites, /datum/reagent/medicine,\

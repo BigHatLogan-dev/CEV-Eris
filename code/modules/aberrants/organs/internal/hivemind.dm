@@ -1,11 +1,9 @@
-// Scaffolds with regular organ functions, reduced/zero requirements, and assisted nature
-// Desc for eyes: "What bondage comes with these eyes?"
-
 /obj/item/organ/internal/scaffold/aberrant/hivemind
 	ruined_name = null
 	ruined_desc = null
 	ruined_color = null
 	icon = 'icons/obj/aberrant_organs/hivemind_organs.dmi'
+	spawn_tags = SPAWN_TAG_ABERRANT_ORGAN_HIVE
 	bad_type = /obj/item/organ/internal/scaffold/aberrant/hivemind
 	origin_tech = list(TECH_BIO = 4, TECH_DATA = 5)
 	max_upgrades = 4
@@ -14,6 +12,9 @@
 
 	use_generated_name = FALSE
 	use_generated_icon = FALSE
+	organ_type = null
+	num_variants = 0
+	num_colors = 0
 	use_generated_color = FALSE
 	should_process_have_organ_stats = FALSE
 
@@ -44,7 +45,7 @@
 
 /obj/item/organ/internal/scaffold/aberrant/hivemind/muscle
 	name = "hivemind-assisted muscle"
-	icon_state = "human_muscle_hivemind"
+	icon_state = "muscle_hivemind"
 	description_info = "Increases limb efficiency, making you run faster or use tools better"
 	desc = "Rip and tear"
 	organ_efficiency = list(OP_MUSCLE = 100)
@@ -101,6 +102,8 @@
 	max_blood_storage = 7.5
 	oxygen_req = 2.5
 	nutriment_req = 1
+	use_generated_icon = TRUE
+	num_variants = 2
 	price_tag = 1000
 
 /obj/item/organ/internal/scaffold/aberrant/hivemind/liver
@@ -162,10 +165,16 @@
 	min_broken_damage = 12
 	price_tag = 250
 
+/obj/item/organ/internal/scaffold/aberrant/hivemind/bone/Initialize()
+	. = ..()
+	transform *= 0.5
+
 /obj/item/organ/internal/scaffold/aberrant/hivemind/bone/skull
 	name = "hivemind-assisted skull"
 	icon_state = "skull_hivemind"
 	parent_organ_base = BP_HEAD
+	use_generated_icon = TRUE
+	num_variants = 3
 
 /obj/item/organ/internal/scaffold/aberrant/hivemind/bone/ribcage
 	name = "hivemind-assisted ribcage"
