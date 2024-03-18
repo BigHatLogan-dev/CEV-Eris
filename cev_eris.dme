@@ -2206,6 +2206,7 @@
 #include "code\modules\modular_computers\file_system\programs\research\email_administration.dm"
 #include "code\modules\modular_computers\file_system\programs\research\ntmonitor.dm"
 #include "code\modules\modular_computers\file_system\programs\security\digitalwarrant.dm"
+#include "code\modules\modular_computers\file_system\programs\security\incident_report.dm"
 #include "code\modules\modular_computers\file_system\reports\bounty_entry.dm"
 #include "code\modules\modular_computers\file_system\reports\crew_record.dm"
 #include "code\modules\modular_computers\file_system\reports\people.dm"
